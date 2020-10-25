@@ -4,7 +4,8 @@
 		"style": {
 			"navigationBarTitleText": "一方阅读"
 		}
-	}],
+	} 
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
