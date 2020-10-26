@@ -8,3 +8,9 @@
 
 首页第一版就长这样了
 ![](http://cdn.fologde.com/2020-10-26%5B12-53-17%5D1603687997.png)
+
+
+
+使用
+npm i -S numeral
+npm i -S element-ui
