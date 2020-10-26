@@ -1,5 +1,6 @@
 <template>
-	<text v-if="text" :class="inverted ? 'uni-badge--' + type + ' uni-badge--' + size + ' uni-badge--' + type + '-inverted' : 'uni-badge--' + type + ' uni-badge--' + size" :style="badgeStyle" class="uni-badge" @click="onClick()">{{ text }}</text>
+	<text v-if="text" :class="inverted ? 'uni-badge--' + type + ' uni-badge--' + size + ' uni-badge--' + type + '-inverted' : 'uni-badge--' + type + ' uni-badge--' + size"
+	 :style="badgeStyle" class="uni-badge" @click="onClick()">{{ text }}</text>
 </template>
 
 <script>
@@ -65,82 +66,88 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	$bage-size: 12px;
+	$bage-small: scale(0.8);
+	$bage-height: 20px;
+
 	.uni-badge {
 		/* #ifndef APP-PLUS */
 		display: flex;
+		box-sizing: border-box;
+		overflow: hidden;
 		/* #endif */
 		justify-content: center;
 		flex-direction: row;
-		height: 20px;
-		line-height: 20px;
-		color: #333;
+		height: $bage-height;
+		line-height: $bage-height;
+		color: $uni-text-color;
 		border-radius: 100px;
-		background-color: #f1f1f1;
+		background-color: $uni-bg-color-hover;
 		background-color: transparent;
 		text-align: center;
 		font-family: 'Helvetica Neue', Helvetica, sans-serif;
-		font-size: 12px;
+		font-size: $bage-size;
 		padding: 0px 6px;
 	}
 
 	.uni-badge--inverted {
 		padding: 0 5px 0 0;
-		color: #f1f1f1;
+		color: $uni-bg-color-hover;
 	}
 
 	.uni-badge--default {
-		color: #333;
-		background-color: #f1f1f1;
+		color: $uni-text-color;
+		background-color: $uni-bg-color-hover;
 	}
 
 	.uni-badge--default-inverted {
-		color: #999;
+		color: $uni-text-color-grey;
 		background-color: transparent;
 	}
 
 	.uni-badge--primary {
-		color: #fff;
-		background-color: #007aff;
+		color: $uni-text-color-inverse;
+		background-color: $uni-color-primary;
 	}
 
 	.uni-badge--primary-inverted {
-		color: #007aff;
+		color: $uni-color-primary;
 		background-color: transparent;
 	}
 
 	.uni-badge--success {
-		color: #fff;
-		background-color: #4cd964;
+		color: $uni-text-color-inverse;
+		background-color: $uni-color-success;
 	}
 
 	.uni-badge--success-inverted {
-		color: #4cd964;
+		color: $uni-color-success;
 		background-color: transparent;
 	}
 
 	.uni-badge--warning {
-		color: #fff;
-		background-color: #f0ad4e;
+		color: $uni-text-color-inverse;
+		background-color: $uni-color-warning;
 	}
 
 	.uni-badge--warning-inverted {
-		color: #f0ad4e;
+		color: $uni-color-warning;
 		background-color: transparent;
 	}
 
 	.uni-badge--error {
-		color: #fff;
-		background-color: #dd524d;
+		color: $uni-text-color-inverse;
+		background-color: $uni-color-error;
 	}
 
 	.uni-badge--error-inverted {
-		color: #dd524d;
+		color: $uni-color-error;
 		background-color: transparent;
 	}
 
 	.uni-badge--small {
-		transform: scale(0.8);
+		transform: $bage-small;
 		transform-origin: center center;
 	}
 </style>

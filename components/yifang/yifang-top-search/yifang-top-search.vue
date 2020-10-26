@@ -22,7 +22,7 @@
 </script>
 
 <style lang="scss" scoped>
-$height: 90rpx;
+$height: 70rpx;
 .taowa{
 	height: $height;
 	width: 100%;
@@ -53,7 +53,7 @@ $height: 90rpx;
 		margin-top: 4rpx;
 		overflow: hidden;
 		.text{
-			$text-line-height: 78rpx;
+			$text-line-height: 58rpx; // 和 $height 变量的值有关联,如$height加1 则当前值页需要加1
 			height: $text-line-height;
 			line-height: $text-line-height;
 			// border: 1px solid red;
