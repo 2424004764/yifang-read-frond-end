@@ -1,18 +1,18 @@
 <template>
 	<cover-view class="taowa">
 		<cover-view class="search">
-			<div class="left">待定</div>
-			<div class="box">
-				<div class="text">搜索</div>
-			</div>
-			<div class="right">待定</div>
+			<cover-view class="left">待定</cover-view>
+			<cover-view class="box">
+				<cover-view class="text">搜索</cover-view>
+			</cover-view>
+			<cover-view class="right">待定</cover-view>
 		</cover-view>
 	</cover-view>
 </template>
 
 <script>
 	export default {
-		name: 'topSearch',
+		name: 'yifangTopSearch',
 		data() {
 			return {
 				
@@ -26,17 +26,17 @@ $height: 90rpx;
 .taowa{
 	height: $height;
 	width: 100%;
-	z-index: 100;
 }
 .search{
 	// border: 1px solid red;
+	z-index: 1000;
 	overflow: hidden;
 	height: $height;
 	clear: both;
 	position: fixed;
 	width: 100%;
 	background-color: #F9FAF9;
-	div{
+	cover-view{
 		height: $height;
 		line-height: $height;
 		// border: 1px solid red;

@@ -2,35 +2,28 @@
 	
 	<view class="body">
 		<!-- 顶部搜索框 -->
-		<top-search></top-search>
+		<yifang-top-search></yifang-top-search>
 		
 		<!-- 轮播图 -->
 		<yifang-swiper></yifang-swiper>
 		
-		<view class="container">
-			<!-- 书籍列表 -->
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-			<div class="book_list">1121134</div>
-		</view>
+		<!-- 菜单 -->
+		<yifang-menu></yifang-menu>
+		
+		<!-- 推荐 -->
+		<yifang-recommend></yifang-recommend>
 	</view>
 	
 </template>
 
 <script>
-	import topSearch from '@/components/yifang/top-search/top-search.vue'
+	import yifangTopSearch from '@/components/yifang/yifang-top-search/yifang-top-search.vue'
 	import yifangSwiper from '@/components/yifang/yifang-swiper.vue'
+	import yifangMenu from '@/components/yifang/yifang-menu/yifang-menu.vue'
+	import yifangRecommend from '@/components/yifang/yifang-recommend/yifang-recommend.vue'
 	export default {
-		components: {topSearch, yifangSwiper},
+		components: {yifangTopSearch, yifangSwiper, yifangMenu,
+		yifangRecommend},
 		data() {
 			return {
 			}
@@ -42,8 +35,4 @@
 </script>
 
 <style scoped lang="scss">
-.book_list{
-	height: 60px;
-	// border: 1px solid red;
-}
 </style>
