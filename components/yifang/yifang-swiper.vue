@@ -4,7 +4,8 @@
 		:autoplay="autoplay" :interval="interval" :duration="duration"
 		:circular="true" :previous-margin="previous_margin" :next-margin="previous_margin"
 		:indicator-color="indicator_color" :indicator-active-color="indicator_active_color"
-		:acceleration="acceleration">
+		:acceleration="acceleration"
+		>
 			<swiper-item>
 				<cover-image class="controls-play img" @click="play" 
 					src="http://cdn.fologde.com/6.png"></cover-image>
