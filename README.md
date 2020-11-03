@@ -16,6 +16,11 @@
 2020-10-27 12:34
 停一段时间 学学产品
 
+2020年10月27日14:03:17
+http://www.imooc.com/learn/926  免费课程:ui动效入门知识储备
+
+
 使用
 npm i -S numeral
 npm i -S element-ui
+npm install axios --save
