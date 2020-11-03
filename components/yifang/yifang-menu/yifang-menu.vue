@@ -1,13 +1,8 @@
 <template>
-	<view class="menu">
-		<ju-navigator-grid element-id="navigatorMenu" 
-		:list="menu" height="170" :key="k" size="70"/>
-	</view>
+	
 </template>
 
 <script>
-	// 该组件的更多用法:https://ext.dcloud.net.cn/plugin?id=1616
-	import juNavigatorGrid from '@/components/ju-navigator-grid/ju-navigator-grid.vue'
 	import {getClass} from '@/util/user_http/menu.js'
 	export default {
 		name: "yifangMenu",
@@ -15,7 +10,7 @@
 		data() {
 			return {
 				page: 1,
-				size: 10,
+				size: 15,
 				k: 0, // 确保菜单能加载成功
 				menu:[
 						// {title: "历史", url: '/pages/field/index', icon: "/static/logo.png"},
@@ -49,6 +44,10 @@
 						}
 						menuTmp.push(menuChild)
 					}
+					// 在菜单中插入全部按钮  点击按钮可跳转全部菜单页
+					menuTmp.push({
+						title: "全部",
+					})
 					this.menu = menuTmp
 					++this.k
 				}).catch(err => {

@@ -44,6 +44,7 @@ $height: 70rpx;
 	}
 	.left{
 		width: 20%;
+		text-align: center;
 	}
 	.box{
 		height: calc(100% - 12rpx);
@@ -69,7 +70,7 @@ $height: 70rpx;
 	.right{
 		float: right;
 		width: 20%;
-		text-align: right;
+		text-align: center;
 	}
 }
 </style>
