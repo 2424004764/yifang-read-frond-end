@@ -1,16 +1,48 @@
 <template>
-	
+	<div class="menu">
+		<swiper class="swiper" :indicator-dots="indicatorDots" :duration="duration"
+		:circular="circular">
+			<swiper-item>
+				<view class="menu-page">
+					<div class="menu-item" v-for="(item, index) in menu" :key="index">
+						<div v-if="index < 10">
+							<div class="menu-img">
+								<image :src="item.icon" class="image" mode="aspectFit"></image>
+							</div>
+							<div class="menu-title">{{item.title}}</div>
+						</div>
+					</div>
+				</view>
+			</swiper-item>
+			<swiper-item>
+				<view class="menu-page">
+					<div v-if="menu.length > 10" class="menu-item" v-for="(item, index) in menu" :key="index">
+						<div v-if="index > 9">
+							<div class="menu-img">
+								<image :src="item.icon" class="image" mode="aspectFit"></image>
+							</div>
+							<div class="menu-title">{{item.title}}</div>
+						</div>
+					</div>
+				</view>
+			</swiper-item>
+		</swiper>
+	</div>
 </template>
 
 <script>
 	import {getClass} from '@/util/user_http/menu.js'
 	export default {
 		name: "yifangMenu",
-		components: {juNavigatorGrid},
+		components: {},
 		data() {
 			return {
 				page: 1,
-				size: 15,
+				size: 19,
+				indicatorDots: true, // 是否显示面板指示点
+				duration: 200, // 滑动动画时长
+				circular: false, // 是否采用衔接滑动，即播放到末尾后重新回到开头
+				
 				k: 0, // 确保菜单能加载成功
 				menu:[
 						// {title: "历史", url: '/pages/field/index', icon: "/static/logo.png"},
@@ -61,5 +93,30 @@
 <style lang="scss" scoped>
 .menu{
 	// border: 1px solid red;
+	.menu-page{
+		display: -webkit-flex; /* Safari */
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		.menu-item{
+			// border: 1px solid red;
+			width: 20%;
+			box-sizing: border-box;
+			.menu-img{
+				width: 92rpx;
+				height: 92rpx;
+				margin: 0 auto;
+				// border: 1px solid red;
+				.image{
+					width: 100%;
+					height: 100%;
+				}
+			}
+			.menu-title{
+				text-align: center;
+				font-size: 24rpx;
+			}
+		}
+	}
 }
 </style>

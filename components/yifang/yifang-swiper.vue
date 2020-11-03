@@ -6,15 +6,15 @@
 		:indicator-color="indicator_color" :indicator-active-color="indicator_active_color"
 		>
 			<swiper-item>
-				<image mode="aspectFit"
+				<image mode="scaleToFill" class="swiper-images"
 					src="http://cdn.fologde.com/6.png"></image>
 			</swiper-item>
 			<swiper-item>
-				<image mode="aspectFit"
+				<image mode="scaleToFill" class="swiper-images"
 				src="http://cdn.fologde.com/7.png"></image>
 			</swiper-item>
 			<swiper-item>
-				<image mode="aspectFit"
+				<image mode="scaleToFill" class="swiper-images"
 				src="http://cdn.fologde.com/4.png"></image>
 			</swiper-item>
 		</swiper>
@@ -44,5 +44,9 @@
 	// border: 1px solid red;
 	width: 96%;
 	margin: 2% 2%;
+	.swiper-images{
+		width: 100%;
+		height: 100%;
+	}
 }
 </style>
