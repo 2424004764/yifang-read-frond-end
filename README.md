@@ -24,6 +24,9 @@ axios 在uniapp使用中  有这有那的问题 太臃肿了
 放弃了  还是用uniapp原生的写法
 换成 [](https://www.quanzhan.co/luch-request/guide/3.x/#example)
 
+2020年11月3日19:30:32
+换好了  轮播、菜单、推荐阅读列表在h5、小程序、app正常使用
+
 使用
 npm i -S numeral
 npm i -S element-ui
