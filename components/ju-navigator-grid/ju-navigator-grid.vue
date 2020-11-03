@@ -12,7 +12,7 @@
                                     <template v-if="!item.iconfont">
                                         <view class="menu-icon-container">
                                             <view class="menu-icon-body">
-                                                <image lazy-load mode="aspectFit" :src="item[iconFieldName]" v-if="item[iconFieldName]"></image>
+                                                <image class="menu-icon-body_image" lazy-load mode="aspectFit" :src="item[iconFieldName]" v-if="item[iconFieldName]"></image>
                                             </view>
                                         </view>
                                     </template>
@@ -45,7 +45,7 @@
             list: {
                 type: Array,
                 required: true,
-                default: []
+                default: function(){return []}
             },
             //名称key
             nameFieldName: {
@@ -135,10 +135,14 @@
         },
         mounted() {
             this.getSystemInfo()
-            setTimeout(() => {
-                this.init()
-            }, 10)
-        },
+			// 持续监测list数据是否加载完成  加载完成才初始化菜单
+			let t = setInterval(() => {
+				if(this.list && this.list.length){
+					this.init()
+					clearInterval(t)
+				}
+			}, 10)
+		},
         methods: {
             //格式化为字符串
             stringifyItem(item) {
@@ -275,10 +279,10 @@
         @return $val*2rpx;
     }
 
-    view, button, scroll-view, text {
-        box-sizing: border-box;
-        line-height: 1;
-    }
+    // view, button, scroll-view, text {
+    //     box-sizing: border-box;
+    //     line-height: 1;
+    // }
 
     .scroll-container {
         white-space: nowrap;
@@ -355,7 +359,7 @@
             align-items: center;
             justify-content: center;
 
-            image, img {
+            .menu-icon-body_image{
                 width: 100%;
                 height: 100%;
             }

@@ -19,6 +19,10 @@
 2020年10月27日14:03:17
 http://www.imooc.com/learn/926  免费课程:ui动效入门知识储备
 
+2020年11月3日15:47:19
+axios 在uniapp使用中  有这有那的问题 太臃肿了
+放弃了  还是用uniapp原生的写法
+换成 [](https://www.quanzhan.co/luch-request/guide/3.x/#example)
 
 使用
 npm i -S numeral

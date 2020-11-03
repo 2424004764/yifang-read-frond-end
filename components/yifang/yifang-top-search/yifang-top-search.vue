@@ -1,13 +1,13 @@
 <template>
-	<cover-view class="taowa">
-		<cover-view class="search">
-			<cover-view class="left">待定</cover-view>
-			<cover-view class="box">
-				<cover-view class="text">搜索</cover-view>
-			</cover-view>
-			<cover-view class="right">待定</cover-view>
-		</cover-view>
-	</cover-view>
+	<view class="taowa">
+		<view class="search">
+			<view class="left">待定</view>
+			<view class="box">
+				<view class="text">搜索</view>
+			</view>
+			<view class="right">待定</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -36,7 +36,7 @@ $height: 70rpx;
 	position: fixed;
 	width: 100%;
 	background-color: #F9FAF9;
-	cover-view{
+	.left, .box, .text, .right{
 		height: $height;
 		line-height: $height;
 		// border: 1px solid red;

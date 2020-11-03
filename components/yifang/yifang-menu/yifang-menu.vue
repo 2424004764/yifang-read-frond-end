@@ -1,14 +1,13 @@
 <template>
 	<view class="menu">
 		<ju-navigator-grid element-id="navigatorMenu" 
-		:list="menu" @press="onPress" height="170" :key="k" size="70"/>
+		:list="menu" height="170" :key="k" size="70"/>
 	</view>
 </template>
 
 <script>
 	// 该组件的更多用法:https://ext.dcloud.net.cn/plugin?id=1616
 	import juNavigatorGrid from '@/components/ju-navigator-grid/ju-navigator-grid.vue'
-	
 	import {getClass} from '@/util/user_http/menu.js'
 	export default {
 		name: "yifangMenu",
@@ -34,18 +33,28 @@
 			};
 		},
 		created() {
-			getClass().then(res => {
-				for (let menuIndex in res.data) {
-					let menuChild = {
-						title: res.data[menuIndex]['class_id_name'],
-						icon:	res.data[menuIndex]['class_cover_img']
+			this.getClass()
+		},
+		methods:{
+			getClass(){
+				getClass({
+					page: this.page,
+					size: this.size
+				}).then(res => {
+					let menuTmp = []
+					for (let menuIndex in res.data) {
+						let menuChild = {
+							title: res.data[menuIndex]['class_id_name'],
+							icon:	res.data[menuIndex]['class_cover_img']
+						}
+						menuTmp.push(menuChild)
 					}
-					this.menu.push(menuChild)
-				}
-				++this.k
-			}).catch(err => {
-				console.log(err)
-			})
+					this.menu = menuTmp
+					++this.k
+				}).catch(err => {
+					console.log(err)
+				})
+			}
 		}
 	}
 </script>
