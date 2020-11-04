@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import {getBookDetail} from '@/util/user_http/book.js'
+	import {getBookDetailUtil} from '@/util/function/book/book.js'
 	
 	export default{
 		name: "yifangBookDetail",
@@ -48,26 +48,19 @@
 		},
 		methods: {
 			getBookDetail(){
-				getBookDetail({
-					book_id: this.book_id
-				}).then(res => {
-					// 处理书籍封面图
-					try{
-						res.data['book_cover_imgs'] = JSON.parse(res.data['book_cover_imgs'])
-					}catch(err){
-						res.data['book_cover_imgs'] = []
-					}
-					this.bookDetail = res.data
+				getBookDetailUtil(this.book_id).then(res => {
+					this.bookDetail = res
 					// 设置页面标题
 					uni.setNavigationBarTitle({
-					    title: res.data.book_name
+					    title: res.book_name
 					})
 					this.isLoadingSuccess = true
-					console.log(res)
 				})
 			},
 			nowRead(){
-				console.log(this.book_id)
+				uni.navigateTo({
+				    url: '/pages/start-read/start-read?book_id='+ this.book_id
+				})
 			}
 		},
 		created() {

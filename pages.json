@@ -24,6 +24,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/start-read/start-read",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

@@ -46,6 +46,4 @@ axios 在uniapp使用中  有这有那的问题 太臃肿了
 
 
 使用
-npm i -S numeral
-npm i -S element-ui
-npm install axios --save
+npm i 
