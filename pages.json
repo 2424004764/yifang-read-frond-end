@@ -28,8 +28,7 @@
             "path" : "pages/start-read/start-read",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationBarTitleText": "阅读"
             }
             
         }
