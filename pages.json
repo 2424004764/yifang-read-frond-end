@@ -16,6 +16,14 @@
 				"navigationBarTitleText": "个人中心"
 			}
 		}
+        ,{
+            "path" : "pages/book/book-detail/book-detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "书籍详情"
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

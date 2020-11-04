@@ -1,7 +1,7 @@
 <template>
 	<div class="menu">
 		<swiper class="swiper" :indicator-dots="indicatorDots" :duration="duration"
-		:circular="circular">
+		:circular="circular" :indicator-active-color="indicator_active_color">
 			<swiper-item>
 				<view class="menu-page">
 					<div class="menu-item" v-for="(item, index) in menu" :key="index">
@@ -42,8 +42,8 @@
 				indicatorDots: true, // 是否显示面板指示点
 				duration: 200, // 滑动动画时长
 				circular: false, // 是否采用衔接滑动，即播放到末尾后重新回到开头
+				indicator_active_color: '#FF5501', // 当前选中的指示点颜色
 				
-				k: 0, // 确保菜单能加载成功
 				menu:[
 						// {title: "历史", url: '/pages/field/index', icon: "/static/logo.png"},
 						// {title: "科学", url: 'https://baidu.com', icon: '/static/logo.png'},
@@ -51,10 +51,6 @@
 						// {title: "农业", openType: 'share', icon: '/static/logo.png'},
 						// {title: "社区", icon: '/static/logo.png'},
 						// {title: "IT", openType: 'redirectTo', url: '/pages/field/index', icon: '/static/logo.png'},
-						// {title: "少儿", icon: '/static/logo.png'},
-						// {title: "健身", icon: '/static/logo.png'},
-						// {title: "养生", icon: '/static/logo.png'},
-						// {title: "保健", icon: '/static/logo.png'},
 						// {title: "全部", icon: '/static/logo.png'},
 				]
 			};
@@ -81,7 +77,6 @@
 						title: "全部",
 					})
 					this.menu = menuTmp
-					++this.k
 				}).catch(err => {
 					console.log(err)
 				})

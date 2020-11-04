@@ -46,7 +46,8 @@
 				}).catch()
 			},
 			bookDesc(book_id){
-				console.log(book_id)
+				// console.log(book_id)
+				uni.navigateTo({url: '/pages/book/book-detail/book-detail?book_id=' + book_id})
 			}
 		}
 	}

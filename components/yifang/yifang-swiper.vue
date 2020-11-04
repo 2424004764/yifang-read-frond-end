@@ -32,7 +32,7 @@
 				duration: 500, // 滑动动画时长
 				previous_margin: "50rpx", // 前边距，可用于露出前一项的一小部分
 				indicator_color: 'RGB(255,255,255)', // 指示点颜色
-				indicator_active_color: 'RGB(207,93,27)', // 当前选中的指示点颜色
+				indicator_active_color: '#FF5501', // 当前选中的指示点颜色
 			};
 		}
 	}
