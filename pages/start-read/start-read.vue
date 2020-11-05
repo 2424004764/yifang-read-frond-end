@@ -33,9 +33,10 @@
 			<div class="close-c-layer" @click="closeCLayer"></div>
 			<!-- 底部控制区  用于弹出章节、设置按钮 -->
 			<div class="c-controller-layer">
-				<div class="item">章节</div>
+				<div class="item" @click="showChapterList">章节</div>
 				<div class="item">设置</div>
 			</div>
+			
 		</div></div>
 	
 	</view>
@@ -44,20 +45,25 @@
 <script>
 	import {getBookDetailUtil} from '@/util/function/book/book.js'
 	
+	import yifangChapterList from '@/components/yifang/yifang-book-detail/yifang-book-detail.vue'
 	export default {
 		name: "startRead",
+		components: {yifangChapterList},
 		data() {
 			return {
 				book_id: null,
 				bookDetail: null, // 书籍详情
 				// 控制层级显示
-				a_layer: false, // 对应第一层
-				b_layer: false, // 对应第二层
-				c_layer: true, // 对应第三层
+				c_layer: false, // 对应第三层
 			}
 		},
 		onLoad(options){
 			this.book_id = options.book_id
+			uni.getStorageInfo({
+			    success: function (res) {
+			        console.log(res);
+			    }
+			});
 		},
 		methods: {
 			getBookDetail(){
@@ -78,6 +84,10 @@
 			closeCLayer(){
 				this.c_layer = false
 			},
+			// 显示章节列表
+			showChapterList(){
+				
+			}
 		},
 		mounted(){
 			uni.setNavigationBarColor({
@@ -95,7 +105,6 @@
 		height: 100%;
 		position: fixed;
 		left: 0rpx;
-		// border: 1px solid red;
 		box-sizing: border-box;
 	}
 	.read-layer{
@@ -127,7 +136,6 @@
 		}
 		.prop-menu{
 			border: 1px solid red;
-			// clear: both;
 			width: 400rpx;
 			height: 400rpx;
 			margin-top: 50%;
@@ -140,7 +148,7 @@
 		background-color: #FFFEFA;
 		opacity: 0.6;
 		.close-c-layer{
-			height: 100%;
+			height: 80%;
 			z-index: 303;
 		}
 		.c-controller-layer{
@@ -158,7 +166,6 @@
 			justify-content: space-evenly;
 			background-color: #FFFAE8;
 			.item{
-				// float: left;
 				padding: 10rpx 20rpx;
 				border: 1px solid #FF5501;
 				border-radius: 20rpx;
