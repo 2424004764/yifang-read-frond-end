@@ -1,5 +1,5 @@
 {
-    "name" : "yifangread",
+    "name" : "一方阅读",
     "appid" : "__UNI__CF0EF73",
     "description" : "",
     "versionName" : "1.0.0",
@@ -39,14 +39,35 @@
             "ios" : {},
             "sdkConfigs" : {
                 "ad" : {}
+            },
+            "splashscreen" : {
+                "androidStyle" : "common"
             }
+        },
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : false,
+            "waiting" : false
         }
     },
     "quickapp" : {},
     "mp-weixin" : {
         "appid" : "wxaed41b90e158b2f5",
         "setting" : {
-            "urlCheck" : true
+            "urlCheck" : true,
+            "minified" : true
+        }
+    },
+    "h5" : {
+        "title" : "一方阅读"
+    },
+    "mp-toutiao" : {
+        "setting" : {
+            "minified" : true
+        }
+    },
+    "mp-qq" : {
+        "setting" : {
+            "minified" : true
         }
     }
 }
