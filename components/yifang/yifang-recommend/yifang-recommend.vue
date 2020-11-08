@@ -30,6 +30,8 @@
 		components: {uniList, uniListItem, uniListChat},
 		data() {
 			return {
+				page: 1,
+				size: 50,
 				recommend: []
 			}
 		},
@@ -38,7 +40,10 @@
 		},
 		methods: {
 			getBookList(){
-				getBookList().then(res => {
+				getBookList({
+					page: this.page,
+					size: this.size
+				}).then(res => {
 					for (let itemIndex in res.data) {
 						res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
 					}

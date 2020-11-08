@@ -21,6 +21,7 @@
 	import yifangSwiper from '@/components/yifang/yifang-swiper.vue'
 	import yifangMenu from '@/components/yifang/yifang-menu/yifang-menu.vue'
 	import yifangRecommend from '@/components/yifang/yifang-recommend/yifang-recommend.vue'
+	
 	export default {
 		components: {yifangTopSearch, yifangSwiper, yifangMenu,
 		yifangRecommend},

@@ -5,6 +5,9 @@ import {getBookDetail} from '@/util/user_http/book.js'
  * @param {Object} book_id 书籍id
  */
 export function getBookDetailUtil(book_id){
+	if(!book_id){
+		throw new Error("book_id 为空！")
+	}
 	return getBookDetail({
 		book_id: book_id
 	}).then(res => {

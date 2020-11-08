@@ -43,12 +43,13 @@
 		data(){
 			return {
 				bookDetail: [], // 书籍详情
-				isLoadingSuccess: false
+				isLoadingSuccess: false, // 是否书籍详情加载完毕
 			}
 		},
 		methods: {
-			getBookDetail(){
-				getBookDetailUtil(this.book_id).then(res => {
+			getBookDetail(book_id){
+				console.log(this.book_id)
+				getBookDetailUtil(book_id).then(res => {
 					this.bookDetail = res
 					// 设置页面标题
 					uni.setNavigationBarTitle({
@@ -67,7 +68,8 @@
 		created() {
 		},
 		mounted(){
-			this.getBookDetail()
+			// console.log(this.book_id)
+			this.getBookDetail(this.book_id)
 		},
 	}
 </script>
