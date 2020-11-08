@@ -3,7 +3,8 @@
 		<div class="list">
 			<div class="title">我是标题</div>
 			<div class="items">
-				<div class="item" v-for="(item, index) in chapter_list" :key="index">
+				<div class="item" v-for="(item, index) in chapter_list" :key="index"
+				@click="clickChapterItem(item.chapter_id)">
 					{{item.chapter_name}}
 				</div>
 			</div>
@@ -19,7 +20,7 @@
 		
 		props: {
 			book_id: {
-				type: String
+				type: String|Number
 			}
 		},
 		data() {
@@ -40,6 +41,11 @@
 					this.chapter_list = res.data
 				})
 			},
+			clickChapterItem(chapter_id){
+				this.$emit('getClickChapterId', chapter_id)
+				// console.log(chapter_id)
+			}
+			
 		},
 		created() {
 		},

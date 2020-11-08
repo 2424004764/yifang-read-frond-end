@@ -1,9 +1,9 @@
 <template>
-	<view class="body">
+	<view class="body" ref="startReadBody" @click="globalClick">
 		<!-- 阅读器分三层 每层分别是： -->
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
 		<div class="read-layer layer">
-			<div class='chapter-content'>
+			<div class='chapter-content' v-if="chapter_content">
 				{{chapter_content}}
 			</div>
 		</div>
@@ -23,7 +23,8 @@
 		</div>
 	
 		<!-- 菜单层  返回、章节、设置都在这一层  为第三层 -->
-		<div class="menu-layer layer" v-show="layer_3">
+		<div class="menu-layer layer" v-show="layer_3"
+		@click="layer_3_click">
 			<!-- 关闭第三层 -->
 			<div class="close-c-layer" @click="closeLayer3"></div>
 			<!-- 底部控制区  用于弹出章节、设置按钮 -->
@@ -39,7 +40,7 @@
 		<!-- 还是要第四层  用来放章节列表和设置 -->
 		<div class="more-controller-layer layer" 
 		@click="closeLayer4" v-show="layer_4">
-			<yifang-chapter-list :book_id="book_id"></yifang-chapter-list>
+			<yifang-chapter-list :book_id="book_id" v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
 		</div>
 	
 	</view>
@@ -61,6 +62,7 @@
 				layer_2: true, // 对应第二层
 				layer_3: false, // 对应第三层
 				layer_4: false, // 对应第四层
+				globalClickUse: true, // 是否可以使用全局点击事件
 				chapter_id: 123, // 测试用的章节id
 				chapter_content: '', // 章节内容
 				systemInfo: null, // 系统信息
@@ -71,6 +73,15 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 监听章节组件返回的章节id
+			onChapterId(chapter_id){
+				this.chapter_id = chapter_id
+				this.chapter_content = null
+				this.layer_4 = false
+				this.layer_3 = false
+				this.openGlobalClickEvent()
+				this.getChapterContent()
+			},
 			// 获取书籍详情
 			getBookDetail(){
 				getBookDetailUtil(this.book_id).then(res => {
@@ -85,17 +96,31 @@
 			},
 			// 弹出控制层 也就是第三层
 			propControllerLayer3(){
-				console.log('开始弹出控制层')
+				// console.log('开始弹出控制层')
 				this.layer_3 = true
 			},
 			// 关闭第三层
 			closeLayer3(){
+				console.log('关闭第三层')
 				this.layer_3 = false
+				this.openGlobalClickEvent()
+			},
+			// 开启全局点击事件
+			openGlobalClickEvent(){
+				this.globalClickUse = false
+				setTimeout((function(){
+					console.log('开启全局点击事件')
+					this.globalClickUse = true
+				}).bind(this), 200)
 			},
 			// 关闭第四层
 			closeLayer4(e){
-				console.log(e)
+				// console.log(e)
 				// this.layer_4 = false
+			},
+			// 第三层点击
+			layer_3_click(){
+				
 			},
 			// 显示第四层章节列表
 			showChapterList(){
@@ -113,41 +138,51 @@
 			nextPage(){},
 			// 获取章节详细内容
 			getChapterContent(){
-				let chapter_id = this.chapter_id
+				uni.showLoading({
+					mask: true,
+					title: "loading..."
+				})
 				getChapterContent({
-					chapter_id: chapter_id
+					chapter_id: this.chapter_id
 				}).then(res => {
 					// console.log('chapter-content', res)
 					this.chapter_content = res.data[0].chapter_content
+					uni.hideLoading()
 				}).catch(err => {
 					console.log(err)
 				})
 			},
 			// 计算是否点击了弹出控制区域
+			// 此时 that.systemInfo 系统信息
 			calcIsClickControllerArea(event){
+				if(!this.globalClickUse)return
 				// offsetX、offsetY 分别表示点击的x、y轴
-				// console.log(e.offsetX)
-				// console.log(e.offsetY)
-				console.log(event)
+				// console.log('offsetX', event.offsetX)
+				// console.log('offsetY', event.offsetY)
+				
+				// 1、确定屏幕中心点
+				let screenX = (this.systemInfo.screenWidth / 2).toFixed(1)
+				let screenY = (this.systemInfo.screenHeight / 2).toFixed(1)
+				
+				// console.log(event)
 				// 计算点击的是否是屏幕中心区域位置
 				// 需要先计算到四个顶点的位置
-				let x1 = 0, x2 = 0, y1 = 0, y2 = 0; // 从左至右 分别对应上面两个顶点和下面两个底点
+				let x1 = 70, x2 = 272, y1 = 168, y2 = 368; // 从左至右 分别对应上面两个顶点和下面两个底点
 				
-				// 获取中心区域元素的坐标信息
-				const query = uni.createSelectorQuery().in(this);
-				query.selectViewport('#propMenu').boundingClientRect(data => {
-				  // console.log(data)
-				}).exec();
-			}
-		},
-		mounted(){
-			uni.setNavigationBarColor({
-			    frontColor: '#000000',
-			    backgroundColor: '#FFFAE8',
-			})
-			// 计算点击的位置
-			let that = this
-			document.getElementsByTagName('body')[0].onclick = function (event) {
+				if( (event.offsetX >= x1) && (x2 >= event.offsetX)
+				 && (event.offsetY >= y1) && (y2 >= event.offsetY)){
+					 // console.log('this.layer_3', this.layer_3)
+					 if(!this.layer_3){
+						 this.propControllerLayer3()
+					 }
+				 }
+			},
+			globalClick(event){
+				// console.log(event)
+				// 覆盖属性
+				event.offsetX = event.detail.x
+				event.offsetY = event.detail.y
+				let that = this
 				if(that.systemInfo){
 					that.calcIsClickControllerArea(event)
 				}else{
@@ -158,10 +193,15 @@
 					    }
 					})
 				}
-			}
+			},
+		},
+		mounted(){
+			uni.setNavigationBarColor({
+			    frontColor: '#000000',
+			    backgroundColor: '#FFFAE8',
+			})
 		},
 		destroyed() {
-			document.getElementsByTagName('body')[0].onclick = null
 		}
 	}
 </script>
@@ -220,7 +260,7 @@
 	.menu-layer{
 		z-index: 300;
 		background-color: #FFFEFA;
-		opacity: 0.6;
+		opacity: 0.9;
 		.close-c-layer{
 			height: 80%;
 			z-index: 303;
