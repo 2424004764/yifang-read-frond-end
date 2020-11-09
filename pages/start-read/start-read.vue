@@ -4,8 +4,7 @@
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
 		<div class="read-layer layer">
 			<div class='chapter-content' v-if="chapter_content">
-				<!-- {{chapter_content}} -->
-				123
+				{{chapter_content}}
 			</div>
 		</div>
 		
