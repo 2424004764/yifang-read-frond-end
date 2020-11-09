@@ -4,7 +4,8 @@
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
 		<div class="read-layer layer">
 			<div class='chapter-content' v-if="chapter_content">
-				{{chapter_content}}
+				<!-- {{chapter_content}} -->
+				123
 			</div>
 		</div>
 		
@@ -15,6 +16,10 @@
 			@click="prevPage"></div>
 			<!-- 弹出菜单 -->
 			<div class="prop-menu page-controller" 
+			:style="{'margin-left': propArea.propMenuLeft + 'px', 
+			'margin-top': propArea.propMenuTop + 'px', 
+			'width': propArea.propMenuWidth + 'px',
+			'height': propArea.propMenuHeight + 'px'}"
 			@click="propControllerLayer3" 
 			id="propMenu"></div>
 			<!-- 下一页 -->
@@ -66,6 +71,16 @@
 				chapter_id: 123, // 测试用的章节id
 				chapter_content: '', // 章节内容
 				systemInfo: null, // 系统信息
+				propArea: {
+					propMenuLeft: 0, // 控制层左边距
+					propMenuTop: 0, // 控制层上边距
+					propMenuWidth: 0, // 控制层宽度
+					propMenuHeight: 0, // 控制层高度
+					x1: 0, // 左上顶点坐标
+					x2: 0, // 右上顶点坐标
+					y1: 0, // 左下顶点坐标
+					y2: 0, // 右下顶点坐标
+				}, // 控制层区域 参数信息
 			}
 		},
 		onLoad(options){
@@ -124,12 +139,12 @@
 			},
 			// 显示第四层章节列表
 			showChapterList(){
-				console.log('显示第四层的章节')
+				// console.log('显示第四层的章节')
 				this.layer_4 = true
 			},
 			// 显示第四层设置
 			showSetting(){
-				console.log('显示第四层的设置')
+				// console.log('显示第四层的设置')
 				this.layer_4 = true
 			},
 			// 上一页
@@ -140,7 +155,7 @@
 			getChapterContent(){
 				uni.showLoading({
 					mask: true,
-					title: "loading..."
+					title: "加载章节中..."
 				})
 				getChapterContent({
 					chapter_id: this.chapter_id
@@ -152,6 +167,23 @@
 					console.log(err)
 				})
 			},
+			initControllerArea(){
+				// 计算点击的是否是屏幕中心区域位置
+				// 需要先计算到四个顶点的位置
+				// let x1 = 70, x2 = 272, y1 = 168, y2 = 368; // 从左至右 分别对应上面两个顶点和下面两个底点
+				let screenX = this.systemInfo.screenWidth, screenY = this.systemInfo.screenHeight
+				this.propArea.x1 = parseFloat((screenX / 2.5).toFixed(2)) // 控制区域宽度
+				this.propArea.propMenuLeft = 0.75 * this.propArea.x1
+				this.propArea.propMenuWidth = this.propArea.x1
+				this.propArea.x2 = parseFloat((this.propArea.x1 + (this.propArea.propMenuLeft)).toFixed(2)) // x1、x2坐标确定！
+						
+				let c_h = parseFloat((screenY * 0.4).toFixed(2))
+				this.propArea.propMenuHeight = c_h
+				this.propArea.y1 = parseFloat((c_h / 1.5).toFixed(2))
+				this.propArea.propMenuTop = this.propArea.y1
+				this.propArea.y2 = parseFloat((this.propArea.y1 + c_h).toFixed(2))
+				console.log('x1', this.propArea.x1, 'x2', this.propArea.x2, 'y1', this.propArea.y1, 'y2', this.propArea.y2)
+			},
 			// 计算是否点击了弹出控制区域
 			// 此时 that.systemInfo 系统信息
 			calcIsClickControllerArea(event){
@@ -160,17 +192,9 @@
 				// console.log('offsetX', event.offsetX)
 				// console.log('offsetY', event.offsetY)
 				
-				// 1、确定屏幕中心点
-				let screenX = (this.systemInfo.screenWidth / 2).toFixed(1)
-				let screenY = (this.systemInfo.screenHeight / 2).toFixed(1)
 				
-				// console.log(event)
-				// 计算点击的是否是屏幕中心区域位置
-				// 需要先计算到四个顶点的位置
-				let x1 = 70, x2 = 272, y1 = 168, y2 = 368; // 从左至右 分别对应上面两个顶点和下面两个底点
-				
-				if( (event.offsetX >= x1) && (x2 >= event.offsetX)
-				 && (event.offsetY >= y1) && (y2 >= event.offsetY)){
+				if( (event.offsetX >= this.propArea.x1) && (this.propArea.x2 >= event.offsetX)
+				 && (event.offsetY >= this.propArea.y1) && (this.propArea.y2 >= event.offsetY)){
 					 // console.log('this.layer_3', this.layer_3)
 					 if(!this.layer_3){
 						 this.propControllerLayer3()
@@ -186,20 +210,28 @@
 				if(that.systemInfo){
 					that.calcIsClickControllerArea(event)
 				}else{
-					uni.getSystemInfo({
-					    success: function (res) {
-							that.systemInfo = res
-							that.calcIsClickControllerArea(event)
-					    }
-					})
+					that.getSystemInfo()
 				}
 			},
+			// 获取系统信息
+			getSystemInfo(){
+				let that = this
+				uni.getSystemInfo({
+				    success: function (res) {
+						that.systemInfo = res
+						that.initControllerArea()
+				    }
+				})
+			}
 		},
 		mounted(){
 			uni.setNavigationBarColor({
 			    frontColor: '#000000',
 			    backgroundColor: '#FFFAE8',
 			})
+			this.getSystemInfo()
+		},
+		computed:{
 		},
 		destroyed() {
 		}
@@ -216,7 +248,7 @@
 		box-sizing: border-box;
 	}
 	.read-layer{
-		padding: 40rpx;
+		padding: 0rpx 40rpx 40rpx 40rpx;
 		z-index: 100;
 		background-color: #FFFAE8;
 		.chapter-content{
@@ -250,10 +282,10 @@
 		}
 		.prop-menu{
 			border: 1px solid red;
-			width: 400rpx;
-			height: 400rpx;
-			margin-top: 50%;
-			margin-left: 24%;
+			// width: 400rpx;
+			// height: 400rpx;
+			// margin-top: 50%;
+			// margin-left: 24%;
 			z-index: 203;
 		}
 	}
