@@ -3,6 +3,7 @@
  */
 
 import Request from '@/js_sdk/luch-request/luch-request/index.js'
+import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy.js'
 const Config = require('../config.js')
 
 class Http {
@@ -69,6 +70,55 @@ class Http {
 		
 		// 响应拦截器
 		instance.interceptors.response.use((response) => { /* 对响应成功做点什么 可使用async await 做异步操作*/
+			// console.log(response)
+			// 判断返回的http 状态码
+			if(200 != response.statusCode){
+				uni.showToast({
+					title: "请求出错！",
+					icon: 'none',
+					duration: 2000
+				})
+				return Promise.reject(response)
+			}
+			// 判断json返回的数据是否正确
+			if('object' != typeof response.data){
+				uni.showToast({
+					title: "请联系管理员",
+					icon: 'none',
+					duration: 2000
+				})
+				uni.showModal({
+				    title: '系统错误！',
+				    content: '请联系管理员QQ：' + Config.adminQQ,
+					cancelText: '返回首页',
+					confirmText: '复制并返回首页',
+				    success: function (res) {
+				        if (res.confirm) {
+				            const result = h5Copy(Config.adminQQ)
+							if (result === false) {
+								uni.showToast({
+									title:'不支持',
+								})
+							} else {
+								uni.showToast({
+									title:'复制成功',
+									icon:'none'
+								})
+								setTimeout(function(){
+									uni.switchTab({
+									    url: '/pages/index/index'
+									})
+								}, 1000)
+							}
+				        } else if (res.cancel) {
+				            uni.switchTab({
+				                url: '/pages/index/index'
+				            })
+				        }
+				    }
+				})
+				return
+			}
 			return Promise.resolve(response.data)
 		}, (error) => { /*  对响应错误处理  */
 			uni.showToast({

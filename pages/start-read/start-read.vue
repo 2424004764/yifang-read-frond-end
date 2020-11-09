@@ -1,8 +1,8 @@
 <template>
-	<view class="body" ref="startReadBody" @click="globalClick">
+	<view class="body" ref="startReadBody">
 		<!-- 阅读器分三层 每层分别是： -->
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
-		<div class="read-layer layer">
+		<div class="read-layer layer"  @click="globalClick">
 			<div class='chapter-content' v-if="chapter_content">
 				{{chapter_content}}
 			</div>
@@ -43,9 +43,10 @@
 		<div class="more-controller-layer layer" 
 		@click="closeLayer4" v-show="layer_4">
 		
-			<yifang-chapter-list v-show="layer_4_chapter_list" :book_id="book_id" v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
-			<view v-show="layer_4_setting">2312432345</view>
+			<yifang-chapter-list v-show="layer_4_chapter_list" :book_id="book_id" 
+			v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
 			
+			<yifang-read-setting v-show="layer_4_setting"></yifang-read-setting>
 		</div>
 	
 	</view>
@@ -53,12 +54,13 @@
 
 <script>
 	import {getBookDetailUtil} from '@/util/function/book/book.js'
+	import {getChapterContent} from '@/util/user_http/chapter-content.js'
 	
 	import yifangChapterList from '@/components/yifang/yifang-chapter-list/yifang-chapter-list.vue'
-	import {getChapterContent} from '@/util/user_http/chapter-content.js'
+	import yifangReadSetting from '@/components/yifang/yifang-read-setting/yifang-read-setting.vue'
 	export default {
 		name: "startRead",
-		components: {yifangChapterList},
+		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
 				book_id: null,
@@ -102,6 +104,10 @@
 			},
 			// 获取书籍详情
 			getBookDetail(){
+				uni.showLoading({
+					mask: true,
+					title: "加载内容中..."
+				})
 				getBookDetailUtil(this.book_id).then(res => {
 					this.bookDetail = res
 					// 设置页面标题
@@ -110,6 +116,8 @@
 					})
 				}).then(() => {
 					this.getChapterContent() // 获取章节详细内容
+				}).catch(() => {
+					uni.hideLoading()
 				})
 			},
 			// 弹出控制层 也就是第三层
@@ -121,6 +129,7 @@
 			closeLayer3(){
 				// console.log('关闭第三层')
 				this.layer_3 = false
+				this.layer_4_setting = false
 				this.openGlobalClickEvent()
 			},
 			// 开启全局点击事件
@@ -149,6 +158,7 @@
 				this.layer_4 = true
 				this.layer_4_chapter_list = false
 				this.layer_4_setting = true
+				this.globalClickUse = false
 			},
 			// 上一页
 			prevPage(){},
@@ -163,11 +173,11 @@
 				getChapterContent({
 					chapter_id: this.chapter_id
 				}).then(res => {
-					// console.log('chapter-content', res)
 					this.chapter_content = res.data[0].chapter_content
 					uni.hideLoading()
 				}).catch(err => {
-					console.log(err)
+					uni.hideLoading()
+					// console.log(err)
 				})
 			},
 			initControllerArea(){
@@ -187,8 +197,7 @@
 				// console.log('x1', this.propArea.x1, 'x2', this.propArea.x2, 'y1', this.propArea.y1, 'y2', this.propArea.y2)
 			},
 			// 计算是否点击了弹出控制区域
-			// 此时 that.systemInfo 系统信息
-			calcIsClickControllerArea(event){
+			calcIsClickControllerArea(event, that){
 				if(!this.globalClickUse)return
 				
 				if( (event.offsetX >= this.propArea.x1) && (this.propArea.x2 >= event.offsetX)
@@ -201,13 +210,14 @@
 			},
 			// 全局点击事件
 			globalClick(event){
-				console.log('全局事件', event)
+				if(!this.globalClickUse)return
+				// console.log('全局事件', event)
 				// 覆盖属性
 				event.offsetX = event.detail.x
 				event.offsetY = event.detail.y
 				let that = this
 				if(that.systemInfo){
-					that.calcIsClickControllerArea(event)
+					that.calcIsClickControllerArea(event, that)
 				}else{
 					that.getSystemInfo()
 				}
@@ -219,6 +229,22 @@
 				    success: function (res) {
 						that.systemInfo = res
 						that.initControllerArea()
+				    }
+				})
+			},
+			// 重新加载
+			reLoad(){
+				uni.showModal({
+				    title: '加载失败',
+				    content: '是否重新加载？',
+					cancelText: '返回上一页',
+					confirmText: '重新加载',
+				    success: function (res) {
+				        if (res.confirm) {
+				            this.getBookDetail()
+				        } else if (res.cancel) {
+				            uni.navigateTo()
+				        }
 				    }
 				})
 			}

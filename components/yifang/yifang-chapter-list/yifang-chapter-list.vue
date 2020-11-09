@@ -1,7 +1,7 @@
 <template>
-	<view class="body">
+	<view class="chapter-list-body">
 		<div class="list">
-			<div class="title">我是标题</div>
+			<div class="title">目录</div>
 			<div class="items">
 				<div class="item" v-for="(item, index) in chapter_list" :key="index"
 				@click="clickChapterItem(item.chapter_id)">
@@ -57,13 +57,13 @@
 </script>
 
 <style lang="scss" scoped>
-.body{
+.chapter-list-body{
 	background-color: white;
 	$width: 610rpx;
 	width: $width;
 	border: 1px solid red;
 	height: 100%;
-	padding-bottom: 88rpx;
+	// padding-bottom: 88rpx;
 	box-sizing: border-box;
 	overflow-y: scroll;
 	// position: absolute;

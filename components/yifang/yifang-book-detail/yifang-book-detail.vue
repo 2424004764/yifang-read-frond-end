@@ -48,7 +48,11 @@
 		},
 		methods: {
 			getBookDetail(book_id){
-				console.log(this.book_id)
+				uni.showLoading({
+					mask: true,
+					title: "详情加载中..."
+				})
+				// console.log(this.book_id)
 				getBookDetailUtil(book_id).then(res => {
 					this.bookDetail = res
 					// 设置页面标题
@@ -56,6 +60,9 @@
 					    title: res.book_name
 					})
 					this.isLoadingSuccess = true
+					uni.hideLoading()
+				}).catch(() => {
+					uni.hideLoading()
 				})
 			},
 			// 开始阅读
