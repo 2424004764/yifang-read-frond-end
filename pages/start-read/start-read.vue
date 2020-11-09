@@ -28,23 +28,24 @@
 	
 		<!-- 菜单层  返回、章节、设置都在这一层  为第三层 -->
 		<div class="menu-layer layer" v-show="layer_3"
-		@click="layer_3_click">
+		>
 			<!-- 关闭第三层 -->
 			<div class="close-c-layer" @click="closeLayer3"></div>
 			<!-- 底部控制区  用于弹出章节、设置按钮 -->
-			<div class="c-controller-layer">
+			<div class="c-controller-layer" @click.stop>
 				<!-- 点击章节获取设置时 显示第四层 -->
 				<div class="item" @click="showChapterList">章节</div>
 				<div class="item" @click="showSetting">设置</div>
 			</div>
-			<!-- 为章节列表腾出位置 -->
-			<div class="chapter-list"></div>
 		</div>
 		
 		<!-- 还是要第四层  用来放章节列表和设置 -->
 		<div class="more-controller-layer layer" 
 		@click="closeLayer4" v-show="layer_4">
-			<yifang-chapter-list :book_id="book_id" v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
+		
+			<yifang-chapter-list v-show="layer_4_chapter_list" :book_id="book_id" v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
+			<view v-show="layer_4_setting">2312432345</view>
+			
 		</div>
 	
 	</view>
@@ -66,6 +67,9 @@
 				layer_2: true, // 对应第二层
 				layer_3: false, // 对应第三层
 				layer_4: false, // 对应第四层
+				layer_4_chapter_list: false, // 第四层的章节列表
+				layer_4_setting: false, // 第四层的设置
+				
 				globalClickUse: true, // 是否可以使用全局点击事件
 				chapter_id: 123, // 测试用的章节id
 				chapter_content: '', // 章节内容
@@ -133,19 +137,18 @@
 				this.layer_4 = false
 				this.closeLayer3()
 			},
-			// 第三层点击
-			layer_3_click(){
-				
-			},
 			// 显示第四层章节列表
 			showChapterList(){
 				// console.log('显示第四层的章节')
 				this.layer_4 = true
+				this.layer_4_chapter_list = true
 			},
 			// 显示第四层设置
 			showSetting(){
 				// console.log('显示第四层的设置')
 				this.layer_4 = true
+				this.layer_4_chapter_list = false
+				this.layer_4_setting = true
 			},
 			// 上一页
 			prevPage(){},
@@ -170,7 +173,6 @@
 			initControllerArea(){
 				// 计算点击的是否是屏幕中心区域位置
 				// 需要先计算到四个顶点的位置
-				// let x1 = 70, x2 = 272, y1 = 168, y2 = 368; // 从左至右 分别对应上面两个顶点和下面两个底点
 				let screenX = this.systemInfo.screenWidth, screenY = this.systemInfo.screenHeight
 				this.propArea.x1 = parseFloat((screenX / 2.5).toFixed(2)) // 控制区域宽度
 				this.propArea.propMenuLeft = 0.75 * this.propArea.x1
@@ -182,27 +184,24 @@
 				this.propArea.y1 = parseFloat((c_h / 1.5).toFixed(2))
 				this.propArea.propMenuTop = this.propArea.y1
 				this.propArea.y2 = parseFloat((this.propArea.y1 + c_h).toFixed(2))
-				console.log('x1', this.propArea.x1, 'x2', this.propArea.x2, 'y1', this.propArea.y1, 'y2', this.propArea.y2)
+				// console.log('x1', this.propArea.x1, 'x2', this.propArea.x2, 'y1', this.propArea.y1, 'y2', this.propArea.y2)
 			},
 			// 计算是否点击了弹出控制区域
 			// 此时 that.systemInfo 系统信息
 			calcIsClickControllerArea(event){
 				if(!this.globalClickUse)return
-				// offsetX、offsetY 分别表示点击的x、y轴
-				// console.log('offsetX', event.offsetX)
-				// console.log('offsetY', event.offsetY)
-				
 				
 				if( (event.offsetX >= this.propArea.x1) && (this.propArea.x2 >= event.offsetX)
 				 && (event.offsetY >= this.propArea.y1) && (this.propArea.y2 >= event.offsetY)){
-					 // console.log('this.layer_3', this.layer_3)
 					 if(!this.layer_3){
 						 this.propControllerLayer3()
+						 this.globalClickUse = false
 					 }
 				 }
 			},
+			// 全局点击事件
 			globalClick(event){
-				// console.log(event)
+				console.log('全局事件', event)
 				// 覆盖属性
 				event.offsetX = event.detail.x
 				event.offsetY = event.detail.y
