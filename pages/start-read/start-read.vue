@@ -115,7 +115,7 @@
 			},
 			// 关闭第三层
 			closeLayer3(){
-				console.log('关闭第三层')
+				// console.log('关闭第三层')
 				this.layer_3 = false
 				this.openGlobalClickEvent()
 			},
@@ -123,14 +123,15 @@
 			openGlobalClickEvent(){
 				this.globalClickUse = false
 				setTimeout((function(){
-					console.log('开启全局点击事件')
+					// console.log('开启全局点击事件')
 					this.globalClickUse = true
 				}).bind(this), 200)
 			},
 			// 关闭第四层
 			closeLayer4(e){
 				// console.log(e)
-				// this.layer_4 = false
+				this.layer_4 = false
+				this.closeLayer3()
 			},
 			// 第三层点击
 			layer_3_click(){
