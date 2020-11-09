@@ -116,6 +116,18 @@ axios 在uniapp使用中  有这有那的问题 太臃肿了
 ![](http://cdn.fologde.com/20201108_180847%2000_00_00-00_00_30.gif)
 
 
+2020年11月9日12:48:23
+APP 预览版 [一方阅读 v1.0 版本下载](http://cdn.fologde.com//yifangyuedu/__UNI__CF0EF73_1109124522.apk
+)
+
+
+
+
+
+
+
+
+
 
 
 
