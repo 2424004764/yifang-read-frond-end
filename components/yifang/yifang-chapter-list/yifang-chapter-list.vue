@@ -4,7 +4,7 @@
 			<div class="title">目录</div>
 			<div class="items">
 				<div class="item" v-for="(item, index) in chapter_list" :key="index"
-				@click="clickChapterItem(item)">
+				@click="clickChapterItem(item, index)">
 					{{item.chapter_name}}
 				</div>
 			</div>
@@ -40,17 +40,45 @@
 				}).then(res => {
 					this.chapter_list = res.data
 					if(this.chapter_list.length){
-						return this.chapter_list[0]
+						this.$emit('getClickChapterId', {item: this.chapter_list[0], index: 0, 
+				chapterLegth: this.chapter_list.length})
 					}
-				}).then(frist_chapter => {
-					// console.log(frist_chapter)
-					frist_chapter && this.clickChapterItem(frist_chapter)
 				})
 			},
-			clickChapterItem(item){
-				this.$emit('getClickChapterId', item)
+			clickChapterItem(item, index){
+				this.$emit('getClickChapterId', {item: item, index: index, 
+				chapterLegth: this.chapter_list.length})
+			},
+			getThisChapterList(){
+				return this.chapter_list
+			},
+			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
+			// 返回的数据说明：分别是当前章节在章节列表中的索引、总章节数、下一章节的id
+			// type 可为 prev、next 分别为上一章、下一章
+			getCurrentChapterIndex(chapter_id, type){
+				for (let chapterIndex in this.chapter_list) {
+					if(chapter_id == this.chapter_list[chapterIndex].chapter_id){
+						let nextChapterIndex = 0
+						let c_i = parseInt(chapterIndex)
+						let a_c_l = this.chapter_list.length
+						switch(type){
+							case 'prev':
+								// 上一页
+								if(c_i > 0){
+									nextChapterIndex = --c_i
+								}
+								break
+							case 'next':
+								// 下一页
+								if(c_i < a_c_l){
+									nextChapterIndex = ++c_i
+								}
+								break
+						}
+						return [parseInt(chapterIndex), a_c_l, this.chapter_list[nextChapterIndex]]
+					}
+				}
 			}
-			
 		},
 		created() {
 		},

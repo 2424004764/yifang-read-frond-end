@@ -6,7 +6,7 @@
 		:style="{'background-color': background_color}"
 		>
 			<div class='chapter-content' v-if="chapter_content"
-			:style="{'font-size': font_size + 'rpx'}">
+			:style="{'font-size': font_size + 'px'}">
 				{{chapter_content}}
 			</div>
 		</div>
@@ -38,7 +38,7 @@
 			<div class="chapter-controller">
 				<div class="prev-chapter" @click="prevChapter">上一章</div>
 				<div class="chapter-progress">
-					<progress percent="20" show-info stroke-width="3" />
+					<progress :percent="percent" show-info stroke-width="3" />
 				</div>
 				<div class="next-chapter" @click="nextChapter">下一章</div>
 			</div>
@@ -54,8 +54,10 @@
 		<div class="more-controller-layer layer" 
 		@click="closeLayer4" v-show="layer_4">
 			<!-- 章节列表 -->
-			<yifang-chapter-list v-show="layer_4_chapter_list" :book_id="book_id" 
-			v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
+			<yifang-chapter-list v-show="layer_4_chapter_list" 
+			:book_id="book_id" 
+			v-on:getClickChapterId="onChapterId"
+			ref="chapterList"></yifang-chapter-list>
 			<!-- 设置 -->
 			<yifang-read-setting v-show="layer_4_setting" 
 			v-on:fontSize="onFontSizeChange"
@@ -87,8 +89,9 @@
 				layer_4_setting: false, // 第四层的设置
 				
 				globalClickUse: true, // 是否可以使用全局点击事件
-				chapter_id: 123, // 测试用的章节id
+				chapter_id: null, // 测试用的章节id
 				font_size: null, // 字体大小 默认
+				percent: 0, // 阅读进度
 				background_color: null, // 字体大小 默认
 				chapter_content: '', // 章节内容
 				systemInfo: null, // 系统信息
@@ -111,11 +114,54 @@
 		methods: {
 			// 点击上一章
 			prevChapter(){
-				
+				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'prev')
+				// console.log(currentChapterIndex, chapterLegth, nextChapter)
+				if(0 == currentChapterIndex){
+					uni.showToast({
+						title: '已经是第一章',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				this.clickChapterAfter(currentChapterIndex, chapterLegth, nextChapter)
 			},
 			// 点击下一章
 			nextChapter(){
-				
+				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'next')
+				// console.log(currentChapterIndex, chapterLegth, nextChapter)
+				if(++currentChapterIndex == chapterLegth){
+					uni.showToast({
+						title: '已经是最后一章',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				this.clickChapterAfter(++currentChapterIndex, chapterLegth, nextChapter)
+			},
+			// 点击上一章或下一章后 统一的操作
+			clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
+				// console.log(currentChapterIndex, chapterLegth, chapter)
+				this.chapter_id = chapter.chapter_id
+				uni.setNavigationBarTitle({
+				    title: chapter.chapter_name
+				})
+				this.getChapterContent()
+				// 计算进度
+				this.calcPercent(currentChapterIndex, chapterLegth)
+			},
+			// 计算进度
+			calcPercent(currentChapterIndex, chapterLegth){
+				// console.log(currentChapterIndex, chapterLegth)
+				this.percent = parseInt((currentChapterIndex/chapterLegth) * 100)
+			},
+			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
+			// 返回的数据说明：分别是当前章节在章节列表中的索引、总章节数、下一章节的id
+			// type 可为 prev、next 分别为上一章、下一章
+			getCurrentChapterIndex(chapter_id, type){
+				// 获取章节列表子组件的章节数据
+				return this.$refs.chapterList.getCurrentChapterIndex(chapter_id, type)
 			},
 			// 监听颜色背景颜色变化
 			onBackgroundColor(bg_color){
@@ -129,15 +175,17 @@
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				this.chapter_id = chapter.chapter_id
+				// console.log(chapter)
+				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
-				    title: chapter.chapter_name
+				    title: chapter.item.chapter_name
 				})
 				this.chapter_content = null
 				this.layer_4 = false
 				this.layer_3 = false
 				this.openGlobalClickEvent()
 				this.getChapterContent()
+				this.calcPercent(chapter.index, chapter.chapterLegth)
 			},
 			// 获取书籍详情
 			getBookDetail(){
@@ -151,8 +199,7 @@
 					uni.setNavigationBarTitle({
 					    title: res.book_name
 					})
-				}).then(() => {
-					this.getChapterContent() // 获取章节详细内容
+					uni.hideLoading()
 				}).catch(() => {
 					uni.hideLoading()
 				})
@@ -197,7 +244,6 @@
 				this.layer_4 = true
 				this.layer_4_chapter_list = false
 				this.layer_4_setting = true
-				// this.globalClickUse = false
 			},
 			// 上一页
 			prevPage(){},
@@ -346,7 +392,7 @@
 			z-index: 202;
 		}
 		.prop-menu{
-			border: 1px solid red;
+			// border: 1px solid red;
 			// width: 400rpx;
 			// height: 400rpx;
 			// margin-top: 50%;
@@ -367,7 +413,7 @@
 			position: fixed;
 			width: 100%;
 			left: 0rpx;
-			bottom: 127rpx;
+			bottom: 125rpx;
 			background-color: #FEFAC4;
 			padding: 30rpx;
 			overflow: hidden;

@@ -23,7 +23,7 @@
 		name: "yifnagReadSetting",
 		data() {
 			return {
-				user_font_size: 35, // 用户设置的字体大小  单位rpx
+				user_font_size: 18, // 用户设置的字体大小  单位px
 				background_color: '#FFFAE8', // 背景颜色
 				bg_list: [
 					{'color': '#FFFAE8'}, {'color': '#F1E1C6'}, {'color': '#E6E6E6'},
