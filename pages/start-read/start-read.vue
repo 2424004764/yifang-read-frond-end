@@ -2,8 +2,11 @@
 	<view class="body" ref="startReadBody">
 		<!-- 阅读器分三层 每层分别是： -->
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
-		<div class="read-layer layer"  @click="globalClick">
-			<div class='chapter-content' v-if="chapter_content">
+		<div class="read-layer layer"  @click="globalClick"
+		:style="{'background-color': background_color}"
+		>
+			<div class='chapter-content' v-if="chapter_content"
+			:style="{'font-size': font_size + 'rpx'}">
 				{{chapter_content}}
 			</div>
 		</div>
@@ -31,6 +34,14 @@
 		>
 			<!-- 关闭第三层 -->
 			<div class="close-c-layer" @click="closeLayer3"></div>
+			<!-- 章节跳转 -->
+			<div class="chapter-controller">
+				<div class="prev-chapter" @click="prevChapter">上一章</div>
+				<div class="chapter-progress">
+					<progress percent="20" show-info stroke-width="3" />
+				</div>
+				<div class="next-chapter" @click="nextChapter">下一章</div>
+			</div>
 			<!-- 底部控制区  用于弹出章节、设置按钮 -->
 			<div class="c-controller-layer" @click.stop>
 				<!-- 点击章节获取设置时 显示第四层 -->
@@ -42,11 +53,14 @@
 		<!-- 还是要第四层  用来放章节列表和设置 -->
 		<div class="more-controller-layer layer" 
 		@click="closeLayer4" v-show="layer_4">
-		
+			<!-- 章节列表 -->
 			<yifang-chapter-list v-show="layer_4_chapter_list" :book_id="book_id" 
 			v-on:getClickChapterId="onChapterId"></yifang-chapter-list>
-			
-			<yifang-read-setting v-show="layer_4_setting"></yifang-read-setting>
+			<!-- 设置 -->
+			<yifang-read-setting v-show="layer_4_setting" 
+			v-on:fontSize="onFontSizeChange"
+			v-on:backgroundColor="onBackgroundColor"
+			></yifang-read-setting>
 		</div>
 	
 	</view>
@@ -74,6 +88,8 @@
 				
 				globalClickUse: true, // 是否可以使用全局点击事件
 				chapter_id: 123, // 测试用的章节id
+				font_size: null, // 字体大小 默认
+				background_color: null, // 字体大小 默认
 				chapter_content: '', // 章节内容
 				systemInfo: null, // 系统信息
 				propArea: {
@@ -93,9 +109,30 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 点击上一章
+			prevChapter(){
+				
+			},
+			// 点击下一章
+			nextChapter(){
+				
+			},
+			// 监听颜色背景颜色变化
+			onBackgroundColor(bg_color){
+				this.background_color = bg_color
+				// console.log(bg_color)
+			},
+			// 监听用户设置的字体大小变化
+			onFontSizeChange(font_size){
+				// console.log(font_size)
+				this.font_size = font_size
+			},
 			// 监听章节组件返回的章节id
-			onChapterId(chapter_id){
-				this.chapter_id = chapter_id
+			onChapterId(chapter){
+				this.chapter_id = chapter.chapter_id
+				uni.setNavigationBarTitle({
+				    title: chapter.chapter_name
+				})
 				this.chapter_content = null
 				this.layer_4 = false
 				this.layer_3 = false
@@ -149,16 +186,18 @@
 			// 显示第四层章节列表
 			showChapterList(){
 				// console.log('显示第四层的章节')
+				this.closeLayer3()
 				this.layer_4 = true
 				this.layer_4_chapter_list = true
 			},
 			// 显示第四层设置
 			showSetting(){
 				// console.log('显示第四层的设置')
+				this.closeLayer3()
 				this.layer_4 = true
 				this.layer_4_chapter_list = false
 				this.layer_4_setting = true
-				this.globalClickUse = false
+				// this.globalClickUse = false
 			},
 			// 上一页
 			prevPage(){},
@@ -173,6 +212,7 @@
 				getChapterContent({
 					chapter_id: this.chapter_id
 				}).then(res => {
+					// console.log('getChapterContent', res)
 					this.chapter_content = res.data[0].chapter_content
 					uni.hideLoading()
 				}).catch(err => {
@@ -316,18 +356,42 @@
 	}
 	.menu-layer{
 		z-index: 300;
-		background-color: #FFFEFA;
-		opacity: 0.9;
+		background: rgba(0, 0, 0, 0);
+		// opacity: 1;
 		.close-c-layer{
 			height: 80%;
 			z-index: 303;
+			opacity: 0.1;
+		}
+		.chapter-controller{
+			position: fixed;
+			width: 100%;
+			left: 0rpx;
+			bottom: 127rpx;
+			background-color: #FEFAC4;
+			padding: 30rpx;
+			overflow: hidden;
+			div{
+				display: inline-block;
+				float: left;
+				width: 100rpx;
+				text-align: center;
+				height: 50rpx;
+				line-height: 50rpx;
+			}
+			.chapter-progress{
+				// float: right;
+				// border: 1px solid red;
+				padding: 0rpx 30rpx;
+				width: 56%;
+			}
 		}
 		.c-controller-layer{
+			clear: both;
 			z-index: 302;
 			position: fixed;
 			width: 100%;
-			padding: 40rpx 0rpx;
-			border-top: 1px solid red;
+			padding: 30rpx 0rpx;
 			left: 0rpx;
 			bottom: 0rpx;
 			box-sizing: border-box;
@@ -335,10 +399,10 @@
 			flex-direction: row;
 			flex-wrap: wrap;
 			justify-content: space-evenly;
-			background-color: #FFFAE8;
+			background-color: #FEFAC4;
 			.item{
-				padding: 10rpx 20rpx;
-				border: 1px solid #FF5501;
+				padding: 10rpx 50rpx;
+				border: 1px solid #A3855F;
 				border-radius: 20rpx;
 			}
 		}

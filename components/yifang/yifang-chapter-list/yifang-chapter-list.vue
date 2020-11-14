@@ -4,7 +4,7 @@
 			<div class="title">目录</div>
 			<div class="items">
 				<div class="item" v-for="(item, index) in chapter_list" :key="index"
-				@click="clickChapterItem(item.chapter_id)">
+				@click="clickChapterItem(item)">
 					{{item.chapter_name}}
 				</div>
 			</div>
@@ -39,11 +39,16 @@
 					book_id: this.book_id
 				}).then(res => {
 					this.chapter_list = res.data
+					if(this.chapter_list.length){
+						return this.chapter_list[0]
+					}
+				}).then(frist_chapter => {
+					// console.log(frist_chapter)
+					frist_chapter && this.clickChapterItem(frist_chapter)
 				})
 			},
-			clickChapterItem(chapter_id){
-				this.$emit('getClickChapterId', chapter_id)
-				// console.log(chapter_id)
+			clickChapterItem(item){
+				this.$emit('getClickChapterId', item)
 			}
 			
 		},
@@ -61,12 +66,13 @@
 	background-color: white;
 	$width: 610rpx;
 	width: $width;
-	border: 1px solid red;
+	// #ifdef H5
+	 padding-bottom: 88rpx;
+	// #endif
+	// border: 1px solid red;
 	height: 100%;
-	// padding-bottom: 88rpx;
 	box-sizing: border-box;
 	overflow-y: scroll;
-	// position: absolute;
 	
 	.list{
 		overflow: hidden;
