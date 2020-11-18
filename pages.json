@@ -41,6 +41,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -81,6 +90,10 @@
 			{
 	            "name": "个人中心", 
 	            "path": "pages/my/my"
+	        }, 
+			{
+	            "name": "登录", 
+	            "path": "pages/login/login"
 	        }
 	    ]
 	}

@@ -13,7 +13,12 @@
 						测试测试测试测试
 					</div>
 					<!-- 未登录 -->
-					<div class="noLogin" v-if="!isLogin">登录/注册</div>
+					<div class="noLogin" v-if="!isLogin">
+						<p @click="toLoginPage">登录 / 注册</p>
+						<p class="no-login-tip">
+							注册后可将记录保存到云端
+						</p>
+					</div>
 				</div>
 				<!-- 用户成就 -->
 				<div class="achievement" v-if="isLogin">
@@ -67,7 +72,7 @@
 		name: "my",
 		data() {
 			return {
-				isLogin: true, // 是否登录
+				isLogin: false, // 是否登录
 				achievements: [
 					{title: '初入一方'}, {title: '小学者'}, {title: '初入一方'},
 					{title: '初入一方'}, {title: '初入一方'}, {title: '初入一方'},
@@ -81,7 +86,15 @@
 					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
 				], // 常用操作
 			};
-		}
+		},
+		methods: {
+			// 去登录页
+			toLoginPage(){
+				uni.navigateTo({
+				    url: '/pages/login/login'
+				});
+			}
+		},
 	}
 </script>
 
@@ -119,7 +132,10 @@
 				max-width: 75%;
 			}
 			.noLogin{
-				
+				.no-login-tip{
+					font-size: 24rpx;
+					margin-top: 15rpx;
+				}
 			}
 		}
 		// 成就
