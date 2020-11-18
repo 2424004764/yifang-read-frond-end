@@ -52,7 +52,7 @@
 			</div>
 			
 			<!-- 退出 -->
-			<div class="block-area signout">
+			<div class="block-area signout" v-if="isLogin">
 				<div class="item">
 					<div class="title">退出</div>
 				</div>
@@ -165,10 +165,11 @@
 		flex-flow: row wrap;
 		padding-top: 0px;
 		.item{
-			width: 156rpx;
+			width: 161rpx;
 			// border: 1px solid red;
 			font-size: 26rpx;
 			margin-top: 40rpx;
+			box-sizing: border-box;
 			.icon{
 				width: 76rpx;
 				height: 76rpx;

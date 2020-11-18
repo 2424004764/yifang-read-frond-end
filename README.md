@@ -145,7 +145,16 @@ APP 预览版 [一方阅读 v1.0 体验版本下载](http://cdn.fologde.com//yif
 2020年11月18日16:55:03   
 根据手绘原型图完成了个人中心大概页面   
 ![](http://cdn.fologde.com//yifangread/2020-11-18%5B16-54-13%5D1605689653.png)
+   
+![](http://cdn.fologde.com//yifangread/2020-11-18%5B16-59-05%5D1605689945.png)
+   
+未登录：   
+![](http://cdn.fologde.com//yifangread/2020-11-18%5B17-13-45%5D1605690825.png)
+   
+已登录   
+![](http://cdn.fologde.com//yifangread/2020-11-18%5B17-14-00%5D1605690840.png)
 
 
+***
 使用
 npm i
