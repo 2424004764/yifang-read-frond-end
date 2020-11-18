@@ -1,0 +1,9 @@
+// 用::after伪元素生成的箭头
+.after-arrow-icon{
+	content: '';
+	border: 1px solid black;
+	display: inline-block;
+	transform: rotate(45deg);
+	border-left-style: none;
+	border-bottom-style: none;
+}
