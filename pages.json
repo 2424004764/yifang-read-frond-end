@@ -45,7 +45,15 @@
             "path" : "pages/login/login",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "登录"
+            }
+            
+        }
+        ,{
+            "path" : "pages/reg/reg",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "注册",
                 "enablePullDownRefresh": false
             }
             
@@ -94,6 +102,10 @@
 			{
 	            "name": "登录", 
 	            "path": "pages/login/login"
+	        }, 
+			{
+	            "name": "注册", 
+	            "path": "pages/reg/reg"
 	        }
 	    ]
 	}

@@ -102,8 +102,7 @@
 	@import '@/util/util.scss';
 	
 .my{
-	$my-bg-cl:  #F4F4F0;
-	background-color: $my-bg-cl;
+	@extend .uni-bg-cr;
 	height: 100vh;
 	padding-top: 1%;
 	.block-area{

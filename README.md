@@ -155,7 +155,9 @@ APP 预览版 [一方阅读 v1.0 体验版本下载](http://cdn.fologde.com//yif
 ![](http://cdn.fologde.com//yifangread/2020-11-18%5B17-14-00%5D1605690840.png)
 ***
 2020年11月18日18:03:44   
-开始登录、注册页面开发
+开始登录、注册页面开发   
+注册页面暂时这样   
+![](http://cdn.fologde.com//yifangread/2020-11-18%5B20-50-59%5D1605703859.png)
 
 ***
 使用
