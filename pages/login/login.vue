@@ -44,7 +44,7 @@
 		name: 'login',
 		data() {
 			return {
-				text_decode: true
+				text_decode: true,
 			};
 		},
 		methods: {
