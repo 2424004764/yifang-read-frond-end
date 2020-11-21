@@ -44,7 +44,7 @@
 				<div class="item">
 					<div class="title">帮助与反馈</div>
 				</div>
-				<div class="item">
+				<div class="item" @click="toAboutPage">
 					<div class="title">关于</div>
 				</div>
 			</div>
@@ -88,11 +88,17 @@
 			};
 		},
 		methods: {
+			// 去关于页
+			toAboutPage(){
+				uni.navigateTo({
+				    url: '/pages/about/about'
+				})
+			},
 			// 去登录页
 			toLoginPage(){
 				uni.navigateTo({
 				    url: '/pages/login/login'
-				});
+				})
 			}
 		},
 	}

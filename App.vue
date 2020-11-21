@@ -25,4 +25,7 @@ img{
 	width: 100%;
 	height: 100%;
 }
+.bd-c-red{
+	border: 1px solid red;
+}
 </style>

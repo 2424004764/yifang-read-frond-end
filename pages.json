@@ -15,24 +15,21 @@
 			"style": {
 				"navigationBarTitleText": "个人中心"
 			}
-		}
-        ,{
+		},{
             "path" : "pages/book/book-detail/book-detail",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "书籍详情"
             }
             
-        }
-        ,{
+        },{
             "path" : "pages/start-read/start-read",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "阅读"
             }
             
-        }
-        ,{
+        },{
             "path" : "components/yifang/yifang-read-setting/yifang-read-setting",
             "style" :                                                                                    
             {
@@ -40,20 +37,26 @@
                 "enablePullDownRefresh": false
             }
             
-        }
-        ,{
+        },{
             "path" : "pages/login/login",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "登录"
             }
             
-        }
-        ,{
+        },{
             "path" : "pages/reg/reg",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "注册",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
+            "path" : "pages/about/about",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             
@@ -106,6 +109,10 @@
 			{
 	            "name": "注册", 
 	            "path": "pages/reg/reg"
+	        }, 
+			{
+	            "name": "关于一方阅读", 
+	            "path": "pages/about/about"
 	        }
 	    ]
 	}
