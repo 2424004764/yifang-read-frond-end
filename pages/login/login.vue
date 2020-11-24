@@ -10,7 +10,7 @@
 					<div class="yifang-account input-form">
 						<div class="tip">书号</div>
 						<input class="uni-input" name="input" 
-						placeholder="一方书号"
+						placeholder="一方书号/邮箱"
 						type="number"
 						maxlength="11"
 						placeholder-class="placeholder-class"/>

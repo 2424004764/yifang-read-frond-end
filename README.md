@@ -158,6 +158,12 @@ APP 预览版 [一方阅读 v1.0 体验版本下载](http://cdn.fologde.com//yif
 开始登录、注册页面开发   
 注册页面暂时这样   
 ![](http://cdn.fologde.com//yifangread/2020-11-18%5B20-50-59%5D1605703859.png)
+***
+要不要使用前端框架？
+    后续新建的页面使用框架开发
+    [uniapp uview前端框架](https://www.uviewui.com/guide/demo.html)
+
+
 
 ***
 使用
