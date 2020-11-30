@@ -9,8 +9,7 @@
 						<img src="http://cdn.fologde.com/6.png" alt="">
 					</div>
 					<div class="nikename" v-if="isLogin">
-						昵称：测试测试测试测试测试测试
-						测试测试测试测试
+						昵称：{{userinfo.user_nickname}}
 					</div>
 					<!-- 未登录 -->
 					<div class="noLogin" v-if="!isLogin">
@@ -21,7 +20,7 @@
 					</div>
 				</div>
 				<!-- 用户成就 -->
-				<div class="achievement" v-if="isLogin">
+				<div class="achievement" v-if="isLogin && achievements.length">
 					<div class="box">
 						<div class="item" v-for="(item, index) in achievements" 
 						:key="index">{{item.title}}</div>
@@ -57,7 +56,7 @@
 			</div>
 			
 			<!-- 退出 -->
-			<div class="block-area signout" v-if="isLogin">
+			<div class="block-area signout" v-if="isLogin" @click="outIn">
 				<div class="item">
 					<div class="title">退出</div>
 				</div>
@@ -68,11 +67,14 @@
 </template>
 
 <script>
+	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
+	
 	export default {
 		name: "my",
 		data() {
 			return {
 				isLogin: false, // 是否登录
+				userinfo: [],
 				achievements: [
 					{title: '初入一方'}, {title: '小学者'}, {title: '初入一方'},
 					{title: '初入一方'}, {title: '初入一方'}, {title: '初入一方'},
@@ -87,7 +89,38 @@
 				], // 常用操作
 			};
 		},
+		onShow(){
+			this.init()
+		},
 		methods: {
+			// 初始化
+			init(){
+				this.isLogin = isLogin() ? true : false
+				if(this.isLogin){
+					// 加载用户信息
+					this.userinfo = getLocalUserInfo()
+					// 加载成就
+					if(this.userinfo.hasOwnProperty('achievements')){
+						this.achievements = this.userinfo.achievements
+					}else{
+						this.achievements = []
+					}
+				}
+			},
+			// 退出
+			outIn(){
+				let that = this
+				uni.showModal({
+				    title: '提示',
+				    content: '是否退出？',
+				    success: function (res) {
+				        if (res.confirm) {
+				            uni.clearStorageSync()
+							that.init()
+				        }
+				    }
+				});
+			},
 			// 去关于页
 			toAboutPage(){
 				uni.navigateTo({

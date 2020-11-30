@@ -8,8 +8,6 @@ const Config = require('../config.js')
 
 class Http {
 	
-	loading = true // 默认开启loading效果
-	
 	request(params = {}, options){
 		const config = {
 			// #ifndef H5
@@ -28,11 +26,14 @@ class Http {
 			data: {}, // POST 请求发送
 			// 注：如果局部custom与全局custom有同名属性，
 			// 则后面的属性会覆盖前面的属性，相当于Object.assign(全局，局部)
-			custom: {}, // 全局自定义参数默认值
+			// 使用参考 components/yifang/yifang-recommend/yifang-recommend.vue::getBookList
+			custom: {
+				loading: true, // 默认开启loading效果
+			}, // 全局自定义参数默认值
 			// #ifdef MP-ALIPAY || MP-WEIXIN
-			timeout: 30000, // 仅微信小程序（2.10.0）、支付宝小程序支持
+			timeout: 10000, // 仅微信小程序（2.10.0）、支付宝小程序支持
 			// #endif
-			// 传递的选项(用来覆盖原有的参数，如超时时间、
+			// 传递的选项(用来覆盖原有的参数，如超时时间、是否每次loading
 			// 下载|上传进度等一切参数)  可以是axios本身的选项  也可以是自定义处理的选项
 			...options, 
 			// 全局自定义验证器。参数为statusCode 且必存在，不用判断空情况。
@@ -48,23 +49,26 @@ class Http {
 		
 		// 请求拦截器  发送请求之前
 		instance.interceptors.request.use((config) => { // 可使用async await 做异步操作
-		  config.header = {
-		    ...config.header,
-		  }
-		  // 演示custom 用处
-		  // if (config.custom.auth) {
-		  //   config.header.token = 'token'
-		  // }
-		  // if (config.custom.loading) {
-		  //  uni.showLoading()
-		  // }
-		  /**
-		   /* 演示
-		   if (!token) { // 如果token不存在，return Promise.reject(config) 会取消本次请求
-		      return Promise.reject(config)
-		    }
-		   **/
-		  return config
+			config.header = {
+				...config.header,
+			}
+			// 演示custom 用处
+			// if (config.custom.auth) {
+			//   config.header.token = 'token'
+			// }
+			if (config.custom.loading) {
+				uni.showLoading({
+				    title: '加载中',
+					mask: true
+				})
+			}
+			/**
+			/* 演示
+			if (!token) { // 如果token不存在，return Promise.reject(config) 会取消本次请求
+				return Promise.reject(config)
+			}
+			**/
+			return config
 		}, config => { // 可使用async await 做异步操作
 		  return Promise.reject(config)
 		})
@@ -119,6 +123,7 @@ class Http {
 				})
 				return
 			}
+			uni.hideLoading()
 			return Promise.resolve(response.data)
 		}, (error) => { /*  对响应错误处理  */
 			uni.showToast({

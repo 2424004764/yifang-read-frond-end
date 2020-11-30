@@ -43,6 +43,10 @@
 				getBookList({
 					page: this.page,
 					size: this.size
+				}, {
+					custom: {
+						loading: true
+					}
 				}).then(res => {
 					for (let itemIndex in res.data) {
 						res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
