@@ -19,7 +19,9 @@ class Http {
 			// #ifdef H5
 			baseURL: 'yifang-read-api',
 			// #endif
-			header: {},
+			header: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
 			// method: 'GET',
 			dataType: 'json',
 			params: params, // 会拼接到url
@@ -90,7 +92,7 @@ class Http {
 				uni.showModal({
 				    title: '系统错误！',
 				    content: '请联系管理员QQ：' + Config.adminQQ,
-					cancelText: '返回首页',
+					cancelText: '关闭',
 					confirmText: '复制并返回首页',
 				    success: function (res) {
 				        if (res.confirm) {
@@ -111,9 +113,7 @@ class Http {
 								}, 1000)
 							}
 				        } else if (res.cancel) {
-				            uni.switchTab({
-				                url: '/pages/index/index'
-				            })
+				            uni.hideToast();
 				        }
 				    }
 				})
