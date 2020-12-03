@@ -8,8 +8,9 @@
 					<div class="headimg" v-if="isLogin">
 						<img src="http://cdn.fologde.com/6.png" alt="">
 					</div>
-					<div class="nikename" v-if="isLogin">
-						昵称：{{userinfo.user_nickname}}
+					<div class="nikename-area" v-if="isLogin">
+						<p class="nickname">{{userinfo.user_nickname}}</p>
+						<p class="uid-area">一方书号：{{userinfo.user_id}}</p>
 					</div>
 					<!-- 未登录 -->
 					<div class="noLogin" v-if="!isLogin">
@@ -160,14 +161,30 @@
 			// border: 1px solid red;
 			background-color: white;
 			.headimg{
-				height: 120rpx;
-				width: 120rpx;
+				height: 140rpx;
+				width: 140rpx;
 				border-radius: 50%;
 				overflow: hidden;
 			}
-			.nikename{
+			.nikename-area{
 				margin-left: 5%;
 				max-width: 75%;
+				.nickname{
+					min-height: 84rpx;
+					font-weight: 700;
+				}
+				.uid-area{
+					position: relative;
+					width: 472rpx;
+					&::after{
+						position: absolute;
+						right: 0px;
+						top: 14rpx;
+						width: 14rpx;
+						height: 14rpx;
+						@extend .after-arrow-icon;
+					}
+				}
 			}
 			.noLogin{
 				.no-login-tip{

@@ -8,7 +8,7 @@
 			<div class="form">
 				<form>
 					<div class="yifang-account input-form">
-						<div class="tip">书号</div>
+						<div class="tip">账号</div>
 						<input class="uni-input" name="input" 
 						placeholder="一方书号/邮箱"
 						type="number"
