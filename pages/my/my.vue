@@ -6,7 +6,7 @@
 				<!-- 用户信息 -->
 				<div class="userinfo">
 					<div class="headimg" v-if="isLogin">
-						<img src="http://cdn.fologde.com/6.png" alt="">
+						<img :src="userinfo.user_headimg" alt="">
 					</div>
 					<div class="nikename-area" v-if="isLogin">
 						<p class="nickname">{{userinfo.user_nickname}}</p>

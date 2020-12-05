@@ -1,6 +1,15 @@
 {
 	"pages": [
 		{
+		    "path" : "pages/book-shelf/book-shelf",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "书架",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "一方阅读"
@@ -74,10 +83,15 @@
 	    "borderStyle": "black",
 	    "backgroundColor": "#ffffff",
 	    "list": [{
+	        "pagePath": "pages/book-shelf/book-shelf",
+	        "iconPath": "static/logo.png",
+	        "selectedIconPath": "static/logo.png",
+	        "text": "书架"
+	    }, {
 	        "pagePath": "pages/index/index",
 	        "iconPath": "static/logo.png",
 	        "selectedIconPath": "static/logo.png",
-	        "text": "首页"
+	        "text": "藏书"
 	    }, {
 	        "pagePath": "pages/square/square",
 	        "iconPath": "static/logo.png",
@@ -113,6 +127,10 @@
 			{
 	            "name": "关于一方阅读", 
 	            "path": "pages/about/about"
+	        }, 
+			{
+	            "name": "书架", 
+	            "path": "pages/book-shelf/book-shelf"
 	        }
 	    ]
 	}

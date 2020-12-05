@@ -12,8 +12,8 @@
 						<input class="uni-input" name="input" 
 							placeholder="一方书号/邮箱"
 							@input="inputChange"
-							type="number"
-							maxlength="11"
+							type="text"
+							maxlength="50"
 							placeholder-class="placeholder-class"
 							data-type="idOrEmail"
 						/>
