@@ -1,11 +1,24 @@
 let USERI_INFO_KEY = 'user-info'
 
 /**
- * 注册之后的操作
- * @param {Object} data 用户注册的数据
+ * 设置登录态  在注册或者登录后
+ * @param {Object} data 用户注册或登录的数据
  */
-export function afterRegister(data){
+export function setLoginStatu(data, msg){
+	let duration = 1000
+	uni.showToast({
+		mask: true,
+		title: msg,
+		duration: duration,
+		icon: 'none'
+	})
 	uni.setStorageSync(USERI_INFO_KEY, data)
+	setTimeout(function(){
+		// console.log('reg settimeout')
+		uni.switchTab({
+		    url: '/pages/my/my'
+		})
+	}, duration)
 }
 
 /**

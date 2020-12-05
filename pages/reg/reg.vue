@@ -91,7 +91,7 @@
 
 <script>
 	import {register} from '@/util/user_http/user.js'
-	import {afterRegister} from '@/util/function/login.js'
+	import {setLoginStatu} from '@/util/function/login.js'
 	
 	export default {
 		
@@ -121,22 +121,48 @@
 			this.regInfo.sex = this.sexDefault
 		},
 		methods: {
+			// 注册前置效验
+			beforeRegister(){
+				function vaildate(regInfo){
+					if(!regInfo.email){
+						return '邮箱不能为空！'
+					}
+					if(!regInfo.password){
+						return '密码不能为空！'
+					}
+					if(!regInfo.againPassword){
+						return '确认密码不能为空！'
+					}
+					if(regInfo.password != regInfo.againPassword){
+						return '两次输入的密码不一致！'
+					}
+					return null
+				}
+				
+				let errMsg = vaildate(this.regInfo)
+				if(errMsg){
+					uni.showToast({
+						mask: true,
+						title: errMsg,
+						duration: 1000,
+						icon: 'none'
+					})
+					return false
+				}
+				return true
+			},
 			// 注册
 			register(){
+				// 前置效验
+				if(!this.beforeRegister()){
+					return
+				}
 				uni.showLoading({
 				    title: '加载中'
 				})
 				register({}, {data: this.regInfo}).then(res => {
 					if(0 == res.code){
-						uni.showToast({
-							mask: true,
-							title: '注册成功！',
-							icon: 'none'
-						})
-						afterRegister(res.data)
-						uni.switchTab({
-						    url: '/pages/my/my'
-						})
+						setLoginStatu(res.data, '注册成功！')
 					}else{
 						uni.showToast({
 							mask: true,

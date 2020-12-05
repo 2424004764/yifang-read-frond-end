@@ -10,22 +10,28 @@
 					<div class="yifang-account input-form">
 						<div class="tip">账号</div>
 						<input class="uni-input" name="input" 
-						placeholder="一方书号/邮箱"
-						type="number"
-						maxlength="11"
-						placeholder-class="placeholder-class"/>
+							placeholder="一方书号/邮箱"
+							@input="inputChange"
+							type="number"
+							maxlength="11"
+							placeholder-class="placeholder-class"
+							data-type="idOrEmail"
+						/>
 					</div>
 					
 					<div class="yifang-password input-form item">
 						<div class="tip">密码</div>
 						<input class="uni-input" name="input" 
-						placeholder="密码"
-						maxlength="30"
-						:password="true"
-						placeholder-class="placeholder-class"/>
+							placeholder="密码"
+							@input="inputChange"
+							maxlength="30"
+							:password="true"
+							data-type="password"
+							placeholder-class="placeholder-class"
+						/>
 					</div>
 					
-					<div class="login-button item">登录</div>
+					<div class="login-button item" @click="login">登录</div>
 					
 					<div class="tip item">
 						<p>
@@ -40,16 +46,70 @@
 </template>
 
 <script>
+	import {login} from '@/util/user_http/user.js'
+	import {setLoginStatu} from '@/util/function/login.js'
+	
 	export default {
 		name: 'login',
 		data() {
 			return {
 				text_decode: true,
+				loginInfo: {
+					idOrEmail: '', // id 或者 邮箱
+					password: '', // 密码
+				}
 			};
 		},
 		methods: {
+			// 登录之前效验
+			beforeLogin(){
+				function vaildate(loginInfo){
+					if(!loginInfo.idOrEmail){
+						return '账号不能为空！'
+					}
+					if(!loginInfo.password){
+						return '密码不能为空！'
+					}
+					return null
+				}
+				
+				let errMsg = vaildate(this.loginInfo)
+				if(errMsg){
+					uni.showToast({
+						mask: true,
+						title: errMsg,
+						duration: 1000,
+						icon: 'none'
+					})
+					return false
+				}
+				return true
+			},
+			// 输入框内容改变  使用type标识是什么输入 如 type：password 表示密码输入框改变
+			inputChange(e){
+				this.$set(this.loginInfo, e.currentTarget.dataset.type, 
+				e.detail.value)
+			},
+			// 登录
+			login(){
+				if(!this.beforeLogin()){
+					return
+				}
+				login({}, {data: this.loginInfo}).then(res => {
+					if(0 == res.code){
+						setLoginStatu(res.data, '登录成功！')
+					}else{
+						uni.showToast({
+							mask: true,
+							title: res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
 			// 去注册页面
 			toRegPage(){
+				console.log('click to login')
 				uni.navigateTo({
 					url: '/pages/reg/reg'
 				})

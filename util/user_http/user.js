@@ -14,3 +14,15 @@ export function register(params, options) {
     })
 }
 
+/**
+ * 登录
+ * @param {Object} params
+ * @param {Object} options
+ */
+export function login(params, options){
+	return axios.request(params, {
+	  ...options,
+	  method: 'POST',
+	  url: `${base_url}/login`,
+	})
+}
