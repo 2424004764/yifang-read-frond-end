@@ -1,13 +1,14 @@
 {
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [
 		{
 		    "path" : "pages/book-shelf/book-shelf",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "书架",
-		        "enablePullDownRefresh": false
+		        "navigationBarTitleText": "书架"
 		    }
-		    
 		},
 		{
 			"path": "pages/index/index",

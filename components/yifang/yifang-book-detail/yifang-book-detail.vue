@@ -24,7 +24,9 @@
 		
 		<!-- 底部固定栏  用来放立即阅读、加入书架等按钮 -->
 		<div class="join" v-if="isLoadingSuccess">
-			<div class="now-read" @click="nowRead">立即阅读</div>
+			<div class="item no-join" @click="nowRead">立即阅读</div>
+			<div class="item no-join" @click="joinBookShelf" v-show="loadIsJoin && !isJoin">加入书架</div>
+			<div class="item joined" @click="joinBookShelf" v-show="loadIsJoin && isJoin">已加入书架</div>
 		</div>
 		
 	</view>
@@ -32,6 +34,8 @@
 
 <script>
 	import {getBookDetailUtil} from '@/util/function/book/book.js'
+	import {loginTip, getLocalUserInfo, isLogin} from '@/util/function/login.js'
+	import {isJoinBookshelf, joinBookshelf} from '@/util/user_http/book-shelf.js'
 	
 	export default{
 		name: "yifangBookDetail",
@@ -44,9 +48,44 @@
 			return {
 				bookDetail: [], // 书籍详情
 				isLoadingSuccess: false, // 是否书籍详情加载完毕
+				loadIsJoin: false, // 加载加入书架请求是否完毕
+				isJoin: null, // 是否加入书架
 			}
 		},
 		methods: {
+			// 是否加入书架
+			isJoinBookshelf(book_id){
+				// 未登录
+				if(!isLogin()){
+					this.isJoin = false
+					this.loadIsJoin = true
+				}
+				isJoinBookshelf({
+					user_id: getLocalUserInfo()['user_id'],
+					book_id: book_id
+				}).then(res => {
+					console.log('isJoinBookshelf', res)
+					if(0 == res.code){
+						this.loadIsJoin = true
+						this.isJoin = res.data.is_join
+					}
+				})
+			},
+			// 加入书籍
+			joinBookShelf(){
+				// 判断是否登录
+				if(loginTip()){
+					// 已登录
+					joinBookshelf({
+						user_id: getLocalUserInfo()['user_id'],
+						book_id: this.book_id
+					}).then(res => {
+						console.log('joinBookshelf', res)
+						this.isJoinBookshelf(this.book_id)
+					})
+				}
+			},
+			// 书籍详情
 			getBookDetail(book_id){
 				uni.showLoading({
 					mask: true,
@@ -75,8 +114,10 @@
 		created() {
 		},
 		mounted(){
+			// prop 数据加载完毕
 			// console.log(this.book_id)
-			this.getBookDetail(this.book_id)
+			this.getBookDetail(this.book_id) // 获取书籍详情
+			this.isJoinBookshelf(this.book_id) // 是否加入书架
 		},
 	}
 </script>
@@ -133,18 +174,23 @@
 		left: 0rpx;
 		border-top: 1px solid #FF5501;
 		box-sizing: border-box;
-		padding-left: 20rpx;
 		.div{
 			float: left;
 		}
-		.now-read{
-			border: 1px solid red;
+		.item{
+			// border: 1px solid red;
 			display: inline-block;
 			padding: 10rpx 35rpx;
-			background-color: #FF5501;
-			color: white;
 			border-radius: 30rpx;
 			text-align: center;
+			margin-left: 20rpx;
+		}
+		.no-join{
+			background-color: #FF5501;
+			color: white;
+		}
+		.joined{
+			background-color: #F5F5F5;
 		}
 	}
 </style>

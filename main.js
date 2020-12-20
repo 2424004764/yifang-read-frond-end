@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App'
 import Config from '@/util/config.js'
+import uView from "uview-ui";
+Vue.use(uView);
 
 Vue.config.productionTip = false
 Vue.prototype.$yifangConfig = Config // 挂载全局配置
