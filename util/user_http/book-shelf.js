@@ -36,6 +36,6 @@ export function getBookshelfList(params, options) {
     return axios.request(params, {
       ...options,
 	  method: 'get',
-      url: `${base_url}/is-join-book-shelf`,
+      url: `${base_url}/get-list`,
     })
 }

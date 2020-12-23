@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<u-sticky>
+		<u-sticky v-if="false">
 			<!-- 只能有一个根元素 -->
 			<view class="sticky-box">
 				<u-dropdown ref="uDropdown" @open="open" @close="close" :border-bottom="true">
@@ -14,7 +14,7 @@
 		</u-sticky>
 		<!-- 书籍列表 -->
 		<div class="book-list">
-			<bookShelf></bookShelf>
+			<bookShelf v-if="hackReset" :isNeedReLoadData="isNeedReLoadData"></bookShelf>
 		</div>
 		
 	</view>
@@ -22,11 +22,18 @@
 
 <script>
 	import bookShelf from '@/components/yifang/book-shelf/book-shelf.vue'
+	
+	import {isLogin} from '@/util/function/login.js'
+	
 	export default {
 		components: {bookShelf},
 		data() {
 			return {
 				currentClickItem: null,  // 当前点击的下拉菜单item index  由open事件修改
+				hackReset: true,
+				// 可能用户登录之后进入首页  判断是否需要重新加载数据 
+				// 传递给书架组件 
+				isNeedReLoadData: false,
 				option0: {
 					title: '排列方式',
 					value: 0, // 需要从0开始
@@ -57,6 +64,13 @@
 			}
 		},
 		methods: {
+			// 书架组件刷新
+			bookShelfRef(){
+				this.hackReset = false;
+				this.$nextTick(() => {
+					this.hackReset = true;
+				})
+			},
 			// 点击某个下拉菜单 被打开事件
 			open(index){
 				// console.log(index + ' open')
@@ -77,7 +91,20 @@
 				this[clickItem].title = this[clickItem].options[index].label
 				// 设置颜色
 			}
-		}
+		},
+		onShow() {
+			this.isNeedReLoadData = !this.isNeedReLoadData
+		},
+		// 下拉刷新
+		onPullDownRefresh(option) {
+			// 未登录 没有啥可加载的
+			if(!isLogin()){
+				uni.stopPullDownRefresh()
+				return
+			}
+			// 重新刷新书架组件 并重新加载数据
+			this.bookShelfRef()
+		},
 	}
 </script>
 

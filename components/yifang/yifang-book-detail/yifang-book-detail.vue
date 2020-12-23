@@ -107,7 +107,7 @@
 			// 开始阅读
 			nowRead(){
 				uni.navigateTo({
-				    url: '/pages/start-read/start-read?book_id='+ this.book_id
+				    url: '/pages/start-read/start-read?book_id=' + this.book_id
 				})
 			}
 		},
