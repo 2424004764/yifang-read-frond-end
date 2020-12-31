@@ -55,7 +55,7 @@
 		@click="closeLayer4" v-show="layer_4">
 			<!-- 章节列表 -->
 			<yifang-chapter-list v-show="layer_4_chapter_list" 
-			:book_id="book_id" 
+			:book_id="book_id"
 			v-on:getClickChapterId="onChapterId"
 			ref="chapterList"></yifang-chapter-list>
 			<!-- 设置 -->
@@ -74,6 +74,10 @@
 	
 	import yifangChapterList from '@/components/yifang/yifang-chapter-list/yifang-chapter-list.vue'
 	import yifangReadSetting from '@/components/yifang/yifang-read-setting/yifang-read-setting.vue'
+	
+	import {saveSchedule} from '@/util/function/book-schedule.js'
+	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
+	
 	export default {
 		name: "startRead",
 		components: {yifangChapterList, yifangReadSetting},
@@ -173,9 +177,18 @@
 				// console.log(font_size)
 				this.font_size = font_size
 			},
+			// 保存进度
+			_saveSchedule(chapter_id){
+				if(!isLogin())return;
+				
+				// 开始保存进度
+				saveSchedule(getLocalUserInfo()['user_id'], this.book_id, chapter_id, '0')
+			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				// console.log(chapter)
+				console.log(chapter)
+				// 保存章节阅读信息
+				this._saveSchedule(chapter.item.chapter_id)
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
 				    title: chapter.item.chapter_name

@@ -14,6 +14,7 @@
 
 <script>
 	import {getChapterList} from '@/util/user_http/chapter.js'
+	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
 	export default {
 		name: "yifangChapterList",
@@ -31,6 +32,10 @@
 			}
 		},
 		methods: {
+			// 获取当前书籍的阅读进度
+			getChpaterReadProgress(book_id){
+				
+			},
 			// 获取章节
 			getChapterList(){
 				getChapterList({
@@ -40,7 +45,9 @@
 				}).then(res => {
 					this.chapter_list = res.data
 					if(this.chapter_list.length){
-						this.$emit('getClickChapterId', {item: this.chapter_list[0], index: 0, 
+						// 获取第一个章节的id
+						let first_chapter = this.chapter_list[0]
+						this.$emit('getClickChapterId', {item: first_chapter, index: 0, 
 				chapterLegth: this.chapter_list.length})
 					}
 				})
