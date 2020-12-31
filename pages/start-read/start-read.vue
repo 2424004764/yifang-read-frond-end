@@ -148,6 +148,8 @@
 			clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
 				// console.log(currentChapterIndex, chapterLegth, chapter)
 				this.chapter_id = chapter.chapter_id
+				// 保存进度
+				this._saveSchedule(this.chapter_id)
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
 				})
@@ -186,7 +188,7 @@
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				console.log(chapter)
+				// console.log(chapter)
 				// 保存章节阅读信息
 				this._saveSchedule(chapter.item.chapter_id)
 				this.chapter_id = chapter.item.chapter_id
@@ -272,7 +274,10 @@
 					chapter_id: this.chapter_id
 				}).then(res => {
 					// console.log('getChapterContent', res)
-					this.chapter_content = res.data[0].chapter_content
+					this.chapter_content = ''
+					this.$nextTick(function(){
+						this.chapter_content = res.data[0].chapter_content
+					})
 					uni.hideLoading()
 				}).catch(err => {
 					uni.hideLoading()
