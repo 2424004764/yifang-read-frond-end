@@ -59,6 +59,7 @@
 				if(!isLogin()){
 					this.isJoin = false
 					this.loadIsJoin = true
+					return
 				}
 				isJoinBookshelf({
 					user_id: getLocalUserInfo()['user_id'],

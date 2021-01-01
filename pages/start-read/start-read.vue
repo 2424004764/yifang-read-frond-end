@@ -41,6 +41,7 @@
 			<!-- 章节跳转 -->
 			<div class="chapter-controller">
 				<div class="prev-chapter" @click="prevChapter">上一章</div>
+				<!-- 进度 -->
 				<div class="chapter-progress">
 					<progress :percent="percent" show-info stroke-width="3" />
 				</div>
@@ -123,20 +124,38 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 处理阅读进度
+			calcReadSchedule(chapter){
+				// console.log(chapter)
+				try{
+					let schedule = JSON.parse(chapter.schedule)
+					// console.log(schedule.value)
+					this.$nextTick(function(){
+						this.scroll_top = schedule.value
+					})
+				}catch(e){
+					//TODO handle the exception
+				}
+			},
 			// 阅读区域滚动
 			readScroll(e){
-				console.log('readScroll')
+				// console.log('readScroll', e)
 				// 直接保存某一章节滚动的高度
 				let scrollTop = e.detail.scrollTop
+				// console.log(scrollTop)
 				let schedule = {
 					type: 'scrollTop',
 					value: scrollTop
 				}
 				let that = this
-				this.$u.throttle(function(){
-					that._saveSchedule(that.book_id, that.chapter_id, JSON.stringify(schedule))
-				},
-				 2000, false)
+				
+				this.$u.debounce(function(){
+					that.$u.throttle(function(){
+						that._saveSchedule(that.book_id, that.chapter_id, JSON.stringify(schedule), false)
+					},
+					 10, false)
+				}, 1000)
+				
 			},
 			// 点击上一章
 			prevChapter(){
@@ -171,7 +190,7 @@
 				// console.log(currentChapterIndex, chapterLegth, chapter)
 				this.chapter_id = chapter.chapter_id
 				// 保存进度
-				this._saveSchedule(this.chapter_id)
+				this._saveSchedule(this.book_id, this.chapter_id, '0', true)
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
 				})
@@ -181,7 +200,7 @@
 			},
 			// 计算进度
 			calcPercent(currentChapterIndex, chapterLegth){
-				// console.log(currentChapterIndex, chapterLegth)
+				console.log('calcPercenta', currentChapterIndex, chapterLegth)
 				this.percent = parseInt((currentChapterIndex/chapterLegth) * 100)
 			},
 			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
@@ -202,18 +221,19 @@
 				this.font_size = font_size
 			},
 			// 保存进度
-			_saveSchedule(book_id, chapter_id, schedule){
+			_saveSchedule(book_id, chapter_id, schedule, is_first){
 				if(!isLogin())return;
 				
 				// 开始保存进度
-				saveSchedule(getLocalUserInfo()['user_id'], book_id, chapter_id, schedule)
+				saveSchedule(getLocalUserInfo()['user_id'], book_id, chapter_id, schedule, is_first)
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				// console.log(chapter)
-				// 保存章节阅读信息
+				console.log('onChapterIda', chapter)
+				// 保存章节首次阅读信息
+				let is_first = this.chapter_id == chapter.item.chapter_id ? true : false
+				this._saveSchedule(this.book_id, this.chapter_id, '0', is_first)
 				this.chapter_id = chapter.item.chapter_id
-				this._saveSchedule(this.book_id, this.chapter_id, '0')
 				uni.setNavigationBarTitle({
 				    title: chapter.item.chapter_name
 				})
@@ -221,8 +241,8 @@
 				this.layer_4 = false
 				this.layer_3 = false
 				this.openGlobalClickEvent()
-				this.getChapterContent()
-				this.calcPercent(chapter.index, chapter.chapterLegth)
+				this.getChapterContent(chapter) // 获取章节详情
+				this.calcPercent(chapter.index, chapter.chapterLegth) // 计算进度
 			},
 			// 获取书籍详情
 			getBookDetail(){
@@ -287,7 +307,7 @@
 			// 下一页
 			nextPage(){},
 			// 获取章节详细内容
-			getChapterContent(){
+			getChapterContent(chapter){
 				uni.showLoading({
 					mask: true,
 					title: "加载章节中..."
@@ -299,8 +319,10 @@
 					this.chapter_content = ''
 					this.$nextTick(function(){
 						this.chapter_content = res.data[0].chapter_content
+						this.calcReadSchedule(chapter)// 处理阅读进度
 					})
 					uni.hideLoading()
+				}).then(() => {
 				}).catch(err => {
 					uni.hideLoading()
 					// console.log(err)

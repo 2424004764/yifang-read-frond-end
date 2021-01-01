@@ -14,6 +14,8 @@
 
 <script>
 	import {getChapterList} from '@/util/user_http/chapter.js'
+	import {getSchedule} from '@/util/user_http/book-schedule.js'
+	
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
 	export default {
@@ -34,7 +36,24 @@
 		methods: {
 			// 获取当前书籍的阅读进度
 			getChpaterReadProgress(book_id){
-				
+				getSchedule({
+					user_id: getLocalUserInfo()['user_id'],
+					book_id: book_id
+				}).then(res => {
+					// console.log('getChpaterReadProgress', res)
+					if(res.data){
+						// 有保存记录 返回相应的章节
+						for (let chapter_indedx in this.chapter_list) {
+							if(this.chapter_list[chapter_indedx]['book_id'] == res.data['book_id']
+							&& this.chapter_list[chapter_indedx]['chapter_id'] == res.data['chapter_id']){
+								// console.log(this.chapter_list[chapter_indedx])
+								
+								this.$emit('getClickChapterId', {item: this.chapter_list[chapter_indedx], index: ++chapter_indedx,
+								chapterLegth: this.chapter_list.length, schedule: res.data.schedule})
+							}
+						}
+					}
+				})
 			},
 			// 获取章节
 			getChapterList(){
@@ -44,11 +63,16 @@
 					book_id: this.book_id
 				}).then(res => {
 					this.chapter_list = res.data
+					// 如果未登录 则返回书籍的第一个章节
 					if(this.chapter_list.length){
-						// 获取第一个章节的id
-						let first_chapter = this.chapter_list[0]
-						this.$emit('getClickChapterId', {item: first_chapter, index: 0, 
-				chapterLegth: this.chapter_list.length})
+						if(!isLogin()){ // 未登录
+							// 默认获取第一个章节的id
+							let first_chapter = this.chapter_list[0]
+							this.$emit('getClickChapterId', {item: first_chapter, index: 0, 
+							chapterLegth: this.chapter_list.length})
+						}else{ // 已登录
+							this.getChpaterReadProgress(this.book_id)
+						}
 					}
 				})
 			},
