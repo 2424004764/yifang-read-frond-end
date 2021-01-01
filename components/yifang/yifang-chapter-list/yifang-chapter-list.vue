@@ -52,8 +52,16 @@
 								chapterLegth: this.chapter_list.length, schedule: res.data.schedule})
 							}
 						}
+					}else{
+						this.getFirstChapterReturn()
 					}
 				})
+			},
+			// 获取第一个章节并返回到父组件
+			getFirstChapterReturn(){
+				let first_chapter = this.chapter_list[0]
+				this.$emit('getClickChapterId', {item: first_chapter, index: 1,
+				chapterLegth: this.chapter_list.length})
 			},
 			// 获取章节
 			getChapterList(){
@@ -67,9 +75,7 @@
 					if(this.chapter_list.length){
 						if(!isLogin()){ // 未登录
 							// 默认获取第一个章节的id
-							let first_chapter = this.chapter_list[0]
-							this.$emit('getClickChapterId', {item: first_chapter, index: 0, 
-							chapterLegth: this.chapter_list.length})
+							this.getFirstChapterReturn()
 						}else{ // 已登录
 							this.getChpaterReadProgress(this.book_id)
 						}
@@ -77,7 +83,7 @@
 				})
 			},
 			clickChapterItem(item, index){
-				this.$emit('getClickChapterId', {item: item, index: index, 
+				this.$emit('getClickChapterId', {item: item, index: ++index, 
 				chapterLegth: this.chapter_list.length})
 			},
 			getThisChapterList(){
@@ -102,10 +108,12 @@
 							case 'next':
 								// 下一页
 								if(c_i < a_c_l){
-									nextChapterIndex = ++c_i
+									chapterIndex = nextChapterIndex = ++c_i
+									++chapterIndex
 								}
 								break
 						}
+						// console.log(c_i, a_c_l, chapterIndex, nextChapterIndex)
 						return [parseInt(chapterIndex), a_c_l, this.chapter_list[nextChapterIndex]]
 					}
 				}

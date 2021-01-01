@@ -160,7 +160,7 @@
 			// 点击上一章
 			prevChapter(){
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'prev')
-				// console.log(currentChapterIndex, chapterLegth, nextChapter)
+				// console.log('prevChaptera', currentChapterIndex, chapterLegth, nextChapter)
 				if(0 == currentChapterIndex){
 					uni.showToast({
 						title: '已经是第一章',
@@ -174,8 +174,8 @@
 			// 点击下一章
 			nextChapter(){
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'next')
-				// console.log(currentChapterIndex, chapterLegth, nextChapter)
-				if(++currentChapterIndex == chapterLegth){
+				// console.log('nextChaptera', currentChapterIndex, chapterLegth, nextChapter)
+				if(currentChapterIndex > chapterLegth){
 					uni.showToast({
 						title: '已经是最后一章',
 						icon: 'none',
@@ -183,24 +183,24 @@
 					})
 					return
 				}
-				this.clickChapterAfter(++currentChapterIndex, chapterLegth, nextChapter)
+				this.clickChapterAfter(currentChapterIndex, chapterLegth, nextChapter)
 			},
 			// 点击上一章或下一章后 统一的操作
 			clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
-				// console.log(currentChapterIndex, chapterLegth, chapter)
+				// console.log('clickChapterAftera', currentChapterIndex, chapterLegth, chapter)
 				this.chapter_id = chapter.chapter_id
 				// 保存进度
 				this._saveSchedule(this.book_id, this.chapter_id, '0', true)
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
-				})
-				this.getChapterContent()
+				}) // 设置页面标题为章节标题
+				this.getChapterContent() // 获取章节详情内容
 				// 计算进度
 				this.calcPercent(currentChapterIndex, chapterLegth)
 			},
 			// 计算进度
 			calcPercent(currentChapterIndex, chapterLegth){
-				console.log('calcPercenta', currentChapterIndex, chapterLegth)
+				// console.log('calcPercenta', currentChapterIndex, chapterLegth)
 				this.percent = parseInt((currentChapterIndex/chapterLegth) * 100)
 			},
 			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
@@ -229,7 +229,7 @@
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				console.log('onChapterIda', chapter)
+				// console.log('onChapterIda', chapter)
 				// 保存章节首次阅读信息
 				let is_first = this.chapter_id == chapter.item.chapter_id ? true : false
 				this._saveSchedule(this.book_id, this.chapter_id, '0', is_first)
