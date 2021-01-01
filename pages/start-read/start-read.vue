@@ -322,8 +322,9 @@
 						this.chapter_content = res.data[0].chapter_content
 						this.calcReadSchedule(chapter)// 处理阅读进度
 					})
+					// 为啥多写一句同样的代码  反正我没搞懂$nextTick的用法，目的达到了
+					this.chapter_content = res.data[0].chapter_content
 					uni.hideLoading()
-				}).then(() => {
 				}).catch(err => {
 					uni.hideLoading()
 					// console.log(err)
