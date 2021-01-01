@@ -5,10 +5,14 @@
 		<div class="read-layer layer"  @click="globalClick"
 		:style="{'background-color': background_color}"
 		>
-			<div class='chapter-content' v-if="chapter_content"
-			:style="{'font-size': font_size + 'px'}">
-				{{chapter_content}}
-			</div>
+			<scroll-view scroll-y="true" @scroll="readScroll" 
+			class="scroll-Y" show-scrollbar="true"
+			:scroll-top="scroll_top">
+				<div class='chapter-content' v-if="chapter_content"
+				:style="{'font-size': font_size + 'px'}">
+					{{chapter_content}}
+				</div>
+			</scroll-view>
 		</div>
 		
 		<!-- 用来控制上一页、下一页、调出菜单的层  为第二层-->
@@ -78,6 +82,8 @@
 	import {saveSchedule} from '@/util/function/book-schedule.js'
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
+	var _ = require('lodash');
+	
 	export default {
 		name: "startRead",
 		components: {yifangChapterList, yifangReadSetting},
@@ -109,6 +115,7 @@
 					y1: 0, // 左下顶点坐标
 					y2: 0, // 右下顶点坐标
 				}, // 控制层区域 参数信息
+				scroll_top: 0, // 该章节滚动的高度 从接口获取
 			}
 		},
 		onLoad(options){
@@ -116,6 +123,21 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 阅读区域滚动
+			readScroll(e){
+				console.log('readScroll')
+				// 直接保存某一章节滚动的高度
+				let scrollTop = e.detail.scrollTop
+				let schedule = {
+					type: 'scrollTop',
+					value: scrollTop
+				}
+				let that = this
+				this.$u.throttle(function(){
+					that._saveSchedule(that.book_id, that.chapter_id, JSON.stringify(schedule))
+				},
+				 2000, false)
+			},
 			// 点击上一章
 			prevChapter(){
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'prev')
@@ -180,18 +202,18 @@
 				this.font_size = font_size
 			},
 			// 保存进度
-			_saveSchedule(chapter_id){
+			_saveSchedule(book_id, chapter_id, schedule){
 				if(!isLogin())return;
 				
 				// 开始保存进度
-				saveSchedule(getLocalUserInfo()['user_id'], this.book_id, chapter_id, '0')
+				saveSchedule(getLocalUserInfo()['user_id'], book_id, chapter_id, schedule)
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
 				// console.log(chapter)
 				// 保存章节阅读信息
-				this._saveSchedule(chapter.item.chapter_id)
 				this.chapter_id = chapter.item.chapter_id
+				this._saveSchedule(this.book_id, this.chapter_id, '0')
 				uni.setNavigationBarTitle({
 				    title: chapter.item.chapter_name
 				})
@@ -363,7 +385,11 @@
 		computed:{
 		},
 		destroyed() {
-		}
+		},
+		// 监听页面滚动
+		onPageScroll(e){
+			console.log(e)
+		},
 	}
 </script>
 
@@ -381,9 +407,12 @@
 		z-index: 100;
 		background-color: #FFFAE8;
 		.chapter-content{
-			overflow-y: scroll;
-			height: 95%;
+			height: 100%;
 			line-height: 70rpx;
+		}
+		.scroll-Y{
+			// height: 90%;
+			height: calc(100vh - 150rpx - env(safe-area-inset-bottom));
 		}
 	}
 	.controller-layer{
@@ -431,7 +460,7 @@
 			position: fixed;
 			width: 100%;
 			left: 0rpx;
-			bottom: 125rpx;
+			bottom: 120rpx;
 			background-color: #FEFAC4;
 			padding: 30rpx;
 			overflow: hidden;
