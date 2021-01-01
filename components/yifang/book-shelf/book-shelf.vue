@@ -86,11 +86,11 @@
 				if(!isLogin())return
 				
 				getBookshelfList({
-					'user_id': getLocalUserInfo()['user_id'],
+					user_id: getLocalUserInfo()['user_id'],
 					page: this.page++,
 					size: this.size,
 				}).then(res => {
-					console.log('getBookshelfList', res)
+					// console.log('getBookshelfList', res)
 					if(res.code == 0){
 						this.book_list
 						for (let item in res.data) {
@@ -107,7 +107,7 @@
 		},
 		watch:{
 			isNeedReLoadData(n, o){
-				console.log('isNeedReLoadData')
+				// console.log('isNeedReLoadData')
 				// 检查是否登录，登录后 是否需要重新加载书架列表
 				this.checkLogin()
 			}

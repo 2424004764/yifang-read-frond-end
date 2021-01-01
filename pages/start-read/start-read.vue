@@ -61,6 +61,7 @@
 			<!-- 章节列表 -->
 			<yifang-chapter-list v-show="layer_4_chapter_list" 
 			:book_id="book_id"
+			:chapter_id="chapter_id"
 			v-on:getClickChapterId="onChapterId"
 			ref="chapterList"></yifang-chapter-list>
 			<!-- 设置 -->
@@ -100,7 +101,7 @@
 				layer_4_setting: false, // 第四层的设置
 				
 				globalClickUse: true, // 是否可以使用全局点击事件
-				chapter_id: null, // 测试用的章节id
+				chapter_id: null, // 章节id
 				font_size: null, // 字体大小 默认
 				percent: 0, // 阅读进度
 				background_color: null, // 字体大小 默认

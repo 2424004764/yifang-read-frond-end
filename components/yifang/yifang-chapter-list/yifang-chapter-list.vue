@@ -3,9 +3,11 @@
 		<div class="list">
 			<div class="title">目录</div>
 			<div class="items">
-				<div class="item" v-for="(item, index) in chapter_list" :key="index"
-				@click="clickChapterItem(item, index)">
-					{{item.chapter_name}}
+				<div v-for="(item, index) in chapter_list" :key="index">
+					<div class="item"  :class="{chapter_item_active: item.chapter_id == chapter_id}"
+					@click="clickChapterItem(item, index)">
+						{{item.chapter_name}}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -24,7 +26,10 @@
 		props: {
 			book_id: {
 				type: String|Number
-			}
+			},
+			chapter_id: {
+				type: String|Number
+			},
 		},
 		data() {
 			return {
@@ -163,6 +168,9 @@
 				border-bottom: 1px solid #f5f5f5;
 				padding: 20rpx 10rpx;
 				text-indent: 1em;
+			}
+			.chapter_item_active{
+				background-color: antiquewhite
 			}
 		}
 	}
