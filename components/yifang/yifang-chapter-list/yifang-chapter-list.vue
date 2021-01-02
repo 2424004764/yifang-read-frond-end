@@ -34,7 +34,7 @@
 		data() {
 			return {
 				page: 1,
-				size: 50,
+				size: 500,
 				chapter_list: [], // 章节列表
 			}
 		},
@@ -87,6 +87,7 @@
 					}
 				})
 			},
+			// 点击章节列表时 返回
 			clickChapterItem(item, index){
 				this.$emit('getClickChapterId', {item: item, index: ++index, 
 				chapterLegth: this.chapter_list.length})

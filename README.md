@@ -163,6 +163,17 @@ APP 预览版 [一方阅读 v1.0 体验版本下载](http://cdn.fologde.com//yif
     后续新建的页面使用框架开发
     [uniapp uview前端框架](https://www.uviewui.com/guide/demo.html)
 
+   
+2021年1月2日16:43:34   
+最新开发进度   
+小程序   
+![](http://cdn.fologde.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20210102164420.jpg)   
+H5   
+![](http://cdn.fologde.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20210102164414.jpg)   
+APP   
+![](http://cdn.fologde.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20210102164425.jpg)
+最新版APP体验地址 [一方阅读 v1.0.1 体验版下载](http://cdn.fologde.com/__UNI__CF0EF73_20210102164708.apk)
+
 
 
 ***

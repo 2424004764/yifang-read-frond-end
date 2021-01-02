@@ -2,9 +2,13 @@
 	<view>
 		 <uni-list>
 			 
-			<uni-list-item title="推荐阅读" :showArrow="false"></uni-list-item>
+			<uni-list-item title="热门阅读" :showArrow="false"></uni-list-item>
+			
+			<hotRead></hotRead>
 			 
-			<div v-for="(item, index) in recommend" :key="index">
+			<uni-list-item title="更多阅读" :showArrow="false"></uni-list-item>
+			 
+			<div v-for="(item, index) in more_read_list" :key="index">
 				<uni-list-chat :show-extra-icon="true"
 					:avatar="item.book_cover_imgs ? item.book_cover_imgs[0] : ''"
 					link=""
@@ -25,14 +29,18 @@
 	import uniListChat from '@/components/uni-list-chat/uni-list-chat.vue'
 	
 	import {getBookList} from '@/util/user_http/book.js'
+	
+	import hotRead from '@/components/yifang/hot-read/hot-read.vue'
+	
 	export default {
 		name: "yifangRecommend",
-		components: {uniList, uniListItem, uniListChat},
+		components: {uniList, uniListItem, uniListChat, hotRead},
 		data() {
 			return {
 				page: 1,
 				size: 50,
-				recommend: []
+				recommend: [], // 热门阅读
+				more_read_list: [], // 更多阅读列表
 			}
 		},
 		created() {
@@ -45,13 +53,17 @@
 					size: this.size
 				}, {
 					custom: {
-						loading: true
+						loading: false
 					}
 				}).then(res => {
 					for (let itemIndex in res.data) {
-						res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
+						try{
+							res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
+						}catch{
+							
+						}
 					}
-					this.recommend = res.data
+					this.more_read_list = res.data
 				}).catch()
 			},
 			bookDesc(book_id){

@@ -63,6 +63,10 @@
 				getClass({
 					page: this.page,
 					size: this.size
+				}, {
+					custom: {
+						loading: false
+					}
 				}).then(res => {
 					let menuTmp = []
 					for (let menuIndex in res.data) {

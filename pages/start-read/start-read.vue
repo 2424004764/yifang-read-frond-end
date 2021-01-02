@@ -10,7 +10,7 @@
 			:scroll-top="scroll_top">
 				<div class='chapter-content' v-if="chapter_content"
 				:style="{'font-size': font_size + 'px'}">
-					{{chapter_content}}
+					<rich-text :nodes="chapter_content"></rich-text>
 				</div>
 			</scroll-view>
 		</div>
@@ -230,9 +230,9 @@
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				// console.log('onChapterIda', chapter)
+				console.log('onChapterIda', chapter)
 				// 保存章节首次阅读信息
-				let is_first = this.chapter_id == chapter.item.chapter_id ? true : false
+				let is_first = this.chapter_id != chapter.item.chapter_id ? true : false
 				this._saveSchedule(this.book_id, this.chapter_id, '0', is_first)
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({

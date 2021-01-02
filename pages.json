@@ -136,6 +136,15 @@
 			{
 	            "name": "书架", 
 	            "path": "pages/book-shelf/book-shelf"
+	        }, 
+			{
+	            "name": "藏书", 
+	            "path": "pages/index/index"
+	        }, 
+			{
+	            "name": "西游记书籍详情", 
+	            "path": "pages/book/book-detail/book-detail",
+				"query": "book_id=1370" //启动参数，在页面的onLoad函数里面得到。
 	        }
 	    ]
 	}

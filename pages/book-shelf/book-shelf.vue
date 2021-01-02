@@ -12,6 +12,7 @@
 				</u-dropdown>
 			</view>
 		</u-sticky>
+		
 		<!-- 书籍列表 -->
 		<div class="book-list">
 			<bookShelf v-if="hackReset" :isNeedReLoadData="isNeedReLoadData"></bookShelf>
@@ -105,6 +106,10 @@
 			// 重新刷新书架组件 并重新加载数据
 			this.bookShelfRef()
 		},
+		// 上拉到底
+		onReachBottom(){
+			console.log(123)
+		}
 	}
 </script>
 

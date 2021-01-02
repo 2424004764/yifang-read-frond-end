@@ -4,7 +4,9 @@
 			<div class="book-detail">
 				<div class="book-img">
 					<!-- 有图片 -->
-					<image v-if="isLoadingSuccess && bookDetail.book_cover_imgs.length" :src="bookDetail.book_cover_imgs[0]" mode=""></image>
+					<image v-if="isLoadingSuccess && bookDetail.book_cover_imgs.length" 
+					:src="bookDetail.book_cover_imgs[0]"
+					 mode="" @click="showImg(bookDetail.book_cover_imgs)"></image>
 					<!-- 没有图片 -->
 					<text v-if="isLoadingSuccess && !bookDetail.book_cover_imgs.length"></text>
 				</div>
@@ -25,8 +27,8 @@
 		<!-- 底部固定栏  用来放立即阅读、加入书架等按钮 -->
 		<div class="join" v-if="isLoadingSuccess">
 			<div class="item no-join" @click="nowRead">立即阅读</div>
-			<div class="item no-join" @click="joinBookShelf" v-show="loadIsJoin && !isJoin">加入书架</div>
-			<div class="item joined" @click="joinBookShelf" v-show="loadIsJoin && isJoin">已加入书架</div>
+			<div class="item no-join" @click="joinBookShelf" v-if="loadIsJoin && !isJoin">加入书架</div>
+			<div class="item joined" @click="joinBookShelf" v-if="loadIsJoin && isJoin">已加入书架</div>
 		</div>
 		
 	</view>
@@ -53,6 +55,27 @@
 			}
 		},
 		methods: {
+			// 点击书籍封面图
+			showImg(book_cover_imgs){
+				uni.previewImage({
+					urls: book_cover_imgs,
+					current: 0,
+					indicator: 'default',
+					loop: true,
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+						},
+						fail: function(err) {
+							uni.showToast({
+								title: '操作失败~',
+								duration: 600
+							})
+						}
+					}
+				})
+			},
 			// 是否加入书架
 			isJoinBookshelf(book_id){
 				// 未登录
@@ -65,7 +88,7 @@
 					user_id: getLocalUserInfo()['user_id'],
 					book_id: book_id
 				}).then(res => {
-					console.log('isJoinBookshelf', res)
+					// console.log('isJoinBookshelf', res)
 					if(0 == res.code){
 						this.loadIsJoin = true
 						this.isJoin = res.data.is_join
@@ -81,7 +104,7 @@
 						user_id: getLocalUserInfo()['user_id'],
 						book_id: this.book_id
 					}).then(res => {
-						console.log('joinBookshelf', res)
+						// console.log('joinBookshelf', res)
 						this.isJoinBookshelf(this.book_id)
 					})
 				}
