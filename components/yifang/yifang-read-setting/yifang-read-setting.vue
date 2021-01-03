@@ -19,6 +19,9 @@
 </template>
 
 <script>
+	import {_addSetting, _getSetting} from '@/util/function/user-setting.js'
+	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
+	
 	export default {
 		name: "yifnagReadSetting",
 		data() {
@@ -37,22 +40,64 @@
 			this.$emit('fontSize', this.user_font_size)
 			// 颜色反馈
 			this.$emit('backgroundColor', this.background_color)
+			// 获取配置
+			this.getSetting()
 		},
 		methods:{
+			// 获取用户设置
+			getSetting(){
+				if(!isLogin())return;
+				
+				_getSetting(getLocalUserInfo()['user_id'], '1,2').then(res => {
+					// console.log(res)
+					for (let name in res.data) {
+						let value = res.data[name].value
+						switch(res.data[name].name){
+							case 1: // 字体大小
+								value = parseInt(value)
+								this.user_font_size = value
+								this.$emit('fontSize', value)
+								break;
+							case 2:// 背景颜色
+								this.background_color = value
+								this.$emit('backgroundColor', value)
+								// 将用户设置的颜色放到最前面
+								for (let colorIndex in this.bg_list) {
+									if(value == this.bg_list[colorIndex].color){
+										console.log(value)
+										let tmp = this.bg_list[colorIndex]
+										this.bg_list.splice(colorIndex, 1)
+										this.bg_list.unshift(tmp)
+									}
+								}
+								break;
+						}
+					}
+				})
+			},
+			// 保存用户的配置
+			saveSetting(name, value){
+				if(!isLogin())return;
+				
+				_addSetting(getLocalUserInfo()['user_id'], name, value)
+			},
 			// 颜色改变
 			bg_color_change(bg_color){
 				this.background_color = bg_color
 				this.$emit('backgroundColor', this.background_color)
+				this.saveSetting(2, this.background_color)
 			},
 			// 点击字体变小
 			font_reduce(){
 				--this.user_font_size
 				this.$emit('fontSize', this.user_font_size)
+				this.saveSetting(1, this.user_font_size)
 			},
 			// 点击字体变大
 			font_enlarge(){
 				++this.user_font_size
 				this.$emit('fontSize', this.user_font_size)
+				this.saveSetting(1, this.user_font_size)
 			}
 		}
 	}

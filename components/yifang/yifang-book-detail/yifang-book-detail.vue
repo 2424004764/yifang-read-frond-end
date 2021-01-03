@@ -1,6 +1,8 @@
 <template>
 	<view class="body">
 		<div class="bg">
+			
+			<!-- 书籍详情区 -->
 			<div class="book-detail">
 				<div class="book-img">
 					<!-- 有图片 -->
@@ -20,7 +22,10 @@
 			</div>
 			<!-- 书籍详情说明 -->
 			<div class="book-detail_introduce" v-if="isLoadingSuccess">
-				详情介绍：{{bookDetail.book_desc}}
+				作者详情介绍：{{bookDetail.author_detail.book_author_desc}}
+			</div>
+			<div class="book-detail_introduce" v-if="isLoadingSuccess">
+				书籍详情介绍：{{bookDetail.book_detail.book_desc}}
 			</div>
 		</div>
 		
@@ -57,21 +62,56 @@
 		methods: {
 			// 点击书籍封面图
 			showImg(book_cover_imgs){
+				
+				// MP 就是各家的小程序 如支付宝、微信、百度等小程序平台
+				// 不需要处理点击事件
+				// #ifdef MP
+				let itemList = ['发送给朋友', '保存图片', '收藏']
+				// #endif
+				
+				// H5 端
+				// #ifdef H5
+				let itemList = ['保存图片']
+				// #endif
+				
+				// APP 端
+				// #ifdef APP-PLUS
+				let itemList = ['保存图片']
+				// #endif
+				
 				uni.previewImage({
 					urls: book_cover_imgs,
 					current: 0,
 					indicator: 'default',
 					loop: true,
 					longPressActions: {
-						itemList: ['发送给朋友', '保存图片', '收藏'],
+						itemList: itemList,
 						success: function(data) {
-							console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+							let buttonIndex = data.tapIndex // 按钮的索引
+							let imageIndex = data.index // 点击的图片索引
+							console.log('选中了第' + (buttonIndex) + '个按钮,第' + (imageIndex) + '张图片');
+							// #ifdef APP-PLUS
+							if(0 == buttonIndex){
+								console.log(book_cover_imgs[imageIndex])
+								uni.saveImageToPhotosAlbum({
+									filePath: book_cover_imgs[imageIndex],
+									success: function () {
+										uni.showToast({
+											title: '保存成功',
+											duration: 600
+										})
+										// console.log('save success');
+									}
+								})
+							}
+							// #endif
 						},
 						fail: function(err) {
-							uni.showToast({
-								title: '操作失败~',
-								duration: 600
-							})
+							// console.log(err)
+							// uni.showToast({
+							// 	title: '操作失败~',
+							// 	duration: 600
+							// })
 						}
 					}
 				})
@@ -154,11 +194,15 @@
 		box-sizing: border-box;
 		padding-top: 50rpx;
 		overflow: hidden;
+		padding-bottom: 120px;
 		.book-detail{
 			// border: 1px solid red;
+			border-bottom: 1px solid #FF5501;
 			margin-left: 50rpx;
 			clear: both;
 			overflow: hidden;
+			padding-bottom: 10rpx;
+			width: 88%;
 			.book-img{
 				width: 170rpx;
 				height: 220rpx;
@@ -198,6 +242,7 @@
 		left: 0rpx;
 		border-top: 1px solid #FF5501;
 		box-sizing: border-box;
+		background-color: white;
 		.div{
 			float: left;
 		}

@@ -84,8 +84,6 @@
 	import {saveSchedule} from '@/util/function/book-schedule.js'
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
-	var _ = require('lodash');
-	
 	export default {
 		name: "startRead",
 		components: {yifangChapterList, yifangReadSetting},
@@ -146,7 +144,7 @@
 				// console.log(scrollTop)
 				let schedule = {
 					type: 'scrollTop',
-					value: scrollTop
+					value: scrollTop.toFixed(2)
 				}
 				let that = this
 				
@@ -214,7 +212,14 @@
 			// 监听颜色背景颜色变化
 			onBackgroundColor(bg_color){
 				this.background_color = bg_color
-				// console.log(bg_color)
+				uni.setNavigationBarColor({
+				    frontColor: '#000000',
+				    backgroundColor: bg_color,
+				    animation: {
+				        duration: 400,
+				        timingFunc: 'easeIn'
+				    }
+				})
 			},
 			// 监听用户设置的字体大小变化
 			onFontSizeChange(font_size){
@@ -230,7 +235,7 @@
 			},
 			// 监听章节组件返回的章节id
 			onChapterId(chapter){
-				console.log('onChapterIda', chapter)
+				// console.log('onChapterIda', chapter)
 				// 保存章节首次阅读信息
 				let is_first = this.chapter_id != chapter.item.chapter_id ? true : false
 				this._saveSchedule(this.book_id, this.chapter_id, '0', is_first)
