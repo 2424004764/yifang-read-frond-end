@@ -125,7 +125,7 @@
 		methods: {
 			// 处理阅读进度
 			calcReadSchedule(chapter){
-				// console.log(chapter)
+				console.log(chapter)
 				try{
 					let schedule = JSON.parse(chapter.schedule)
 					// console.log(schedule.value)
@@ -133,7 +133,9 @@
 						this.scroll_top = schedule.value
 					})
 				}catch(e){
-					//TODO handle the exception
+					this.$nextTick(function(){
+						this.scroll_top = 0
+					})
 				}
 			},
 			// 阅读区域滚动
@@ -141,6 +143,7 @@
 				// console.log('readScroll', e)
 				// 直接保存某一章节滚动的高度
 				let scrollTop = e.detail.scrollTop
+				this.scroll_top = scrollTop
 				// console.log(scrollTop)
 				let schedule = {
 					type: 'scrollTop',

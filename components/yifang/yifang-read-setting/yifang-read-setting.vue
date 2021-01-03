@@ -64,7 +64,7 @@
 								// 将用户设置的颜色放到最前面
 								for (let colorIndex in this.bg_list) {
 									if(value == this.bg_list[colorIndex].color){
-										console.log(value)
+										// console.log(value)
 										let tmp = this.bg_list[colorIndex]
 										this.bg_list.splice(colorIndex, 1)
 										this.bg_list.unshift(tmp)
