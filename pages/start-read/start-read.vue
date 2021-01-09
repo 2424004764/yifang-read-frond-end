@@ -9,7 +9,7 @@
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top">
 				<div class='chapter-content' v-if="chapter_content"
-				:style="{'font-size': font_size + 'px'}">
+				:style="{'font-size': font_size + 'px', color: font_color}">
 					<rich-text :nodes="chapter_content"></rich-text>
 				</div>
 			</scroll-view>
@@ -68,6 +68,7 @@
 			<yifang-read-setting v-show="layer_4_setting" 
 			v-on:fontSize="onFontSizeChange"
 			v-on:backgroundColor="onBackgroundColor"
+			v-on:fontColorChange="onFontColorChange"
 			></yifang-read-setting>
 		</div>
 	
@@ -89,6 +90,7 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
+				font_color: '', // 用户设置的颜色，如无则默认黑色
 				book_id: null,
 				bookDetail: null, // 书籍详情
 				// 控制层级显示
@@ -102,7 +104,7 @@
 				chapter_id: null, // 章节id
 				font_size: null, // 字体大小 默认
 				percent: 0, // 阅读进度
-				background_color: null, // 字体大小 默认
+				background_color: null, // 背景颜色 默认
 				chapter_content: '', // 章节内容
 				systemInfo: null, // 系统信息
 				propArea: {
@@ -116,6 +118,7 @@
 					y2: 0, // 右下顶点坐标
 				}, // 控制层区域 参数信息
 				scroll_top: 0, // 该章节滚动的高度 从接口获取
+				default_content: '该章节没有内容', // 如果章节没有内容时显示的文字
 			}
 		},
 		onLoad(options){
@@ -123,9 +126,23 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 监听字体颜色改变
+			onFontColorChange(color){
+				// console.log(color)
+				this.font_color = color
+				// 更改状态栏字体颜色
+				uni.setNavigationBarColor({
+				    frontColor: this.font_color,
+					backgroundColor: this.background_color,
+				    animation: {
+				        duration: 400,
+				        timingFunc: 'easeIn'
+				    }
+				})
+			},
 			// 处理阅读进度
 			calcReadSchedule(chapter){
-				console.log(chapter)
+				// console.log(chapter)
 				try{
 					let schedule = JSON.parse(chapter.schedule)
 					// console.log(schedule.value)
@@ -216,7 +233,7 @@
 			onBackgroundColor(bg_color){
 				this.background_color = bg_color
 				uni.setNavigationBarColor({
-				    frontColor: '#000000',
+				    frontColor: this.font_color,
 				    backgroundColor: bg_color,
 				    animation: {
 				        duration: 400,
@@ -241,7 +258,7 @@
 				// console.log('onChapterIda', chapter)
 				// 保存章节首次阅读信息
 				let is_first = this.chapter_id != chapter.item.chapter_id ? true : false
-				this._saveSchedule(this.book_id, this.chapter_id, '0', is_first)
+				this._saveSchedule(this.book_id, chapter.item.chapter_id, '0', is_first)
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
 				    title: chapter.item.chapter_name
@@ -302,6 +319,8 @@
 				this.closeLayer3()
 				this.layer_4 = true
 				this.layer_4_chapter_list = true
+				// 滚动到当前章节
+				return this.$refs.chapterList.scrollToChapterId(this.chapter_id)
 			},
 			// 显示第四层设置
 			showSetting(){
@@ -325,6 +344,9 @@
 					chapter_id: this.chapter_id
 				}).then(res => {
 					// console.log('getChapterContent', res)
+					if(!res.data){
+						res.data[0].chapter_content = this.default_content
+					}
 					this.chapter_content = ''
 					this.$nextTick(function(){
 						this.chapter_content = res.data[0].chapter_content
@@ -332,9 +354,11 @@
 					})
 					// 为啥多写一句同样的代码  反正我没搞懂$nextTick的用法，目的达到了
 					this.chapter_content = res.data[0].chapter_content
+				}).then(() => {
 					uni.hideLoading()
 				}).catch(err => {
 					uni.hideLoading()
+					this.chapter_content = this.default_content
 					// console.log(err)
 				})
 			},
