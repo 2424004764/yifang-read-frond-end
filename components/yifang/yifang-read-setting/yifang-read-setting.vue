@@ -20,6 +20,24 @@
 			</div>
 		</div>
 		
+		<!-- 字间距 -->
+		<div class="setting-item">
+			<div class="title">字间距</div>
+			<view class="wrap">
+				 <slider id="letter_spacing" :value="letter_spacing" @changing="letterSpacingChange"
+				   show-value="true"step="2" max="50" />
+			</view>
+		</div>
+		
+		<!-- 行间距 -->
+		<div class="setting-item">
+			<div class="title">行间距</div>
+			<view class="wrap">
+				 <slider id="line_height" :value="line_height" @changing="lineHeightChange"
+				  show-value="true" step="2" min="50" />
+			</view>
+		</div>
+		
 		<!-- 背景颜色 -->
 		<div class="setting-item">
 			<div class="title">背景颜色</div>
@@ -45,6 +63,8 @@
 		name: "yifnagReadSetting",
 		data() {
 			return {
+				letter_spacing: 2, // 文字间距 单位rpx
+				line_height: 50, // 行间距 单位rpx
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
 				background_color: '#F6F2EF', // 默认背景颜色
 				user_font_color: '#000000', // 默认字体颜色
@@ -66,10 +86,44 @@
 			this.$emit('backgroundColor', this.background_color)
 			// 默认字体颜色反馈
 			this.$emit('fontColorChange', this.user_font_color)
+			// 统一返回配置 以后有新配置了 用这样统一返回
+			this.uniReturnSettings()
 			// 获取配置
 			this.getSetting()
 		},
 		methods:{
+			// 行间距改变
+			lineHeightChange(e){
+				
+				this.line_height = e.detail.value
+				this.uniReturnSettings()
+				
+				let that = this
+				// 保存用户字体颜色
+				this.$u.debounce(function(){
+					that.saveSetting(5, that.line_height)
+				}, 1000)
+			},
+			// 文字间距改变
+			letterSpacingChange(e){
+				// console.log(e.detail)
+				
+				this.letter_spacing = e.detail.value
+				this.uniReturnSettings()
+				
+				let that = this
+				// 保存用户字体颜色
+				this.$u.debounce(function(){
+					that.saveSetting(4, that.letter_spacing)
+				}, 1000)
+			},
+			// 统一返回配置
+			uniReturnSettings(){
+				this.$emit('userSetting', {
+					letter_spacing: this.letter_spacing, // 文字间距
+					line_height: this.line_height, // 行间距
+				})
+			},
 			// 点击字体颜色 字体颜色改变
 			font_color_change(color){
 				this.user_font_color = color
@@ -85,7 +139,8 @@
 			getSetting(){
 				if(!isLogin())return;
 				
-				_getSetting(getLocalUserInfo()['user_id'], '1,2,3').then(res => {
+				let settings_index = '1,2,3,4,5'
+				_getSetting(getLocalUserInfo()['user_id'], settings_index).then(res => {
 					// console.log(res)
 					for (let name in res.data) {
 						let value = res.data[name].value
@@ -112,44 +167,18 @@
 								this.user_font_color = value
 								this.$emit('fontColorChange', this.user_font_color)
 								break
+							case 4: // 字间距
+								this.letter_spacing = value
+							case 5: // 行间距
+								this.line_height = value
+								this.uniReturnSettings()
+								break
+								
 						}
 					}
 					// 加载完配置后 再获取章节。获取完章节后，会自动再获取章节内容
 					// 目的  要加载另一个组件的方法，且要保证另一个组件的mounted钩子执行
-					// YifangChapterList.methods.getChapterList()
-					import('@/components/yifang/yifang-chapter-list/yifang-chapter-list.vue').then((component) => {
-						// 清理已缓存的组件定义
-						component.default._Ctor = {}
-						if (!component.default.attached) {
-							// 保存原组件中的 created 生命周期函数
-							component.default.backupCreated = component.default.created
-						}
-						
-						// 注入一个特殊的 created 生命周期函数
-						component.default.created = function() {
-							// 子组件已经实例化完毕
-
-							// this 即为子组件 vm 实例
-							console.log(this)
-
-							if (component.default.backupCreated) {
-								// 执行原组件中的 created 生命周期函数
-								component.default.backupCreated.call(this)
-							}
-						}
-						
-						component.default.mounted = function(){
-							if (component.default.backupCreated) {
-								// 执行原组件中的 mounted 生命周期函数
-								component.default.backupCreated.call(this)
-							}
-						}
-						
-						// 表示已经注入过了 
-						component.default.attached = true
-						
-						return component
-					})
+					this.$emit('doLoadChapterList')
 				})
 			},
 			// 保存用户的配置
@@ -259,6 +288,12 @@
 		.item:not(:first-child){
 			margin-left: 3%;
 		}
+	}
+	.wrap{
+		height: 40rpx;
+		width: 95%;
+		margin: 0 auto;
+		margin-top: 20rpx;
 	}
 }
 </style>

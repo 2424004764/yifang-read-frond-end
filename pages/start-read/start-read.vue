@@ -9,7 +9,10 @@
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top">
 				<div class='chapter-content' v-if="chapter_content"
-				:style="{'font-size': font_size + 'px', color: font_color}">
+				:style="{'font-size': font_size + 'px', 
+				color: font_color, 
+				'letter-spacing': settings.letter_spacing + 'rpx',
+				'line-height': settings.line_height + 'rpx'}">
 					<rich-text :nodes="chapter_content"></rich-text>
 				</div>
 			</scroll-view>
@@ -64,11 +67,14 @@
 			:chapter_id="chapter_id"
 			v-on:getClickChapterId="onChapterId"
 			ref="chapterList"></yifang-chapter-list>
+			
 			<!-- 设置 -->
 			<yifang-read-setting v-show="layer_4_setting" 
 			v-on:fontSize="onFontSizeChange"
 			v-on:backgroundColor="onBackgroundColor"
 			v-on:fontColorChange="onFontColorChange"
+			v-on:userSetting="onUserSetting"
+			v-on:doLoadChapterList="onLoadChapterList"
 			></yifang-read-setting>
 		</div>
 	
@@ -90,6 +96,10 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
+				settings: {
+					letter_spacing: 0, // 字间距
+					line_height: 0, // 行间距
+				}, // 用户设置
 				font_color: '', // 用户设置的颜色，如无则默认黑色
 				book_id: null,
 				bookDetail: null, // 书籍详情
@@ -126,6 +136,14 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
+			onLoadChapterList(){
+				this.$refs.chapterList._getChapterList()
+			},
+			// 监听到配置
+			onUserSetting(settings){
+				this.settings = Object.assign(this.settings, settings)
+			},
 			// 监听字体颜色改变
 			onFontColorChange(color){
 				// console.log(color)
@@ -320,7 +338,7 @@
 				this.layer_4 = true
 				this.layer_4_chapter_list = true
 				// 滚动到当前章节
-				return this.$refs.chapterList.scrollToChapterId(this.chapter_id)
+				// return this.$refs.chapterList.scrollToChapterId(this.chapter_id)
 			},
 			// 显示第四层设置
 			showSetting(){
@@ -465,6 +483,7 @@
 		.chapter-content{
 			height: 100%;
 			line-height: 70rpx;
+			text-align: center;
 		}
 		.scroll-Y{
 			// height: 90%;

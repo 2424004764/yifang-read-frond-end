@@ -74,6 +74,14 @@
                 "enablePullDownRefresh": false
             }
             
+        },{
+            "path" : "components/yifang/yifang-chapter-list/yifang-chapter-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
         }
     ],
 	"globalStyle": {

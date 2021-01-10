@@ -92,8 +92,7 @@
 				this.uniGetClickChapterId(first_chapter, 1)
 			},
 			// 获取章节
-			getChapterList(){
-				console.log(12)
+			_getChapterList(){
 				// 需等待配置加载完毕  才开始加载章节
 				getChapterList({
 					page: this.page,
@@ -181,10 +180,6 @@
 			    }
 			})
 		},
-		mounted() {
-			// 加载该书籍的章节信息
-			this.getChapterList()
-		}
 	}
 </script>
 
