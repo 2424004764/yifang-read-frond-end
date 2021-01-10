@@ -143,7 +143,8 @@
 		methods: {
 			// 阅读区域滚动到底部
 			onScrolltolower(e){
-				console.log(e)
+				// console.log(e)
+				this.nextChapter()
 			},
 			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
 			onLoadChapterList(){
@@ -185,18 +186,18 @@
 			},
 			// 阅读区域滚动
 			readScroll(e){
+				// return
 				// console.log('readScroll', e)
-				// 直接保存某一章节滚动的高度
-				let scrollTop = e.detail.scrollTop
-				this.scroll_top = scrollTop
-				// console.log(scrollTop)
-				let schedule = {
-					type: 'scrollTop',
-					value: scrollTop.toFixed(2)
-				}
 				let that = this
-				
 				this.$u.debounce(function(){
+					// 直接保存某一章节滚动的高度
+					let scrollTop = e.detail.scrollTop
+					that.scroll_top = scrollTop
+					// console.log(scrollTop)
+					let schedule = {
+						type: 'scrollTop',
+						value: scrollTop.toFixed(2)
+					}
 					that.$u.throttle(function(){
 						that._saveSchedule(that.book_id, that.chapter_id, JSON.stringify(schedule), false)
 					},
@@ -468,7 +469,7 @@
 				// return
 				let that = this
 				// 保存用户字体颜色
-				console.log(val)
+				// console.log(val)
 				this.$u.debounce(() => {
 					let e = {
 						detail: {
@@ -503,6 +504,8 @@
 		.scroll-Y{
 			// height: 90%;
 			height: calc(100vh - 150rpx - env(safe-area-inset-bottom));
+			position:fiexd;
+			z-index:10;
 		}
 	}
 	.controller-layer{
