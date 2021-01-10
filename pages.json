@@ -40,7 +40,12 @@
             "path" : "pages/start-read/start-read",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "阅读"
+                "navigationBarTitleText": "阅读",
+				"app-plus": {  
+					// #ifdef APP-PLUS
+					"titleNView": false//禁用原生导航栏  
+					// #endif
+				}
             }
             
         },{

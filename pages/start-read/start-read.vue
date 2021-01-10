@@ -6,8 +6,15 @@
 		:style="{'background-color': background_color,
 			'padding-left': settings.padding_left_right + 'rpx',
 			'padding-right': settings.padding_left_right + 'rpx',
+			'padding-top': padding_top + 'px'
 		}"
 		>
+			
+			<!-- 为APP时再显示标题 -->
+			<!-- #ifdef APP-PLUS -->
+			<div class="chapter_title app_style">{{app_chapter_title}}</div>
+			<!-- #endif -->
+			
 			<scroll-view scroll-y="true" @scroll="readScroll" 
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top"
@@ -20,6 +27,15 @@
 					<rich-text :nodes="chapter_content"></rich-text>
 				</div>
 			</scroll-view>
+			
+			<!-- 阅读区域底部信息区 显示电量和时间 -->
+			<!-- #ifdef APP-PLUS -->
+			<div class="read_bottom_area app_style">
+				<div v-if="app_level">电量：{{app_level}}%</div>
+				<div>{{current_date}}</div>
+			</div>
+			<!-- #endif -->
+			
 		</div>
 		
 		<!-- 用来控制上一页、下一页、调出菜单的层  为第二层-->
@@ -100,11 +116,16 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
+				app_level: 0, // 电量 仅在APP环境可用
+				t1: null, // 定时器
+				current_date: '', // 系统当前时分 时间 仅在APP环境可用
+				app_chapter_title: '', // 标题仅支持APP
 				settings: {
 					letter_spacing: 0, // 字间距
 					line_height: 0, // 行间距
 					padding_left_right: 0, // 阅读区域左右空白区域间距 单位rpx
 				}, // 用户设置
+				padding_top: 1,
 				font_color: '', // 用户设置的颜色，如无则默认黑色
 				book_id: null,
 				bookDetail: null, // 书籍详情
@@ -139,8 +160,44 @@
 		onLoad(options){
 			this.book_id = options.book_id
 			this.getBookDetail()
+			// #ifdef APP-PLUS
+			let that = this
+			if(this.t1){
+				clearInterval(this.t1)
+			}
+			this.t1 = setInterval(() => {
+				let time1 = +new Date()
+				let date = new Date(time1 + 8 * 3600 * 1000)
+				that.current_date = date.toJSON().substr(11, 5)
+				// 加载电量
+			}, 2000)
+			this.app_load_level()
+			// #endif
 		},
 		methods: {
+			// APP 环境加载电量信息
+			app_load_level(){
+				let that = this
+				//注意，安卓需要配置下manifest.json文件，打开后，进入模块权限配置，在右侧的Android权限设置里勾选上android.permission.BATTERY_STATS  
+				var main = plus.android.runtimeMainActivity();  
+				var Intent = plus.android.importClass('android.content.Intent');  
+				var recevier = plus.android.implements('io.dcloud.feature.internal.reflect.BroadcastReceiver', {  
+					onReceive: function(context, intent) {
+						var action = intent.getAction();  
+						if (action == Intent.ACTION_BATTERY_CHANGED) {
+							var level   = intent.getIntExtra("level", 0); //电量
+							var voltage = intent.getIntExtra("voltage", 0); //电池电压
+							var temperature = intent.getIntExtra("temperature", 0); //电池温度
+							//如需获取别的，在这里继续写，此代码只提供获取电量
+							console.log(level)
+							that.app_level = level
+						}  
+					}  
+				 })
+				var IntentFilter = plus.android.importClass('android.content.IntentFilter');  
+				var filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);  
+				main.registerReceiver(recevier, filter); 
+			},
 			// 阅读区域滚动到底部
 			onScrolltolower(e){
 				// console.log(e)
@@ -292,6 +349,7 @@
 				uni.setNavigationBarTitle({
 				    title: chapter.item.chapter_name
 				})
+				this.app_chapter_title = chapter.item.chapter_name
 				this.chapter_content = null
 				this.layer_4 = false
 				this.layer_3 = false
@@ -311,6 +369,7 @@
 					uni.setNavigationBarTitle({
 					    title: res.book_name
 					})
+					this.app_chapter_title = res.book_name
 					uni.hideLoading()
 				}).catch(() => {
 					uni.hideLoading()
@@ -327,6 +386,9 @@
 				this.layer_3 = false
 				this.layer_4_setting = false
 				this.openGlobalClickEvent()
+				// #ifdef APP-PLUS
+				plus.navigator.setFullscreen(true) // 启用系统状态栏
+				// #endif
 			},
 			// 开启全局点击事件
 			openGlobalClickEvent(){
@@ -414,8 +476,12 @@
 				if( (event.offsetX >= this.propArea.x1) && (this.propArea.x2 >= event.offsetX)
 				 && (event.offsetY >= this.propArea.y1) && (this.propArea.y2 >= event.offsetY)){
 					 if(!this.layer_3){
-						 this.propControllerLayer3()
-						 this.globalClickUse = false
+						// 弹出第三层
+						this.propControllerLayer3()
+						this.globalClickUse = false
+						// #ifdef APP-PLUS
+						plus.navigator.setFullscreen(false) // 启用系统状态栏
+						// #endif
 					 }
 				 }
 			},
@@ -439,7 +505,11 @@
 				uni.getSystemInfo({
 				    success: function (res) {
 						that.systemInfo = res
+						// console.log(res)
 						that.initControllerArea()
+						// #ifdef APP-PLUS
+						that.padding_top = res.statusBarHeight
+						// #endif
 				    }
 				})
 			},
@@ -462,6 +532,17 @@
 		},
 		mounted(){
 			this.getSystemInfo()
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(true) // 隐藏系统状态栏
+			// #endif
+		},
+		destroyed() {
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(false) // 启用系统状态栏
+			if(this.t1){
+				clearInterval(this.t1)
+			}
+			// #endif
 		},
 		watch:{
 			scroll_top(val, old){
@@ -506,6 +587,15 @@
 			height: calc(100vh - 150rpx - env(safe-area-inset-bottom));
 			position:fiexd;
 			z-index:10;
+		}
+		.read_bottom_area{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+		.app_style{
+			
 		}
 	}
 	.controller-layer{
