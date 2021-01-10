@@ -31,7 +31,11 @@
 			<!-- 阅读区域底部信息区 显示电量和时间 -->
 			<!-- #ifdef APP-PLUS -->
 			<div class="read_bottom_area app_style">
-				<div v-if="app_level">电量：{{app_level}}%</div>
+				<div v-if="app_level">
+					<text v-if="is_plugged">充电中</text>
+					<text v-else>电量</text>
+					：{{app_level}}%	
+				</div>
 				<div>{{current_date}}</div>
 			</div>
 			<!-- #endif -->
@@ -116,6 +120,7 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
+				is_plugged: 0, // 是否在充电 仅在APP环境可用 2是 0否
 				app_level: 0, // 电量 仅在APP环境可用
 				t1: null, // 定时器
 				current_date: '', // 系统当前时分 时间 仅在APP环境可用
@@ -185,11 +190,15 @@
 					onReceive: function(context, intent) {
 						var action = intent.getAction();  
 						if (action == Intent.ACTION_BATTERY_CHANGED) {
+							// console.log(intent.getIntExtras())
+							let plugged = intent.getIntExtra("plugged", -1) // 是否在充电 2是 0否
+							that.is_plugged = plugged
+							
 							var level   = intent.getIntExtra("level", 0); //电量
 							var voltage = intent.getIntExtra("voltage", 0); //电池电压
 							var temperature = intent.getIntExtra("temperature", 0); //电池温度
 							//如需获取别的，在这里继续写，此代码只提供获取电量
-							console.log(level)
+							// console.log(level)
 							that.app_level = level
 						}  
 					}  
