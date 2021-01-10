@@ -3,11 +3,15 @@
 		<!-- 阅读器分三层 每层分别是： -->
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
 		<div class="read-layer layer"  @click="globalClick"
-		:style="{'background-color': background_color}"
+		:style="{'background-color': background_color,
+			'padding-left': settings.padding_left_right + 'rpx',
+			'padding-right': settings.padding_left_right + 'rpx',
+		}"
 		>
 			<scroll-view scroll-y="true" @scroll="readScroll" 
 			class="scroll-Y" show-scrollbar="true"
-			:scroll-top="scroll_top">
+			:scroll-top="scroll_top"
+			@scrolltolower="onScrolltolower">
 				<div class='chapter-content' v-if="chapter_content"
 				:style="{'font-size': font_size + 'px', 
 				color: font_color, 
@@ -99,6 +103,7 @@
 				settings: {
 					letter_spacing: 0, // 字间距
 					line_height: 0, // 行间距
+					padding_left_right: 0, // 阅读区域左右空白区域间距 单位rpx
 				}, // 用户设置
 				font_color: '', // 用户设置的颜色，如无则默认黑色
 				book_id: null,
@@ -136,6 +141,10 @@
 			this.getBookDetail()
 		},
 		methods: {
+			// 阅读区域滚动到底部
+			onScrolltolower(e){
+				console.log(e)
+			},
 			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
 			onLoadChapterList(){
 				this.$refs.chapterList._getChapterList()
@@ -171,6 +180,7 @@
 					this.$nextTick(function(){
 						this.scroll_top = 0
 					})
+					this.scroll_top = 0
 				}
 			},
 			// 阅读区域滚动
@@ -450,20 +460,25 @@
 			}
 		},
 		mounted(){
-			uni.setNavigationBarColor({
-			    frontColor: '#000000',
-			    backgroundColor: '#FFFAE8',
-			})
 			this.getSystemInfo()
 		},
-		computed:{
-		},
-		destroyed() {
-		},
-		// 监听页面滚动
-		onPageScroll(e){
-			console.log(e)
-		},
+		watch:{
+			scroll_top(val, old){
+				if(!old)return
+				// return
+				let that = this
+				// 保存用户字体颜色
+				console.log(val)
+				this.$u.debounce(() => {
+					let e = {
+						detail: {
+							scrollTop: val
+						}
+					}
+					that.readScroll(e)
+				}, 1000)
+			}
+		}
 	}
 </script>
 
@@ -477,7 +492,7 @@
 		box-sizing: border-box;
 	}
 	.read-layer{
-		padding: 0rpx 40rpx 40rpx 40rpx;
+		padding: 0rpx 40rpx;
 		z-index: 100;
 		background-color: #FFFAE8;
 		.chapter-content{

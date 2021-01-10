@@ -24,7 +24,7 @@
 		<div class="setting-item">
 			<div class="title">字间距</div>
 			<view class="wrap">
-				 <slider id="letter_spacing" :value="letter_spacing" @changing="letterSpacingChange"
+				 <slider :value="letter_spacing" @changing="letterSpacingChanging"
 				   show-value="true"step="2" max="50" />
 			</view>
 		</div>
@@ -33,8 +33,19 @@
 		<div class="setting-item">
 			<div class="title">行间距</div>
 			<view class="wrap">
-				 <slider id="line_height" :value="line_height" @changing="lineHeightChange"
+				 <slider :value="line_height" @changing="lineHeightChanging"
+				 @change="lineHeightChange"
 				  show-value="true" step="2" min="50" />
+			</view>
+		</div>
+		
+		<!-- 左右空白间距 -->
+		<div class="setting-item">
+			<div class="title">左右空白间距</div>
+			<view class="wrap">
+				 <slider :value="padding_left_right" @changing="paddingLeftRightChanging"
+				 @change="paddingLeftRightChange"
+				  show-value="true" step="2" max="40" />
 			</view>
 		</div>
 		
@@ -63,8 +74,11 @@
 		name: "yifnagReadSetting",
 		data() {
 			return {
+				t1: null, // 定时器
+				t2: null, // 定时器
 				letter_spacing: 2, // 文字间距 单位rpx
 				line_height: 50, // 行间距 单位rpx
+				padding_left_right: 40, // 阅读区域左右空白区域间距 单位rpx
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
 				background_color: '#F6F2EF', // 默认背景颜色
 				user_font_color: '#000000', // 默认字体颜色
@@ -92,20 +106,43 @@
 			this.getSetting()
 		},
 		methods:{
-			// 行间距改变
-			lineHeightChange(e){
-				
-				this.line_height = e.detail.value
-				this.uniReturnSettings()
-				
+			// 左右空白间距改变 完成一次拖动后触发的事件
+			paddingLeftRightChange(e){
 				let that = this
-				// 保存用户字体颜色
-				this.$u.debounce(function(){
+				if(that.t1){
+					clearInterval(that.t1)
+				}
+				
+				// 保存左右空白间距改变
+				that.t1 = setTimeout((() => {
+					that.saveSetting(6, that.padding_left_right)
+				}).bind(this), 1000)
+			},
+			// 左右空白间距改变 拖动过程中触发的事件
+			paddingLeftRightChanging(e){
+				this.padding_left_right = e.detail.value
+				this.uniReturnSettings()
+			},
+			// 行间距改变 完成一次拖动后触发的事件
+			lineHeightChange(e){
+				let that = this
+				if(that.t2){
+					clearInterval(that.t2)
+				}
+				
+				// 保存左右空白间距改变
+				that.t2 = setTimeout(() => {
 					that.saveSetting(5, that.line_height)
 				}, 1000)
 			},
-			// 文字间距改变
-			letterSpacingChange(e){
+			// 行间距改变 拖动过程中触发的事件
+			lineHeightChanging(e){
+				// console.log(e.detail)
+				this.line_height = e.detail.value
+				this.uniReturnSettings()
+			},
+			// 文字间距改变 拖动过程中触发的事件
+			letterSpacingChanging(e){
 				// console.log(e.detail)
 				
 				this.letter_spacing = e.detail.value
@@ -122,6 +159,7 @@
 				this.$emit('userSetting', {
 					letter_spacing: this.letter_spacing, // 文字间距
 					line_height: this.line_height, // 行间距
+					padding_left_right: this.padding_left_right, // 左右的空白区域
 				})
 			},
 			// 点击字体颜色 字体颜色改变
@@ -139,7 +177,7 @@
 			getSetting(){
 				if(!isLogin())return;
 				
-				let settings_index = '1,2,3,4,5'
+				let settings_index = '1,2,3,4,5,6'
 				_getSetting(getLocalUserInfo()['user_id'], settings_index).then(res => {
 					// console.log(res)
 					for (let name in res.data) {
@@ -171,9 +209,11 @@
 								this.letter_spacing = value
 							case 5: // 行间距
 								this.line_height = value
+							case 6: // 左右空白区域
+								this.padding_left_right = value
 								this.uniReturnSettings()
 								break
-								
+							
 						}
 					}
 					// 加载完配置后 再获取章节。获取完章节后，会自动再获取章节内容
