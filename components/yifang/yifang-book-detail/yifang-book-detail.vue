@@ -32,8 +32,14 @@
 		<!-- 底部固定栏  用来放立即阅读、加入书架等按钮 -->
 		<view class="join " :style="{bottom: buttom_bottom + 'rpx'}">
 			<view class="item no-join" @click="nowRead">立即阅读</view>
-			<view class="item no-join" @click="joinBookShelf" v-if="loadIsJoin && !isJoin">加入书架</view>
-			<view class="item joined" @click="joinBookShelf" v-if="loadIsJoin && isJoin">已加入书架</view>
+			
+			<template v-if="!loadIsJoin">
+				<view class="item"><u-loading mode="circle"></u-loading></view>
+			</template>
+			<template v-else>
+				<view class="item no-join" @click="joinBookShelf" v-if="loadIsJoin && !isJoin">加入书架</view>
+				<view class="item joined" @click="joinBookShelf" v-if="loadIsJoin && isJoin">已加入书架</view>
+			</template>
 		</view>
 		
 	</view>
@@ -175,8 +181,8 @@
 			nowRead(){
 				// #ifdef APP-PLUS
 				let a = plus.navigator.getStatusbarHeight()
-				console.log(a)
-				this.buttom_bottom = 96
+				// console.log(a)
+				this.buttom_bottom = 96 + a
 				// #endif
 				uni.navigateTo({
 				    url: '/pages/start-read/start-read?book_id=' + this.book_id
