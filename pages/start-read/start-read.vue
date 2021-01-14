@@ -1,5 +1,5 @@
 <template>
-	<view class="body" ref="startReadBody">
+	<view class="readbody" ref="startReadBody">
 		<!-- 阅读器分三层 每层分别是： -->
 		<!-- 用以承载书籍章节内容 仅做展示 第一层 -->
 		<div class="read-layer layer"  @click="globalClick"
@@ -238,10 +238,10 @@
 			calcReadSchedule(chapter){
 				// console.log(chapter)
 				try{
-					let schedule = JSON.parse(chapter.schedule)
+					let schedule = JSON.parse(chapter.schedule).value
 					// console.log(schedule.value)
 					this.$nextTick(function(){
-						this.scroll_top = schedule.value
+						this.scroll_top = schedule
 					})
 				}catch(e){
 					this.$nextTick(function(){
@@ -368,10 +368,10 @@
 			},
 			// 获取书籍详情
 			getBookDetail(){
-				uni.showLoading({
-					mask: true,
-					title: "加载内容中..."
-				})
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: "加载详情中..."
+				// })
 				getBookDetailUtil(this.book_id).then(res => {
 					this.bookDetail = res
 					// 设置页面标题
@@ -396,7 +396,7 @@
 				this.layer_4_setting = false
 				this.openGlobalClickEvent()
 				// #ifdef APP-PLUS
-				plus.navigator.setFullscreen(true) // 启用系统状态栏
+				plus.navigator.setFullscreen(true) // 关闭系统状态栏
 				// #endif
 			},
 			// 开启全局点击事件
@@ -539,15 +539,21 @@
 				})
 			}
 		},
-		mounted(){
-			this.getSystemInfo()
+		created() {
 			// #ifdef APP-PLUS
 			plus.navigator.setFullscreen(true) // 隐藏系统状态栏
 			// #endif
 		},
-		destroyed() {
+		mounted(){
+			this.getSystemInfo()
+		},
+		beforeDestroy() {
 			// #ifdef APP-PLUS
 			plus.navigator.setFullscreen(false) // 启用系统状态栏
+			// #endif
+		},
+		destroyed() {
+			// #ifdef APP-PLUS
 			if(this.t1){
 				clearInterval(this.t1)
 			}
@@ -574,7 +580,7 @@
 </script>
 
 <style lang="scss" scoped>
-.body{
+.readbody{
 	.layer{
 		width: 100%;
 		height: 100%;

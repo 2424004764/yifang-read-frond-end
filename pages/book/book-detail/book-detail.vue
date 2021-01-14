@@ -23,6 +23,9 @@
 		onLoad(option) {
 			// console.log(option)
 			this.book_id = option.book_id
+		},
+		onShow() {
+			// uni.$emit('bookDetailOnShow')
 		}
 
 	}

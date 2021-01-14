@@ -30,11 +30,11 @@
 		</div>
 		
 		<!-- 底部固定栏  用来放立即阅读、加入书架等按钮 -->
-		<div class="join" v-if="isLoadingSuccess">
-			<div class="item no-join" @click="nowRead">立即阅读</div>
-			<div class="item no-join" @click="joinBookShelf" v-if="loadIsJoin && !isJoin">加入书架</div>
-			<div class="item joined" @click="joinBookShelf" v-if="loadIsJoin && isJoin">已加入书架</div>
-		</div>
+		<view class="join " :style="{bottom: buttom_bottom + 'rpx'}">
+			<view class="item no-join" @click="nowRead">立即阅读</view>
+			<view class="item no-join" @click="joinBookShelf" v-if="loadIsJoin && !isJoin">加入书架</view>
+			<view class="item joined" @click="joinBookShelf" v-if="loadIsJoin && isJoin">已加入书架</view>
+		</view>
 		
 	</view>
 </template>
@@ -57,9 +57,11 @@
 				isLoadingSuccess: false, // 是否书籍详情加载完毕
 				loadIsJoin: false, // 加载加入书架请求是否完毕
 				isJoin: null, // 是否加入书架
+				buttom_bottom: 0, // 底部操作区距离
 			}
 		},
 		methods: {
+			
 			// 点击书籍封面图
 			showImg(book_cover_imgs){
 				
@@ -157,19 +159,25 @@
 				})
 				// console.log(this.book_id)
 				getBookDetailUtil(book_id).then(res => {
+					// console.log(res)
 					this.bookDetail = res
 					// 设置页面标题
-					uni.setNavigationBarTitle({
-					    title: res.book_name
-					})
+					// uni.setNavigationBarTitle({
+					//     title: res.book_name
+					// })
 					this.isLoadingSuccess = true
 					uni.hideLoading()
 				}).catch(() => {
 					uni.hideLoading()
 				})
 			},
-			// 开始阅读
+			// 点击立即阅读
 			nowRead(){
+				// #ifdef APP-PLUS
+				let a = plus.navigator.getStatusbarHeight()
+				console.log(a)
+				this.buttom_bottom = 96
+				// #endif
 				uni.navigateTo({
 				    url: '/pages/start-read/start-read?book_id=' + this.book_id
 				})
@@ -182,7 +190,21 @@
 			// console.log(this.book_id)
 			this.getBookDetail(this.book_id) // 获取书籍详情
 			this.isJoinBookshelf(this.book_id) // 是否加入书架
+			let that = this
+			uni.$on('bookDetailOnShow', function(){
+				// #ifdef APP-PLUS
+				setTimeout(function(){
+					console.log(plus.navigator.isFullscreen()) // 获取状态栏高度
+					that.buttom_bottom = 140
+				}, 1000)
+				// #endif
+			})
 		},
+		watch:{
+			isLoadingSuccess(newV, oldV){
+				// console.log(newV, oldV)
+			}
+		}
 	}
 </script>
 
@@ -238,16 +260,18 @@
 		// height: 100rpx;
 		padding: 30rpx 0rpx;
 		position: fixed;
-		bottom: 0rpx;
+		// bottom: 1rpx;
 		left: 0rpx;
 		border-top: 1px solid #FF5501;
-		box-sizing: border-box;
+		// box-sizing: border-box;
 		background-color: white;
+		// transform: translate(2px);
 		.div{
 			float: left;
 		}
 		.item{
 			// border: 1px solid red;
+			height: 66rpx;
 			display: inline-block;
 			padding: 10rpx 35rpx;
 			border-radius: 30rpx;

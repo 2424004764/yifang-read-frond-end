@@ -1,7 +1,7 @@
 {
     "name" : "一方阅读",
     "appid" : "__UNI__CF0EF73",
-    "description" : "",
+    "description" : "属于你的一方阅读世界",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -37,7 +37,9 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios" : {},
+            "ios" : {
+                "idfa" : false
+            },
             "sdkConfigs" : {
                 "ad" : {}
             },

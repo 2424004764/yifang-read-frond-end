@@ -8,10 +8,10 @@
 		<yifang-swiper></yifang-swiper>
 		
 		<!-- 菜单 -->
-		<yifang-menu></yifang-menu>
+		<yifang-menu v-if="hackReset"></yifang-menu>
 		
 		<!-- 推荐 -->
-		<yifang-recommend></yifang-recommend>
+		<yifang-recommend v-if="hackReset"></yifang-recommend>
 	</view>
 	
 </template>
@@ -27,11 +27,19 @@
 		yifangRecommend},
 		data() {
 			return {
+				hackReset: true
 			}
 		},
 		methods: {
 
-		}
+		},
+		onPullDownRefresh(option) {
+			this.hackReset = false
+			this.$nextTick(() => {
+				this.hackReset = true
+				uni.stopPullDownRefresh();
+			})
+		},
 	}
 </script>
 
