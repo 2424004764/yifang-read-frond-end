@@ -210,7 +210,7 @@
 			// 阅读区域滚动到底部
 			onScrolltolower(e){
 				// console.log(e)
-				this.nextChapter()
+				this.$u.throttle(this.nextChapter, 1000)
 			},
 			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
 			onLoadChapterList(){
@@ -308,7 +308,11 @@
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
 				}) // 设置页面标题为章节标题
-				this.getChapterContent() // 获取章节详情内容
+				// console.log('clickChapterAfter', chapter)
+				let newChapter = {
+					item: chapter
+				}
+				this.getChapterContent(newChapter) // 获取章节详情内容
 				// 计算进度
 				this.calcPercent(currentChapterIndex, chapterLegth)
 			},
@@ -436,6 +440,9 @@
 			nextPage(){},
 			// 获取章节详细内容
 			getChapterContent(chapter){
+				// console.log('getChapterContent chapter', chapter)
+				// 设置APP端的章节标题
+				this.app_chapter_title = chapter.item.chapter_name
 				uni.showLoading({
 					mask: true,
 					title: "加载章节中..."
@@ -452,8 +459,6 @@
 						this.chapter_content = res.data[0].chapter_content
 						this.calcReadSchedule(chapter)// 处理阅读进度
 					})
-					// 为啥多写一句同样的代码  反正我没搞懂$nextTick的用法，目的达到了
-					this.chapter_content = res.data[0].chapter_content
 				}).then(() => {
 					uni.hideLoading()
 				}).catch(err => {
