@@ -27,7 +27,7 @@
 				
 				<template v-else>
 					<div class='chapter-content' 
-					:style="{'font-size': font_size + 'px', 
+					:style="{'font-size': settings.font_size + 'px', 
 					color: font_color, 
 					'letter-spacing': settings.letter_spacing + 'rpx',
 					'line-height': settings.line_height + 'rpx'}">
@@ -108,7 +108,6 @@
 			
 			<!-- 设置 -->
 			<yifang-read-setting v-show="layer_4_setting" 
-			v-on:fontSize="onFontSizeChange"
 			v-on:backgroundColor="onBackgroundColor"
 			v-on:fontColorChange="onFontColorChange"
 			v-on:userSetting="onUserSetting"
@@ -149,6 +148,7 @@
 					letter_spacing: 0, // 字间距
 					line_height: 0, // 行间距
 					padding_left_right: 0, // 阅读区域左右空白区域间距 单位rpx
+					font_size: 0, // 字体大小
 				}, // 用户设置
 				padding_top: 1,
 				font_color: '', // 用户设置的颜色，如无则默认黑色
@@ -163,7 +163,6 @@
 				
 				globalClickUse: true, // 是否可以使用全局点击事件
 				chapter_id: null, // 章节id
-				font_size: null, // 字体大小 默认
 				percent: 0, // 阅读进度
 				background_color: null, // 背景颜色 默认
 				chapter_content: '', // 章节内容
@@ -368,11 +367,6 @@
 				        timingFunc: 'easeIn'
 				    }
 				})
-			},
-			// 监听用户设置的字体大小变化
-			onFontSizeChange(font_size){
-				// console.log(font_size)
-				this.font_size = font_size
 			},
 			// 保存进度
 			_saveSchedule(book_id, chapter_id){
