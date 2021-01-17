@@ -12,9 +12,8 @@ import {addSchedule} from '@/util/user_http/book-schedule.js'
  * @param {Object} book_id 书籍id
  * @param {Object} chapter_id 章节id
  * @param {Object} schedule 进度
- * @param {bool} is_first 是否首次保存
  */
-export function saveSchedule(user_id, book_id, chapter_id, schedule, is_first = true) {
+export function saveSchedule(user_id, book_id, chapter_id, schedule) {
 	book_id = parseInt(book_id)
 	
 	addSchedule({}, {data: {
@@ -22,7 +21,6 @@ export function saveSchedule(user_id, book_id, chapter_id, schedule, is_first = 
 		book_id: book_id,
 		chapter_id: chapter_id,
 		schedule: schedule,
-		is_first: is_first ? '1' : 0
 	}, custom: {loading: false}}).then(res => {
 		
 	})

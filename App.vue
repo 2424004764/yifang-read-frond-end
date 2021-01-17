@@ -8,6 +8,9 @@ export default {
 	},
 	onHide: function() {
 		// console.log('App Hide');
+	},
+	onError(err) {
+		console.log('onError', err)
 	}
 };
 </script>
