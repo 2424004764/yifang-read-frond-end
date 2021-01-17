@@ -25,7 +25,7 @@
 			<div class="title">字间距</div>
 			<view class="wrap">
 				 <slider :value="letter_spacing" @changing="letterSpacingChanging"
-				   show-value="true"step="2" max="50" />
+				   show-value="true" step="2" max="50" />
 			</view>
 		</div>
 		

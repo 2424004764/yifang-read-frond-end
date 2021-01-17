@@ -66,6 +66,8 @@
 				getSchedule({
 					user_id: getLocalUserInfo()['user_id'],
 					book_id: book_id
+				}, {
+					custom: {loading: false}
 				}).then(res => {
 					// console.log('getChpaterReadProgress', res)
 					if(res.data){
@@ -98,6 +100,8 @@
 					page: this.page,
 					size: this.size,
 					book_id: this.book_id
+				}, {
+					custom: {loading: false}
 				}).then(res => {
 					this.chapter_list = res.data
 					// 如果未登录 则返回书籍的第一个章节

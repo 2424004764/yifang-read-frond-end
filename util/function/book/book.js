@@ -10,7 +10,9 @@ export function getBookDetailUtil(book_id){
 	}
 	return getBookDetail({
 		book_id: book_id
-	}).then(res => {
+	}, {
+			custom: {loading: false}
+		}).then(res => {
 		// 处理书籍封面图
 		try{
 			res.data['book_cover_imgs'] = JSON.parse(res.data['book_cover_imgs'])

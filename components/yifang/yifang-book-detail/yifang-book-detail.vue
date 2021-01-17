@@ -159,10 +159,10 @@
 			},
 			// 书籍详情
 			getBookDetail(book_id){
-				uni.showLoading({
-					mask: true,
-					title: "详情加载中..."
-				})
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: "详情加载中..."
+				// })
 				// console.log(this.book_id)
 				getBookDetailUtil(book_id).then(res => {
 					// console.log(res)
