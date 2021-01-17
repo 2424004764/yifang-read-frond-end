@@ -68,8 +68,6 @@
 	import {_addSetting, _getSetting} from '@/util/function/user-setting.js'
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
-	import YifangChapterList from '@/components/yifang/yifang-chapter-list/yifang-chapter-list.vue'
-	
 	export default {
 		name: "yifnagReadSetting",
 		data() {
