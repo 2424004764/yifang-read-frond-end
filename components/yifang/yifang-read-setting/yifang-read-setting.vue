@@ -25,6 +25,7 @@
 			<div class="title">字间距</div>
 			<view class="wrap">
 				 <slider :value="letter_spacing" @changing="letterSpacingChanging"
+					@change="letterSpacingChange"
 				   show-value="true" step="2" max="50" />
 			</view>
 		</div>
@@ -74,12 +75,15 @@
 			return {
 				t1: null, // 定时器
 				t2: null, // 定时器
+				t3: null, // 定时器
+				
 				letter_spacing: 2, // 文字间距 单位rpx
 				line_height: 50, // 行间距 单位rpx
 				padding_left_right: 40, // 阅读区域左右空白区域间距 单位rpx
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
 				background_color: '#F6F2EF', // 默认背景颜色
 				user_font_color: '#000000', // 默认字体颜色
+				
 				bg_list: [
 					{'color': '#F6F2EF'}, {'color': '#FFFAE8'}, {'color': '#F4E7BD'},
 					{'color': '#CFA656'}, {'color': '#EADACA'}, {'color': '#E0EDCA'},
@@ -92,8 +96,6 @@
 		},
 		mounted() {
 			// 默认反馈
-			// 字体反馈
-			this.$emit('fontSize', this.user_font_size)
 			// 颜色反馈
 			this.$emit('backgroundColor', this.background_color)
 			// 默认字体颜色反馈
@@ -139,18 +141,26 @@
 				this.line_height = e.detail.value
 				this.uniReturnSettings()
 			},
+			// 文字间距改变 拖动完成触发的事件
+			letterSpacingChange(e){
+				this.letter_spacing = e.detail.value
+				
+				let that = this
+				if(that.t3){
+					clearInterval(that.t3)
+				}
+				// 保存用户字体颜色
+				
+				that.t3 = setTimeout((() => {
+					that.saveSetting(4, that.letter_spacing)
+				}).bind(this), 1000)
+			},
 			// 文字间距改变 拖动过程中触发的事件
 			letterSpacingChanging(e){
 				// console.log(e.detail)
 				
 				this.letter_spacing = e.detail.value
 				this.uniReturnSettings()
-				
-				let that = this
-				// 保存用户字体颜色
-				this.$u.debounce(function(){
-					that.saveSetting(4, that.letter_spacing)
-				}, 1000)
 			},
 			// 统一返回配置
 			uniReturnSettings(){
@@ -158,6 +168,7 @@
 					letter_spacing: this.letter_spacing, // 文字间距
 					line_height: this.line_height, // 行间距
 					padding_left_right: this.padding_left_right, // 左右的空白区域
+					font_size: this.user_font_size, // 字体大小
 				})
 			},
 			// 点击字体颜色 字体颜色改变
