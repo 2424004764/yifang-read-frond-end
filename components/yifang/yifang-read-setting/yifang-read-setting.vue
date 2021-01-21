@@ -76,6 +76,10 @@
 				t1: null, // 定时器
 				t2: null, // 定时器
 				t3: null, // 定时器
+				t4: null, // 定时器
+				t5: null, // 定时器
+				t6: null, // 定时器
+				t7: null, // 定时器
 				
 				letter_spacing: 2, // 文字间距 单位rpx
 				line_height: 50, // 行间距 单位rpx
@@ -114,9 +118,9 @@
 				}
 				
 				// 保存左右空白间距改变
-				that.t1 = setTimeout((() => {
+				that.t1 = setTimeout(() => {
 					that.saveSetting(6, that.padding_left_right)
-				}).bind(this), 1000)
+				}, 1000)
 			},
 			// 左右空白间距改变 拖动过程中触发的事件
 			paddingLeftRightChanging(e){
@@ -184,11 +188,10 @@
 			},
 			// 获取用户设置
 			getSetting(){
-				if(!isLogin())return;
 				
 				let settings_index = '1,2,3,4,5,6'
-				_getSetting(getLocalUserInfo()['user_id'], settings_index).then(res => {
-					// console.log(res)
+				_getSetting(settings_index).then(res => {
+					console.log('20 _getSetting', res)
 					for (let name in res.data) {
 						let value = res.data[name].value
 						switch(res.data[name].name){
@@ -226,15 +229,13 @@
 						}
 					}
 					// 加载完配置后 再获取章节。获取完章节后，会自动再获取章节内容
-					// 目的  要加载另一个组件的方法，且要保证另一个组件的mounted钩子执行
 					this.$emit('doLoadChapterList')
 				})
 			},
 			// 保存用户的配置
 			saveSetting(name, value){
-				if(!isLogin())return;
 				
-				_addSetting(getLocalUserInfo()['user_id'], name, value)
+				_addSetting(name, value)
 			},
 			// 背景颜色改变
 			bg_color_change(bg_color){
@@ -249,7 +250,7 @@
 			// 点击字体变小
 			font_reduce(){
 				--this.user_font_size
-				this.$emit('fontSize', this.user_font_size)
+				this.uniReturnSettings()
 				
 				let that = this
 				this.$u.debounce(function(){
@@ -259,7 +260,7 @@
 			// 点击字体变大
 			font_enlarge(){
 				++this.user_font_size
-				this.$emit('fontSize', this.user_font_size)
+				this.uniReturnSettings()
 				
 				let that = this
 				this.$u.debounce(function(){
