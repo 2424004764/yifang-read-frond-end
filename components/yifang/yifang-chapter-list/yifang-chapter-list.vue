@@ -18,7 +18,7 @@
 
 <script>
 	import {getChapterList} from '@/util/user_http/chapter.js'
-	import {getSchedule} from '@/util/user_http/book-schedule.js'
+	import {getScheduleInfo} from '@/util/function/book-schedule.js'
 	
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
 	
@@ -49,6 +49,7 @@
 		methods: {
 			// 统一反馈章节信息
 			uniGetClickChapterId(item, index, schedule){
+				// console.log('uniGetClickChapterId', schedule)
 				this.$emit('getClickChapterId', {
 					item: item,
 					index: index,
@@ -63,28 +64,30 @@
 			},
 			// 获取当前书籍的阅读进度
 			getChpaterReadProgress(book_id){
-				getSchedule({
-					user_id: getLocalUserInfo()['user_id'],
+				getScheduleInfo({
 					book_id: book_id
 				}, {
 					custom: {loading: false}
-				}).then(res => {
-					// console.log('getChpaterReadProgress', res)
-					if(res.data){
-						// 有保存记录 返回相应的章节
-						for (let chapter_indedx in this.chapter_list) {
-							if(this.chapter_list[chapter_indedx]['book_id'] == res.data['book_id']
-							&& this.chapter_list[chapter_indedx]['chapter_id'] == res.data['chapter_id']){
-								
-								let item = this.chapter_list[chapter_indedx]
-								let index = ++chapter_indedx
-								let schedule = res.data.schedule
-								this.uniGetClickChapterId(item, index, schedule)
+				}, (res) => {
+					res.then(res => {
+						if(res.data){
+							// 有保存记录 返回相应的章节
+							for (let chapter_indedx in this.chapter_list) {
+								if(this.chapter_list[chapter_indedx]['book_id'] == res.data['book_id']
+								&& this.chapter_list[chapter_indedx]['chapter_id'] == res.data['chapter_id']){
+									
+									let item = this.chapter_list[chapter_indedx]
+									let index = ++chapter_indedx
+									let schedule = res.data.schedule
+									this.uniGetClickChapterId(item, index, schedule)
+								}
 							}
+						}else{
+							this.getFirstChapterReturn()
 						}
-					}else{
-						this.getFirstChapterReturn()
-					}
+					}).catch(err => {
+						
+					})
 				})
 			},
 			// 获取第一个章节并返回到父组件
@@ -106,12 +109,7 @@
 					this.chapter_list = res.data
 					// 如果未登录 则返回书籍的第一个章节
 					if(this.chapter_list.length){	
-						if(!isLogin()){ // 未登录
-							// 默认获取第一个章节的id
-							this.getFirstChapterReturn()
-						}else{ // 已登录 则加载保存的阅读的章节
-							this.getChpaterReadProgress(this.book_id)
-						}
+						this.getChpaterReadProgress(this.book_id)
 					}
 				})
 			},

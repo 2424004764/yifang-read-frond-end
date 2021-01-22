@@ -370,7 +370,6 @@
 			},
 			// 保存进度
 			_saveSchedule(book_id, chapter_id){
-				if(!isLogin())return;
 				
 				// 开始保存进度
 				saveSchedule(getLocalUserInfo()['user_id'], book_id, chapter_id, JSON.stringify(this.scroll_controller_structure))

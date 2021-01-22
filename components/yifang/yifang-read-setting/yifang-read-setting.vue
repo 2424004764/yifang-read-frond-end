@@ -191,7 +191,7 @@
 				
 				let settings_index = '1,2,3,4,5,6'
 				_getSetting(settings_index).then(res => {
-					console.log('20 _getSetting', res)
+					// console.log('20 _getSetting', res)
 					for (let name in res.data) {
 						let value = res.data[name].value
 						switch(res.data[name].name){
