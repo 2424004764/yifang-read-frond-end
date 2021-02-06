@@ -31,7 +31,6 @@ function saveToLocal(user_id, book_id, chapter_id, schedule_value){
 	save_structure.v = JSON.parse(schedule_value).value
 	
 	let value = JSON.stringify(save_structure)
-	console.log('schedule saveToLocal', value)
 	uni.setStorage({
 	    key: SCHEDULE_KEY,
 	    data: value,
@@ -49,8 +48,16 @@ function saveToLocal(user_id, book_id, chapter_id, schedule_value){
  */
 export function saveSchedule(user_id, book_id, chapter_id, schedule) {
 	book_id = parseInt(book_id)
+	let schedule_obj = JSON.parse(schedule)
 	
 	// 保存进度至本地
+	// 如果本地有当前书籍的章节的阅读进度  且进度未改变  则不保存
+	let local_schedule = uni.getStorageSync(SCHEDULE_KEY) // 必有值
+	let local_schedule_obj = JSON.parse(local_schedule)
+	if(schedule_obj.value == local_schedule_obj.v &&
+	book_id == local_schedule_obj.b &&
+	chapter_id == local_schedule_obj.c)return;
+	
 	saveToLocal(user_id ? user_id : '', book_id, chapter_id, schedule)
 	
 	if(!isLogin())return;

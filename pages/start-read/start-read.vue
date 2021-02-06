@@ -15,7 +15,7 @@
 			<div class="chapter_title app_style">{{app_chapter_title}}</div>
 			<!-- #endif -->
 			
-			<scroll-view :scroll-y="scroll_y" @scroll="readScroll" 
+			<scroll-view scroll-y="true" @scroll="readScroll" 
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top"
 			@scrolltolower="onScrolltolower">
@@ -135,7 +135,7 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
-				scroll_y: true,
+				save_schedule: true, // 是否保存进度
 				scroll_controller_structure: {
 					type: 'scrollTop', // 滚动的类型
 					value: 0, // 滚动的距离
@@ -282,6 +282,8 @@
 					console.log('readScroll', _scrollTop, 'that.scroll_top:', that.scroll_top)
 					that.scroll_top = _scrollTop
 					that.scroll_controller_structure.value = !_scrollTop ? 0 : _scrollTop.toFixed(2)
+					console.log('that.save_schedule', that.save_schedule)
+					if(!that.save_schedule)return;
 					that._saveSchedule(this.book_id, this.chapter_id)
 				}, 2000)
 			},
@@ -453,7 +455,7 @@
 			nextPage(){},
 			// 获取章节详细内容
 			async getChapterContent(chapter){
-				// this
+				this.save_schedule = false
 				console.log('getChapterContent chapter', chapter.item.chapter_name)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
@@ -470,8 +472,7 @@
 					this.$nextTick(() => {
 						this.chapter_content = res.data[0].chapter_content
 						this.calcReadSchedule(chapter) // 处理阅读进度
-						// 手动更改阅读进度  达到切换章节后保存一次的目的
-						this.scroll_top += 1
+						this.save_schedule = true
 					})
 				}).then(() => {
 					uni.hideLoading()
