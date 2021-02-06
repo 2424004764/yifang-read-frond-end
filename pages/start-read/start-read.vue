@@ -12,12 +12,13 @@
 			
 			<!-- 为APP时再显示标题 -->
 			<!-- #ifdef APP-PLUS -->
-			<div class="chapter_title app_style">{{app_chapter_title}}</div>
+			<div class="chapter_title app_style">{{app_chapter_title}}{{this.scroll_top}}</div>
 			<!-- #endif -->
 			
 			<scroll-view scroll-y="true" @scroll="readScroll" 
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top"
+			scroll-anchoring="true"
 			@scrolltolower="onScrolltolower">
 				<template v-if="!chapter_content">
 					<div>
@@ -196,7 +197,7 @@
 				let time1 = +new Date()
 				let date = new Date(time1 + 8 * 3600 * 1000)
 				that.current_date = date.toJSON().substr(11, 5)
-				// 加载电量
+				// 加载当前时间
 			}, 2000)
 			this.app_load_level()
 			// #endif
@@ -205,15 +206,19 @@
 			// 切换下一章之前
 			getChapterContentBefore(){
 				this.save_schedule = false
-				console.log('getChapterContentBefore')
+				// console.log('getChapterContentBefore')
 			},
 			// 切换下一章之后
 			getChapterContentAfter(){
-				console.log('getChapterContentAfter')
+				console.log('getChapterContentAfter', this.save_schedule)
 				// 手动保存一下当前章节的进度
 				this.$nextTick(function(){
 					this._saveSchedule(this.book_id, this.chapter_id)
+					this.scheduleReInit()
 				})
+			},
+			// 进度信息重新初始化
+			scheduleReInit(){
 			},
 			// APP 环境加载电量信息
 			app_load_level(){
@@ -274,15 +279,12 @@
 				// console.log('calcReadSchedule chapter', chapter)
 				try{
 					let schedule = JSON.parse(chapter.schedule).value
-					// console.log(schedule.value)
-					await this.$nextTick(() => {
-						this.scroll_controller_structure.value = schedule
-						this.scroll_top = schedule
-					})
+					this.scroll_controller_structure.value = schedule
+					setTimeout(() => {
+						this.scroll_top = parseInt(schedule)
+					}, 100)
 				}catch(e){
-					await this.$nextTick(() => {
-						this.scroll_top = 0
-					})
+					this.scroll_top = 0
 				}
 			},
 			// 阅读区域滚动
@@ -293,14 +295,18 @@
 				this.$u.debounce(() => {
 					// 保存某一章节滚动的高度
 					let _scrollTop = e.detail.scrollTop
-					that.scroll_top = _scrollTop
-					that.scroll_controller_structure.value = !_scrollTop ? 0 : _scrollTop.toFixed(2)
+					_scrollTop = !_scrollTop ? 0 : _scrollTop.toFixed(2)
+					that.scroll_controller_structure.value = that.scroll_top = _scrollTop
+					
+					console.log(9)
+					console.log('that.save_schedule', that.save_schedule)
 					if(!that.save_schedule){
 						that.save_schedule = true
 						return
 					}
+					console.log(10)
 					that._saveSchedule(this.book_id, this.chapter_id)
-				}, 2000)
+				}, 1500)
 			},
 			// 点击上一章
 			prevChapter(){
@@ -318,7 +324,7 @@
 			},
 			// 点击下一章
 			nextChapter(){
-				console.log('nextChapter before')
+				// console.log('nextChapter before')
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'next')
 				// console.log('nextChaptera', currentChapterIndex, chapterLegth, nextChapter)
 				if(currentChapterIndex > chapterLegth){
@@ -337,7 +343,6 @@
 				this.chapter_id = chapter.chapter_id
 				// 保存进度
 				this.scroll_controller_structure.value = 0
-				console.log('点击上一章或下一章后 统一的操作 this.scroll_controller_structure.value', this.scroll_controller_structure.value)
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
 				}) // 设置页面标题为章节标题
@@ -470,7 +475,7 @@
 			nextPage(){},
 			// 获取章节详细内容
 			async getChapterContent(chapter){
-				console.log('getChapterContent chapter', chapter.item.chapter_name)
+				// console.log('getChapterContent chapter', chapter.item.chapter_name)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
 				this.getChapterContentBefore()
@@ -619,6 +624,7 @@
 			text-align: center;
 		}
 		.scroll-Y{
+			overflow-anchor:auto;
 			// height: 90%;
 			height: calc(100vh - 150rpx - env(safe-area-inset-bottom));
 			position:fiexd;

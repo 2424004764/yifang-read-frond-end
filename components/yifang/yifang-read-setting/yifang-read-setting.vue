@@ -186,7 +186,7 @@
 					that.saveSetting(3, that.user_font_color)
 				}, 1000)
 			},
-			// 获取用户设置
+			// 获取用户设置 优先本地缓存
 			getSetting(){
 				
 				let settings_index = '1,2,3,4,5,6'
