@@ -202,6 +202,19 @@
 			// #endif
 		},
 		methods: {
+			// 切换下一章之前
+			getChapterContentBefore(){
+				this.save_schedule = false
+				console.log('getChapterContentBefore')
+			},
+			// 切换下一章之后
+			getChapterContentAfter(){
+				console.log('getChapterContentAfter')
+				// 手动保存一下当前章节的进度
+				this.$nextTick(function(){
+					this._saveSchedule(this.book_id, this.chapter_id)
+				})
+			},
 			// APP 环境加载电量信息
 			app_load_level(){
 				let that = this
@@ -263,6 +276,7 @@
 					let schedule = JSON.parse(chapter.schedule).value
 					// console.log(schedule.value)
 					await this.$nextTick(() => {
+						this.scroll_controller_structure.value = schedule
 						this.scroll_top = schedule
 					})
 				}catch(e){
@@ -279,11 +293,12 @@
 				this.$u.debounce(() => {
 					// 保存某一章节滚动的高度
 					let _scrollTop = e.detail.scrollTop
-					console.log('readScroll', _scrollTop, 'that.scroll_top:', that.scroll_top)
 					that.scroll_top = _scrollTop
 					that.scroll_controller_structure.value = !_scrollTop ? 0 : _scrollTop.toFixed(2)
-					console.log('that.save_schedule', that.save_schedule)
-					if(!that.save_schedule)return;
+					if(!that.save_schedule){
+						that.save_schedule = true
+						return
+					}
 					that._saveSchedule(this.book_id, this.chapter_id)
 				}, 2000)
 			},
@@ -455,10 +470,10 @@
 			nextPage(){},
 			// 获取章节详细内容
 			async getChapterContent(chapter){
-				this.save_schedule = false
 				console.log('getChapterContent chapter', chapter.item.chapter_name)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
+				this.getChapterContentBefore()
 				await getChapterContent({
 					chapter_id: this.chapter_id
 				}, {
@@ -472,7 +487,8 @@
 					this.$nextTick(() => {
 						this.chapter_content = res.data[0].chapter_content
 						this.calcReadSchedule(chapter) // 处理阅读进度
-						this.save_schedule = true
+						// this.save_schedule = true
+						this.getChapterContentAfter()
 					})
 				}).then(() => {
 					uni.hideLoading()
