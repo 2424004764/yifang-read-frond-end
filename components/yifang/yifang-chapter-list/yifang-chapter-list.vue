@@ -70,7 +70,6 @@
 					custom: {loading: false}
 				}, (res) => {
 					res.then(res => {
-						// console.log('res', res)
 						if(res.data){
 							// 有保存记录 返回相应的章节
 							for (let chapter_indedx in this.chapter_list) {
@@ -109,10 +108,9 @@
 				}, {
 					custom: {loading: false}
 				}).then(res => {
-					// console.log('getChapterList', res)
 					this.chapter_list = res.data
-					// 如果未登录 则返回书籍的第一个章节
-					if(this.chapter_list.length){	
+					// 返回书籍的第一个章节
+					if(this.chapter_list.length){
 						this.getChpaterReadProgress(this.book_id)
 					}
 				})

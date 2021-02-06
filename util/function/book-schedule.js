@@ -32,7 +32,7 @@ function saveToLocal(user_id, book_id, chapter_id, schedule_value){
 	
 	let value = JSON.stringify(save_structure)
 	uni.setStorage({
-	    key: SCHEDULE_KEY,
+	    key: SCHEDULE_KEY + book_id,
 	    data: value,
 	})
 }
@@ -52,11 +52,15 @@ export function saveSchedule(user_id, book_id, chapter_id, schedule) {
 	
 	// 保存进度至本地
 	// 如果本地有当前书籍的章节的阅读进度  且进度未改变  则不保存
-	let local_schedule = uni.getStorageSync(SCHEDULE_KEY) // 必有值
-	let local_schedule_obj = JSON.parse(local_schedule)
-	if(schedule_obj.value == local_schedule_obj.v &&
-	book_id == local_schedule_obj.b &&
-	chapter_id == local_schedule_obj.c)return;
+	let local_schedule = uni.getStorageSync(SCHEDULE_KEY+book_id) // 必有值
+	try{
+		let local_schedule_obj = JSON.parse(local_schedule)
+		if(schedule_obj.value == local_schedule_obj.v &&
+		book_id == local_schedule_obj.b &&
+		chapter_id == local_schedule_obj.c)return;
+	}catch(e){
+		//TODO handle the exception
+	}
 	
 	saveToLocal(user_id ? user_id : '', book_id, chapter_id, schedule)
 	
@@ -80,10 +84,8 @@ export function saveSchedule(user_id, book_id, chapter_id, schedule) {
  */
 export function getScheduleInfo(params, options, fn){
 	// 优先从本地获取
-	let local_schedule = uni.getStorageSync(SCHEDULE_KEY)
-	// console.log('local_schedule', local_schedule)
+	let local_schedule = uni.getStorageSync(SCHEDULE_KEY+params.book_id)
 	if(local_schedule){
-		// console.log('本地有记录')
 		local_schedule = JSON.parse(local_schedule)
 		// 本地有进度的保存记录
 		fn( Promise.resolve({
@@ -98,13 +100,15 @@ export function getScheduleInfo(params, options, fn){
 	}
 	
 	// 本地没有记录
-	if(!isLogin())return;
-	
-	// console.log('本地没有记录')
+	if(!isLogin()){
+		fn( Promise.resolve({
+			data: null
+		}) )
+		return
+	};
 	
 	params.user_id = getLocalUserInfo()['user_id']
 	getSchedule(params, options).then(res => {
-		// console.log('1', res.data)
 		if(res.data){
 			let data = res.data
 			// 数据库存在记录
@@ -113,7 +117,6 @@ export function getScheduleInfo(params, options, fn){
 			// 返回
 			fn( Promise.resolve(res) )
 		}else{
-			// console.log('2 数据库也没有记录')
 			fn( Promise.resolve({
 				data: null
 			}) )
