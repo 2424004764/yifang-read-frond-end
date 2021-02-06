@@ -15,7 +15,7 @@
 			<div class="chapter_title app_style">{{app_chapter_title}}</div>
 			<!-- #endif -->
 			
-			<scroll-view scroll-y="true" @scroll="readScroll" 
+			<scroll-view :scroll-y="scroll_y" @scroll="readScroll" 
 			class="scroll-Y" show-scrollbar="true"
 			:scroll-top="scroll_top"
 			@scrolltolower="onScrolltolower">
@@ -80,19 +80,21 @@
 			<!-- 关闭第三层 -->
 			<div class="close-c-layer" @click="closeLayer3"></div>
 			<!-- 章节跳转 -->
-			<div class="chapter-controller">
-				<div class="prev-chapter" @click="prevChapter">上一章</div>
-				<!-- 进度 -->
-				<div class="chapter-progress">
-					<progress :percent="percent" show-info stroke-width="3" />
+			<div>
+				<div class="chapter-controller">
+					<div class="prev-chapter" @click="prevChapter">上一章</div>
+					<!-- 进度 -->
+					<div class="chapter-progress">
+						<progress :percent="percent" show-info stroke-width="3" />
+					</div>
+					<div class="next-chapter" @click="nextChapter">下一章</div>
 				</div>
-				<div class="next-chapter" @click="nextChapter">下一章</div>
-			</div>
-			<!-- 底部控制区  用于弹出章节、设置按钮 -->
-			<div class="c-controller-layer" @click.stop>
-				<!-- 点击章节获取设置时 显示第四层 -->
-				<div class="item" @click="showChapterList">章节</div>
-				<div class="item" @click="showSetting">设置</div>
+				<!-- 底部控制区  用于弹出章节、设置按钮 -->
+				<div class="c-controller-layer" @click.stop>
+					<!-- 点击章节获取设置时 显示第四层 -->
+					<div class="item" @click="showChapterList">章节</div>
+					<div class="item" @click="showSetting">设置</div>
+				</div>
 			</div>
 		</div>
 		
@@ -133,6 +135,7 @@
 		components: {yifangChapterList, yifangReadSetting},
 		data() {
 			return {
+				scroll_y: true,
 				scroll_controller_structure: {
 					type: 'scrollTop', // 滚动的类型
 					value: 0, // 滚动的距离
@@ -228,8 +231,7 @@
 			},
 			// 阅读区域滚动到底部
 			onScrolltolower(e){
-				// console.log('到底了')
-				// console.log(e)
+				console.log('到底了')
 				this.$u.throttle(this.nextChapter, 1000)
 			},
 			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
@@ -254,43 +256,34 @@
 				    }
 				})
 			},
-			// 处理阅读进度
-			calcReadSchedule(chapter){
-				// console.log(chapter)
+			// 每次新章节  处理阅读进度（根据进度跳转scrolltop）
+			async calcReadSchedule(chapter){
+				// console.log('calcReadSchedule chapter', chapter)
 				try{
 					let schedule = JSON.parse(chapter.schedule).value
 					// console.log(schedule.value)
-					this.$nextTick(function(){
+					await this.$nextTick(() => {
 						this.scroll_top = schedule
 					})
 				}catch(e){
-					this.$nextTick(function(){
+					await this.$nextTick(() => {
 						this.scroll_top = 0
 					})
-					this.scroll_top = 0
 				}
 			},
 			// 阅读区域滚动
 			readScroll(e){
 				// console.log('_readScroll', e)
 				let that = this
-				this.$u.debounce(function(){
-					// 直接保存某一章节滚动的高度
-					let _scrollTop = e.detail.scrollTop
-					// console.log(_scrollTop)
-					// 如果阅读的进度和  接口保存的进度一致 则不保存
-					if(that.scroll_top == _scrollTop){
-						return
-					}
-					that.scroll_top = _scrollTop
-					
-					that.scroll_controller_structure.value = !_scrollTop ? 0 : _scrollTop.toFixed(2)
-					that.$u.throttle(function(){
-						that._saveSchedule(that.book_id, that.chapter_id)
-					},
-					 10, false)
-				}, 2000)
 				
+				this.$u.debounce(() => {
+					// 保存某一章节滚动的高度
+					let _scrollTop = e.detail.scrollTop
+					console.log('readScroll', _scrollTop, 'that.scroll_top:', that.scroll_top)
+					that.scroll_top = _scrollTop
+					that.scroll_controller_structure.value = !_scrollTop ? 0 : _scrollTop.toFixed(2)
+					that._saveSchedule(this.book_id, this.chapter_id)
+				}, 2000)
 			},
 			// 点击上一章
 			prevChapter(){
@@ -324,11 +317,10 @@
 			// 点击上一章或下一章后 统一的操作
 			clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
 				this.chapter_content = ''
-				// console.log('clickChapterAftera', currentChapterIndex, chapterLegth, chapter)
 				this.chapter_id = chapter.chapter_id
 				// 保存进度
 				this.scroll_controller_structure.value = 0
-				this._saveSchedule(this.book_id, this.chapter_id)
+				console.log('点击上一章或下一章后 统一的操作 this.scroll_controller_structure.value', this.scroll_controller_structure.value)
 				uni.setNavigationBarTitle({
 				    title: chapter.chapter_name
 				}) // 设置页面标题为章节标题
@@ -375,7 +367,7 @@
 				saveSchedule(getLocalUserInfo()['user_id'], book_id, chapter_id, JSON.stringify(this.scroll_controller_structure))
 			},
 			// 监听章节组件返回的章节id
-			onChapterId(chapter){
+			async onChapterId(chapter){
 				// return
 				console.log('_onChapterId', chapter)
 				// 保存章节首次阅读信息
@@ -388,7 +380,7 @@
 				this.layer_4 = false
 				this.layer_3 = false
 				this.openGlobalClickEvent()
-				this.getChapterContent(chapter) // 获取章节详情
+				await this.getChapterContent(chapter) // 获取章节详情
 				this.calcPercent(chapter.index, chapter.chapterLegth) // 计算进度
 			},
 			// 获取书籍详情
@@ -400,9 +392,9 @@
 				getBookDetailUtil(this.book_id).then(res => {
 					this.bookDetail = res
 					// 设置页面标题
-					uni.setNavigationBarTitle({
-					    title: res.book_name
-					})
+					// uni.setNavigationBarTitle({
+					//     title: res.book_name
+					// })
 					this.app_chapter_title = res.book_name
 					uni.hideLoading()
 				}).catch(() => {
@@ -460,15 +452,12 @@
 			// 下一页
 			nextPage(){},
 			// 获取章节详细内容
-			getChapterContent(chapter){
+			async getChapterContent(chapter){
+				// this
 				console.log('getChapterContent chapter', chapter.item.chapter_name)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
-				// uni.showLoading({
-				// 	mask: true,
-				// 	title: "加载章节中..."
-				// })
-				getChapterContent({
+				await getChapterContent({
 					chapter_id: this.chapter_id
 				}, {
 					custom: {loading: false}
@@ -478,21 +467,20 @@
 						res.data[0].chapter_content = this.default_content
 					}
 					this.chapter_content = ''
-					setTimeout(() => {
+					this.$nextTick(() => {
 						this.chapter_content = res.data[0].chapter_content
-						this.calcReadSchedule(chapter)// 处理阅读进度
-					}, 20)
-					this.$nextTick(function(){
-						
+						this.calcReadSchedule(chapter) // 处理阅读进度
+						// 手动更改阅读进度  达到切换章节后保存一次的目的
+						this.scroll_top += 1
 					})
 				}).then(() => {
 					uni.hideLoading()
 				}).catch(err => {
 					uni.hideLoading()
 					this.chapter_content = this.default_content
-					// console.log(err)
 				})
 			},
+			// 初始化点击弹出菜单区的位置
 			initControllerArea(){
 				// 计算点击的是否是屏幕中心区域位置
 				// 需要先计算到四个顶点的位置
@@ -568,7 +556,7 @@
 				        }
 				    }
 				})
-			}
+			},
 		},
 		created() {
 			// #ifdef APP-PLUS
@@ -591,20 +579,6 @@
 			// #endif
 		},
 		watch:{
-			scroll_top(val, old){
-				return
-				console.log(55)
-				if(!old)return
-				let that = this
-				this.$u.debounce(() => {
-					let e = {
-						detail: {
-							scrollTop: val
-						}
-					}
-					that.readScroll(e)
-				}, 1000)
-			}
 		}
 	}
 </script>

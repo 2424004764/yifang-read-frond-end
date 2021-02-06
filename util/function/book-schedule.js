@@ -31,6 +31,7 @@ function saveToLocal(user_id, book_id, chapter_id, schedule_value){
 	save_structure.v = JSON.parse(schedule_value).value
 	
 	let value = JSON.stringify(save_structure)
+	console.log('schedule saveToLocal', value)
 	uni.setStorage({
 	    key: SCHEDULE_KEY,
 	    data: value,
