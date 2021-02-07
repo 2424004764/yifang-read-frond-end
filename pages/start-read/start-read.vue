@@ -12,13 +12,14 @@
 			
 			<!-- 为APP时再显示标题 -->
 			<!-- #ifdef APP-PLUS -->
-			<div class="chapter_title app_style">{{app_chapter_title}}{{this.scroll_top}}</div>
+			<div class="chapter_title app_style">{{app_chapter_title}}</div>
 			<!-- #endif -->
 			
 			<scroll-view scroll-y="true" @scroll="readScroll" 
-			class="scroll-Y" show-scrollbar="true"
+			class="scroll-Y" show-scrollbar="false"
 			:scroll-top="scroll_top"
 			scroll-anchoring="true"
+			v-if="chapter_content"
 			@scrolltolower="onScrolltolower">
 				<template v-if="!chapter_content">
 					<div>
@@ -206,6 +207,7 @@
 			// 切换下一章之前
 			getChapterContentBefore(){
 				this.save_schedule = false
+				this.chapter_content = ''
 				// console.log('getChapterContentBefore')
 			},
 			// 切换下一章之后
@@ -214,11 +216,11 @@
 				// 手动保存一下当前章节的进度
 				this.$nextTick(function(){
 					this._saveSchedule(this.book_id, this.chapter_id)
-					this.scheduleReInit()
 				})
 			},
 			// 进度信息重新初始化
 			scheduleReInit(){
+				this.scroll_top = this.scroll_controller_structure.value = 0
 			},
 			// APP 环境加载电量信息
 			app_load_level(){
@@ -276,36 +278,35 @@
 			},
 			// 每次新章节  处理阅读进度（根据进度跳转scrolltop）
 			async calcReadSchedule(chapter){
-				// console.log('calcReadSchedule chapter', chapter)
+				console.log('calcReadSchedule chapter', chapter)
+				let _scrollTop = 0
 				try{
 					let schedule = JSON.parse(chapter.schedule).value
-					this.scroll_controller_structure.value = schedule
-					setTimeout(() => {
-						this.scroll_top = parseInt(schedule)
-					}, 100)
+					_scrollTop = parseInt(schedule)
 				}catch(e){
-					this.scroll_top = 0
 				}
+				
+				console.log('_scrollTop before', _scrollTop)
+				setTimeout(() => {
+					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
+					console.log('_scrollTop after', _scrollTop)
+				}, 100)
 			},
 			// 阅读区域滚动
 			readScroll(e){
-				// console.log('_readScroll', e)
-				let that = this
+				console.log('_readScroll', e)
 				
 				this.$u.debounce(() => {
 					// 保存某一章节滚动的高度
 					let _scrollTop = e.detail.scrollTop
 					_scrollTop = !_scrollTop ? 0 : _scrollTop.toFixed(2)
-					that.scroll_controller_structure.value = that.scroll_top = _scrollTop
-					
-					console.log(9)
-					console.log('that.save_schedule', that.save_schedule)
-					if(!that.save_schedule){
-						that.save_schedule = true
+					if(!this.save_schedule){
+						this.save_schedule = true
 						return
 					}
-					console.log(10)
-					that._saveSchedule(this.book_id, this.chapter_id)
+					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
+					// console.log('_saveSchedule', _scrollTop)
+					this._saveSchedule(this.book_id, this.chapter_id)
 				}, 1500)
 			},
 			// 点击上一章
@@ -338,7 +339,7 @@
 				this.clickChapterAfter(currentChapterIndex, chapterLegth, nextChapter)
 			},
 			// 点击上一章或下一章后 统一的操作
-			clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
+			async clickChapterAfter(currentChapterIndex, chapterLegth, chapter){
 				this.chapter_content = ''
 				this.chapter_id = chapter.chapter_id
 				// 保存进度
@@ -350,7 +351,7 @@
 				let newChapter = {
 					item: chapter
 				}
-				this.getChapterContent(newChapter) // 获取章节详情内容 和阅读进度
+				await this.getChapterContent(newChapter) // 获取章节详情内容 和阅读进度
 				// 计算进度
 				this.calcPercent(currentChapterIndex, chapterLegth)
 				// 关闭第三层 
@@ -391,7 +392,7 @@
 			// 监听章节组件返回的章节id
 			async onChapterId(chapter){
 				// return
-				console.log('_onChapterId', chapter)
+				// console.log('_onChapterId', chapter)
 				// 保存章节首次阅读信息
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
@@ -476,6 +477,7 @@
 			// 获取章节详细内容
 			async getChapterContent(chapter){
 				// console.log('getChapterContent chapter', chapter.item.chapter_name)
+				console.log('_getChapterContent', chapter)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
 				this.getChapterContentBefore()
@@ -601,6 +603,9 @@
 			// #endif
 		},
 		watch:{
+			scroll_top(n_v, o_v){
+				console.log('scroll_top n_v', n_v, 'o_v', o_v)
+			}
 		}
 	}
 </script>
