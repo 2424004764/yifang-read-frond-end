@@ -7,8 +7,7 @@
 		<div class="item version">Version {{Config.version}}</div>
 		
 		<div class="footer">
-			<p>开源地址：<text class="copy" @click="copyGitUrl">点击复制</text></p>
-			<p></p>
+			<p>Github 开源地址：<text class="copy" @click="copyGitUrl">点击复制</text></p>
 			<p>{{Config.appName}} 版权所有</p>
 			<p>All Right Reserved.</p>
 		</div>
@@ -44,7 +43,7 @@
 	.item{
 		width: 100%;
 		align-self: center;
-		margin-top: 40rpx;
+		margin-top: 20rpx;
 		text-align: center;
 	}
 	.icon{
@@ -56,12 +55,13 @@
 		overflow: hidden;
 	}
 	.appName{
+		margin-top: 80rpx;
 		font-size: 44rpx;
 	}
 	.footer{
 		position: fixed;
 		left: 0px;
-		bottom: 0px;
+		bottom: 10px;
 		width: 100%;
 		box-sizing: border-box;
 		p{

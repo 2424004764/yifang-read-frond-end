@@ -21,40 +21,40 @@
 					</div>
 				</div>
 				<!-- 用户成就 -->
-				<div class="achievement" v-if="isLogin && achievements.length">
+				<!-- <div class="achievement" v-if="isLogin && achievements.length">
 					<div class="box">
 						<div class="item" v-for="(item, index) in achievements" 
 						:key="index">{{item.title}}</div>
 					</div>
 					<div class="more">更多成就</div>
-				</div>
+				</div> -->
 			</div>
 			
 			<!-- 常用操作 -->
-			<div class="block-area controller">
+			<!-- <div class="block-area controller">
 				<div class="item" v-for="(item, index) in controllers"
 				:key="index">
 					<div class="icon"><img :src="item.icon" alt=""></div>
 					<div class="title">{{item.title}}</div>
 				</div>
-			</div>
+			</div> -->
 			
 			<!-- 菜单 -->
 			<div class="block-area menu">
-				<div class="item">
+				<!-- <div class="item">
 					<div class="title">帮助与反馈</div>
-				</div>
+				</div> -->
 				<div class="item" @click="toAboutPage">
 					<div class="title">关于</div>
 				</div>
 			</div>
 			
 			<!-- 设置 -->
-			<div class="block-area menu">
+			<!-- <div class="block-area menu">
 				<div class="item">
 					<div class="title">设置</div>
 				</div>
-			</div>
+			</div> -->
 			
 			<!-- 退出 -->
 			<div class="block-area signout" v-if="isLogin" @click="outIn">

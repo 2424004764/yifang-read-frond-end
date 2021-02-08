@@ -129,6 +129,7 @@
 		},
 		data() {
 			return {
+				now_save_schedule: false, // 是否保存进度 只在第一次打开时控制
 				save_schedule: true, // 是否保存进度
 				scroll_controller_structure: {
 					type: 'scrollTop', // 滚动的类型
@@ -207,7 +208,7 @@
 				// console.log('getChapterContentAfter', this.save_schedule)
 				// 手动保存一下当前章节的进度
 				this.$nextTick(function() {
-					this._saveSchedule(this.book_id, this.chapter_id)
+					this.now_save_schedule && this._saveSchedule(this.book_id, this.chapter_id)
 				})
 			},
 			// APP 环境加载电量信息
@@ -282,7 +283,7 @@
 			},
 			// 阅读区域滚动
 			readScroll(e) {
-				console.log('_readScroll', e)
+				// console.log('_readScroll', e)
 
 				this.$u.debounce(() => {
 					// 保存某一章节滚动的高度
@@ -290,12 +291,16 @@
 					_scrollTop = !_scrollTop ? 0 : _scrollTop.toFixed(2)
 					if (!this.save_schedule) {
 						this.save_schedule = true
+						this.$nextTick(() => {
+							this.save_schedule = true
+						})
 						return
 					}
 					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
-					// console.log('_saveSchedule', _scrollTop)
+					console.log('_saveSchedule', _scrollTop)
 					this._saveSchedule(this.book_id, this.chapter_id)
 				}, 1500)
+				
 			},
 			// 点击上一章
 			prevChapter() {
@@ -325,6 +330,7 @@
 					return
 				}
 				this.clickChapterAfter(currentChapterIndex, chapterLegth, nextChapter)
+				this.now_save_schedule = true
 			},
 			// 点击上一章或下一章后 统一的操作
 			async clickChapterAfter(currentChapterIndex, chapterLegth, chapter) {

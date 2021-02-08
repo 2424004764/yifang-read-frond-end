@@ -35,8 +35,8 @@
 					
 					<div class="tip item">
 						<p>
-							<text>忘记密码？</text>
-							<text @click="toRegPage">|&nbsp;&nbsp;新用户注册</text>
+							<!-- <text>忘记密码？|</text> -->
+							<text @click="toRegPage" style="margin-left: 10rpx;"> 新用户注册</text>
 						</p>
 					</div>
 				</form>

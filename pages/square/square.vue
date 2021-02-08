@@ -1,6 +1,6 @@
 <template>
 	<view>
-		123
+		功能正在慢速开发中..
 	</view>
 </template>
 

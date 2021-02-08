@@ -2,13 +2,13 @@
 	
 	<view class="body">
 		<!-- 顶部搜索框 -->
-		<yifang-top-search></yifang-top-search>
+		<!-- <yifang-top-search></yifang-top-search> -->
 		
 		<!-- 轮播图 -->
 		<yifang-swiper></yifang-swiper>
 		
 		<!-- 菜单 -->
-		<yifang-menu v-if="hackReset"></yifang-menu>
+		<!-- <yifang-menu v-if="hackReset"></yifang-menu> -->
 		
 		<!-- 推荐 -->
 		<yifang-recommend v-if="hackReset"></yifang-recommend>
