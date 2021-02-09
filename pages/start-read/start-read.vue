@@ -277,7 +277,7 @@
 				// console.log('_scrollTop before', this.scroll_top)
 				setTimeout(() => {
 					this.scroll_top = _scrollTop
-					this.scroll_controller_structure.value = this.scroll_top = (this.scroll_top + 1)
+					this.scroll_controller_structure.value = this.scroll_top = (this.scroll_top + 0.01)
 					// console.log('_scrollTop after', this.scroll_top)
 				}, 100)
 			},
@@ -291,13 +291,10 @@
 					_scrollTop = !_scrollTop ? 0 : _scrollTop.toFixed(2)
 					if (!this.save_schedule) {
 						this.save_schedule = true
-						this.$nextTick(() => {
-							this.save_schedule = true
-						})
 						return
 					}
 					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
-					console.log('_saveSchedule', _scrollTop)
+					// console.log('_saveSchedule', _scrollTop)
 					this._saveSchedule(this.book_id, this.chapter_id)
 				}, 1500)
 				
