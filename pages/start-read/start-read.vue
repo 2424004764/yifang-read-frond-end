@@ -278,7 +278,6 @@
 				setTimeout(() => {
 					this.scroll_top = _scrollTop
 					this.scroll_controller_structure.value = this.scroll_top = (this.scroll_top + 0.01)
-					// console.log('_scrollTop after', this.scroll_top)
 				}, 100)
 			},
 			// 阅读区域滚动
