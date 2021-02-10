@@ -4,16 +4,16 @@
 			
 			<!-- 书籍详情区 -->
 			<div class="book-detail">
-				<div class="bg-layer"></div>
+				<div class="bg-layer" :style="'background-image: url('+filter_img+')'"></div>
 				
 				<div class="img-content">
 					<div class="book-img">
 						<!-- 有图片 -->
-						<image v-if="isLoadingSuccess && bookDetail.book_cover_imgs.length" 
-						:src="bookDetail.book_cover_imgs[0]"
+						<image v-if="isLoadingSuccess && filter_img" 
+						:src="filter_img"
 						 mode="" @click="showImg(bookDetail.book_cover_imgs)"></image>
 						<!-- 没有图片 -->
-						<text v-if="isLoadingSuccess && !bookDetail.book_cover_imgs.length"></text>
+						<text v-if="isLoadingSuccess && !filter_img"></text>
 					</div>
 					<div class="book-desc" v-if="isLoadingSuccess">
 						<div class="book_name">{{bookDetail.book_name}}</div>
@@ -77,9 +77,20 @@
 				loadIsJoin: false, // 加载加入书架请求是否完毕
 				isJoin: null, // 是否加入书架
 				buttom_bottom: 0, // 底部操作区距离
+				filter_img: '', // 用于书籍详情的背景模糊图
 			}
 		},
 		methods: {
+			// 处理背景图片
+			handleBgImg(){
+				// 如果书籍的封面图
+				if(this.bookDetail.book_cover_imgs.length){
+					this.filter_img = this.bookDetail.book_cover_imgs[0]
+				}else{
+					// 设置默认背景图  以及模糊图
+					this.filter_img = 'http://cdn.fologde.com/bk_100101791_r_601_m6.jpg'
+				}
+			},
 			bookDetailLoaded() {
 				this.$refs.bookDetailMore.init();
 			},
@@ -193,6 +204,9 @@
 					// })
 					this.isLoadingSuccess = true
 					uni.hideLoading()
+				}).then(() => {
+					// 处理背景图片
+					this.handleBgImg()
 				}).catch(() => {
 					uni.hideLoading()
 				})
@@ -213,7 +227,6 @@
 		},
 		mounted(){
 			// prop 数据加载完毕
-			// console.log(this.book_id)
 			this.getBookDetail(this.book_id) // 获取书籍详情
 			this.isJoinBookshelf(this.book_id) // 是否加入书架
 			let that = this
@@ -253,7 +266,6 @@
 				top: 0px;
 				left: 0px;
 				width: 100%;
-				background-image: url(http://cdn.fologde.com/bk_100101791_r_601_m6.jpg);
 				background-position: center;
 				background-size: 100%;
 				filter: blur(40rpx);
