@@ -159,6 +159,7 @@
 						this.loadIsJoin = true
 						this.isJoin = res.data.is_join
 					}
+					uni.stopPullDownRefresh()
 				})
 			},
 			// 加入书籍
@@ -225,9 +226,7 @@
 			})
 		},
 		watch:{
-			isLoadingSuccess(newV, oldV){
-				// console.log(newV, oldV)
-			}
+			
 		}
 	}
 </script>

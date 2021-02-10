@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<yifang-book-detail :book_id="book_id"></yifang-book-detail>
+		<yifang-book-detail :book_id="book_id" v-if="hock"></yifang-book-detail>
 	</view>
 </template>
 
@@ -15,6 +15,7 @@
 		data() {
 			return {
 				book_id: null, // 传过来的book_id
+				hock: true,
 			}
 		},
 		methods: {
@@ -26,8 +27,14 @@
 		},
 		onShow() {
 			// uni.$emit('bookDetailOnShow')
-		}
-
+		},
+		// 书籍详情页面下拉刷新
+		onPullDownRefresh(){
+			this.hock = false
+			this.$nextTick(() => {
+				this.hock = true
+			})
+		},
 	}
 </script>
 
