@@ -148,6 +148,7 @@
 				if(!isLogin()){
 					this.isJoin = false
 					this.loadIsJoin = true
+					uni.stopPullDownRefresh()
 					return
 				}
 				isJoinBookshelf({
