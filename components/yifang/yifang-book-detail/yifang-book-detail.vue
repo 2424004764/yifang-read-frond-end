@@ -22,10 +22,16 @@
 			</div>
 			<!-- 书籍详情说明 -->
 			<div class="book-detail_introduce" v-if="isLoadingSuccess">
-				作者详情介绍：{{bookDetail.author_detail.book_author_desc}}
+				作者详情介绍：
+				<u-read-more ref="authorDetailMore" :toggle="true" show-height="300">
+					<u-parse :html="bookDetail.author_detail.book_author_desc" @load="authorDetailLoaded"></u-parse>
+				</u-read-more>
 			</div>
 			<div class="book-detail_introduce" v-if="isLoadingSuccess">
-				书籍详情介绍：{{bookDetail.book_detail.book_desc}}
+				书籍详情介绍：
+				<u-read-more ref="bookDetailMore" :toggle="true" show-height="300">
+					<u-parse :html="bookDetail.book_detail.book_desc" @load="bookDetailLoaded"></u-parse>
+				</u-read-more>
 			</div>
 		</div>
 		
@@ -67,7 +73,12 @@
 			}
 		},
 		methods: {
-			
+			bookDetailLoaded() {
+				this.$refs.bookDetailMore.init();
+			},
+			authorDetailLoaded() {
+				this.$refs.authorDetailMore.init();
+			},
 			// 点击书籍封面图
 			showImg(book_cover_imgs){
 				
