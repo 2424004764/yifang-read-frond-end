@@ -1,6 +1,6 @@
 // 挂载到全局  使用参考/pages/about/abut
 module.exports = {
-	baseUrl: 'http://192.168.31.118:885/web/index.php', // api 接口地址
+	baseUrl: 'http://192.168.43.203:885/web/index.php', // api 接口地址
 	// baseUrl: 'https://yifangread.fologde.com', // api 接口地址
 	adminQQ: '2424004764', // 管理员QQ
 	appName: '一方阅读', // app 名字

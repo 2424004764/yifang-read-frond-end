@@ -27,7 +27,7 @@
 			<!-- 书籍详情说明 -->
 			<div class="book-detail_introduce near-img-area" v-if="isLoadingSuccess">
 				作者详情介绍：
-				<u-read-more ref="authorDetailMore" :toggle="true" show-height="200" v-if="bookDetail.author_detail.book_author_desc">
+				<u-read-more ref="authorDetailMore" :toggle="true" show-height="300" v-if="bookDetail.author_detail.book_author_desc">
 					<u-parse :html="bookDetail.author_detail.book_author_desc" @load="authorDetailLoaded"></u-parse>
 				</u-read-more>
 			</div>
@@ -36,7 +36,7 @@
 			
 			<div class="book-detail_introduce" v-if="isLoadingSuccess && bookDetail.book_detail.book_desc">
 				书籍详情介绍：
-				<u-read-more ref="bookDetailMore" :toggle="true" show-height="200" v-if="bookDetail.book_detail.book_desc">
+				<u-read-more ref="bookDetailMore" :toggle="true" show-height="300" v-if="bookDetail.book_detail.book_desc">
 					<u-parse :html="bookDetail.book_detail.book_desc" @load="bookDetailLoaded"></u-parse>
 				</u-read-more>
 			</div>
@@ -269,7 +269,7 @@
 				background-position: center;
 				background-size: 100%;
 				filter: blur(40rpx);
-				height: 360rpx;
+				height: 400rpx;
 			}
 			.img-content{
 				position: relative;
@@ -313,7 +313,7 @@
 		.near-img-area{
 			border-radius: 40rpx;
 			position: relative;
-			margin-top: -24rpx;
+			margin-top: -40rpx;
 			background-color: white;
 		}
 	}
