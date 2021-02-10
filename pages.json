@@ -89,6 +89,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/my/my-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

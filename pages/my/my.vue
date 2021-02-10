@@ -8,7 +8,7 @@
 					<div class="headimg" v-if="isLogin">
 						<img :src="userinfo.user_headimg" alt="">
 					</div>
-					<div class="nikename-area" v-if="isLogin">
+					<div class="nikename-area" v-if="isLogin" @click="clickMyInfo">
 						<p class="nickname">{{userinfo.user_nickname}}</p>
 						<p class="uid-area">一方书号：{{userinfo.user_id}}</p>
 					</div>
@@ -94,6 +94,12 @@
 			this.init()
 		},
 		methods: {
+			// 点击头像昵称区域  进度我的个人中心
+			clickMyInfo(){
+				uni.navigateTo({
+					url: '/pages/my/my-info'
+				})
+			},
 			// 初始化
 			init(){
 				this.isLogin = isLogin() ? true : false

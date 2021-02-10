@@ -4,32 +4,39 @@
 			
 			<!-- 书籍详情区 -->
 			<div class="book-detail">
-				<div class="book-img">
-					<!-- 有图片 -->
-					<image v-if="isLoadingSuccess && bookDetail.book_cover_imgs.length" 
-					:src="bookDetail.book_cover_imgs[0]"
-					 mode="" @click="showImg(bookDetail.book_cover_imgs)"></image>
-					<!-- 没有图片 -->
-					<text v-if="isLoadingSuccess && !bookDetail.book_cover_imgs.length"></text>
+				<div class="bg-layer"></div>
+				
+				<div class="img-content">
+					<div class="book-img">
+						<!-- 有图片 -->
+						<image v-if="isLoadingSuccess && bookDetail.book_cover_imgs.length" 
+						:src="bookDetail.book_cover_imgs[0]"
+						 mode="" @click="showImg(bookDetail.book_cover_imgs)"></image>
+						<!-- 没有图片 -->
+						<text v-if="isLoadingSuccess && !bookDetail.book_cover_imgs.length"></text>
+					</div>
+					<div class="book-desc" v-if="isLoadingSuccess">
+						<div class="book_name">{{bookDetail.book_name}}</div>
+						<div class="book_author">作者：{{bookDetail.author_detail.book_author}}</div>
+						<div class="book_class">分类：{{bookDetail.class_detail.class_id_name}}</div>
+						<div class="book_word_count">字数：{{bookDetail.book_word_count}}</div>
+					</div>
+					
 				</div>
-				<div class="book-desc" v-if="isLoadingSuccess">
-					<div class="book_name">{{bookDetail.book_name}}</div>
-					<div class="book_author">作者：{{bookDetail.author_detail.book_author}}</div>
-					<div class="book_class">分类：{{bookDetail.class_detail.class_id_name}}</div>
-					<div class="book_word_count">字数：{{bookDetail.book_word_count}}</div>
-				</div>
-	
 			</div>
 			<!-- 书籍详情说明 -->
-			<div class="book-detail_introduce" v-if="isLoadingSuccess">
+			<div class="book-detail_introduce near-img-area" v-if="isLoadingSuccess">
 				作者详情介绍：
-				<u-read-more ref="authorDetailMore" :toggle="true" show-height="300">
+				<u-read-more ref="authorDetailMore" :toggle="true" show-height="200" v-if="bookDetail.author_detail.book_author_desc">
 					<u-parse :html="bookDetail.author_detail.book_author_desc" @load="authorDetailLoaded"></u-parse>
 				</u-read-more>
 			</div>
-			<div class="book-detail_introduce" v-if="isLoadingSuccess">
+			
+			<u-gap height="8" bg-color="#F3F3F3"></u-gap>
+			
+			<div class="book-detail_introduce" v-if="isLoadingSuccess && bookDetail.book_detail.book_desc">
 				书籍详情介绍：
-				<u-read-more ref="bookDetailMore" :toggle="true" show-height="300">
+				<u-read-more ref="bookDetailMore" :toggle="true" show-height="200" v-if="bookDetail.book_detail.book_desc">
 					<u-parse :html="bookDetail.book_detail.book_desc" @load="bookDetailLoaded"></u-parse>
 				</u-read-more>
 			</div>
@@ -229,47 +236,73 @@
 	.bg{
 		width: 100%;
 		// border: 1px solid red;
-		border-bottom: 1px solid #FF5501;
+		// border-bottom: 1px solid #FF5501;
 		box-sizing: border-box;
-		padding-top: 50rpx;
-		overflow: hidden;
 		padding-bottom: 120px;
 		.book-detail{
-			// border: 1px solid red;
-			border-bottom: 1px solid #FF5501;
-			margin-left: 50rpx;
+			position: relative;
 			clear: both;
 			overflow: hidden;
-			padding-bottom: 10rpx;
-			width: 88%;
-			.book-img{
-				width: 170rpx;
-				height: 220rpx;
-				float: left;
-				image{
-					width: 100%;
-					height: 100%;
-				}
+			padding: 40rpx;
+			padding-bottom: 70rpx;
+			width: 100%;
+			box-sizing: border-box;
+			
+			.bg-layer{
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				background-image: url(http://cdn.fologde.com/bk_100101791_r_601_m6.jpg);
+				background-position: center;
+				background-size: 100%;
+				filter: blur(40rpx);
+				height: 360rpx;
 			}
-			.book-desc{
-				float: left;
+			.img-content{
+				position: relative;
+				top: 0px;
+				left: 0px;
+				width: 100%;
 				// border: 1px solid red;
-				margin-left: 50rpx;
-				width: 60%;
-				.book_name{
-					font-size: 40rpx;
-					font-weight: 900;
+				overflow: hidden;
+				.book-img{
+					width: 170rpx;
+					height: 220rpx;
+					float: left;
+					// border: 1px solid red;
+					image{
+						width: 100%;
+						height: 100%;
+					}
 				}
-				.book_author{
-					margin-top: 20rpx;
-				}
-				.book_class, .book_word_count{
-					margin-top: 10rpx;
+				.book-desc{
+					float: left;
+					// border: 1px solid red;
+					margin-left: 50rpx;
+					width: 60%;
+					color: white;
+					.book_name{
+						font-size: 40rpx;
+						font-weight: 900;
+					}
+					.book_author{
+						margin-top: 20rpx;
+					}
+					.book_class, .book_word_count{
+						margin-top: 10rpx;
+					}
 				}
 			}
 		}
 		.book-detail_introduce{
-			margin: 20rpx 40rpx;
+			padding: 20rpx 40rpx;
+		}
+		.near-img-area{
+			border-radius: 40rpx;
+			position: relative;
+			margin-top: -24rpx;
+			background-color: white;
 		}
 	}
 	.join{
@@ -279,10 +312,8 @@
 		position: fixed;
 		// bottom: 1rpx;
 		left: 0rpx;
-		border-top: 1px solid #FF5501;
-		// box-sizing: border-box;
+		border-top: 1px solid #F2F2F2;
 		background-color: white;
-		// transform: translate(2px);
 		.div{
 			float: left;
 		}
