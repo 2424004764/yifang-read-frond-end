@@ -14,7 +14,6 @@ export function setLoginStatu(data, msg){
 	})
 	uni.setStorageSync(USERI_INFO_KEY, data)
 	setTimeout(function(){
-		// console.log('reg settimeout')
 		uni.switchTab({
 		    url: '/pages/my/my'
 		})
@@ -37,6 +36,13 @@ export function isLogin(){
  */
 export function getLocalUserInfo(){
 	return uni.getStorageSync(USERI_INFO_KEY)
+}
+
+/**
+ * 设置本地用户信息
+ */
+export function setLocalUserInfo(data){
+	return uni.setStorageSync(USERI_INFO_KEY, data)
 }
 
 /**

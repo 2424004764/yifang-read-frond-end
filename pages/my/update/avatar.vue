@@ -9,13 +9,13 @@
 					<u-image width="120rpx" height="120rpx" :src="userinfo.user_headimg" @click="showImg(userinfo.user_headimg)"></u-image>
 				</u-grid-item>
 				
-				<u-grid-item v-if="man_icon_select_index || woman_icon_select_index">
+				<u-grid-item v-if="man_icon_select_index || man_icon_select_index == 0 || woman_icon_select_index || woman_icon_select_index == 0">
 					<text>选择的头像</text> <br>
 					<u-image width="120rpx" height="120rpx" :src="current_select_avatar_url" @click="showImg(current_select_avatar_url)"></u-image>
 				</u-grid-item>
 				
-				<u-grid-item v-if="man_icon_select_index || woman_icon_select_index">
-					<u-button type="primary" @click="saveAvatar">保存</u-button>
+				<u-grid-item v-if="save_button_is_show">
+					<u-button type="primary" @click="saveAvatar" :ripple="true" :loading="save_button_loading">{{save_button_name}}</u-button>
 				</u-grid-item>
 			</u-grid>
 		</div>
@@ -38,15 +38,18 @@
 				</u-grid-item>
 			</u-grid>
 		</div>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
 	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
+	import {updateUserInfo} from '@/util/user_http/user.js'
+	import {updateUserLocalInfo} from '@/util/function/user.js'
+	
 	export default {
 		data() {
 			return {
-				src: "http://cdn.fologde.com/6.png",
 				man_img: [], // 男性头像
 				woman_img: [], // 女性头像
 				img_format: "http://cdn.fologde.com/avatar%s.png", // 头像地址 格式化用
@@ -57,9 +60,13 @@
 				
 				isLogin: false, // 是否登录
 				userinfo: {}, // 用户信息
+				save_button_name: '保存', // 保存的按钮名字
+				save_button_loading: false, // 保存按钮是否loading
+				save_button_is_show: false, // 保存按钮是否显示
 			}
 		},
 		onLoad() {
+			this.init()
 			this.initAvatar()
 		},
 		onShow(){
@@ -68,7 +75,29 @@
 		methods: {
 			// 保存头像
 			saveAvatar(){
-				console.log(this.current_select_avatar_url)
+				this.init()
+				this.save_button_loading = true
+				this.save_button_name = '保存中'
+				updateUserInfo({}, {
+					data: {
+						user_id: this.userinfo.user_id,
+						user_headimg: this.current_select_avatar_url,
+					}
+				}).then(res => {
+					this.$refs.uToast.show({
+						title: '修改成功！',
+						type: 'success',
+					})
+				}).then(res => {
+					this.save_button_loading = false
+					this.save_button_name = '保存'
+					this.save_button_is_show = false
+					updateUserLocalInfo({
+						user_headimg: this.current_select_avatar_url,
+					})
+				}).then(() => {
+					this.init()
+				})
 			},
 			init(){
 				this.isLogin = isLogin() ? true : false
@@ -111,7 +140,8 @@
 			},
 			// 计算当前选中的头像url
 			currentSelectAvatar(){
-				this.current_select_avatar_url = this.man_icon_select_index ? this.man_img[this.man_icon_select_index].icon : this.woman_img[this.woman_icon_select_index].icon
+				this.current_select_avatar_url = 'number' == typeof(this.man_icon_select_index) ? this.man_img[this.man_icon_select_index].icon : this.woman_img[this.woman_icon_select_index].icon
+				this.save_button_is_show = true
 			},
 			// 点击某个女性头像图标
 			woman_avatar_cilck(index){
@@ -137,14 +167,16 @@
 			initAvatar(){
 				// 处理男性头像
 				for(let i = 1; i <= 20; i++){
+					let icon = this.img_format.replace(/%s/, i < 10 ? '0' + i : i)
 					this.man_img.push({
-						'icon': this.img_format.replace(/%s/, i < 10 ? '0' + i : i),
+						'icon': icon,
 						'is_select': false
 					})
 				}
 				
 				// 处理女性头像
 				for(let i = 21; i <= 40; i++){
+					let icon = this.img_format.replace(/%s/, i)
 					this.woman_img.push({
 						'icon': this.img_format.replace(/%s/, i),
 						'is_select': false

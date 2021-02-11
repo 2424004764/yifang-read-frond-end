@@ -11,11 +11,11 @@ class Http {
 	request(params = {}, options){
 		const config = {
 			// #ifndef H5
-			baseURL: Config['baseUrl'],
+			baseURL: Config['baseUrl'], // 非h5端 走直连的形式
 			// #endif
 			
 			// #ifdef H5
-			baseURL: 'yifang-read-api',
+			baseURL: 'yifang-read-api', // 如果是h5端 则请求走本地代理的形式
 			// #endif
 			header: {
 				'Content-Type': 'application/x-www-form-urlencoded',

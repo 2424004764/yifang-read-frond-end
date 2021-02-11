@@ -26,3 +26,16 @@ export function login(params, options){
 	  url: `${base_url}/login`,
 	})
 }
+
+/**
+ * 修改用户信息
+ * @param {Object} params
+ * @param {Object} options
+ */
+export function updateUserInfo(params, options) {
+    return axios.request(params, {
+      ...options,
+	  method: 'POST',
+      url: `${base_url}/update-user-info`,
+    })
+}
