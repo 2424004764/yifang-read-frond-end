@@ -76,7 +76,6 @@ class Http {
 		
 		// 响应拦截器
 		instance.interceptors.response.use((response) => { /* 对响应成功做点什么 可使用async await 做异步操作*/
-			// console.log(response)
 			// 判断返回的http 状态码
 			if(200 != response.statusCode){
 				uni.showToast({

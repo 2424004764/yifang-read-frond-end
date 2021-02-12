@@ -92,6 +92,7 @@
 					this.save_button_loading = false
 					this.save_button_name = '保存'
 					this.save_button_is_show = false
+					// 更新用户本地缓存的信息
 					updateUserLocalInfo({
 						user_headimg: this.current_select_avatar_url,
 					})
