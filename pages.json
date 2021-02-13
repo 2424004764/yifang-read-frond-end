@@ -142,13 +142,13 @@
 	    "backgroundColor": "#ffffff",
 	    "list": [{
 	        "pagePath": "pages/book-shelf/book-shelf",
-	        "iconPath": "static/logo.png",
-	        "selectedIconPath": "static/logo.png",
+	        "iconPath": "static/tab/bookshelf.png",
+	        "selectedIconPath": "static/tab/bookshelf-select.png",
 	        "text": "书架"
 	    }, {
 	        "pagePath": "pages/index/index",
-	        "iconPath": "static/logo.png",
-	        "selectedIconPath": "static/logo.png",
+	        "iconPath": "static/tab/bp.png",
+	        "selectedIconPath": "static/tab/bp-select.png",
 	        "text": "藏书"
 	    }, 
 		// {
@@ -159,8 +159,8 @@
 	 //    },
 		{
 	        "pagePath": "pages/my/my",
-	        "iconPath": "static/logo.png",
-	        "selectedIconPath": "static/logo.png",
+	        "iconPath": "static/tab/my.png",
+	        "selectedIconPath": "static/tab/my-select.png",
 	        "text": "我的"
 	    }]
 	},

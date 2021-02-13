@@ -31,13 +31,13 @@
 			</div>
 
 			<!-- 常用操作 -->
-			<!-- <div class="block-area controller">
+			<div class="block-area controller">
 				<div class="item" v-for="(item, index) in controllers"
 				:key="index">
 					<div class="icon"><img :src="item.icon" alt=""></div>
 					<div class="title">{{item.title}}</div>
 				</div>
-			</div> -->
+			</div>
 
 			<!-- 菜单 -->
 			<div class="block-area menu">
