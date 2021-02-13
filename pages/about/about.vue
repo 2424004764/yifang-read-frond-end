@@ -1,7 +1,7 @@
 <template>
 	<view class="about">
 		<div class="item icon">
-			<img src="http://cdn.fologde.com/6.png" alt="">
+			<img src="/static/logo.png" alt="">
 		</div>
 		<div class="item appName"><b>{{Config.appName}}</b></div>
 		<div class="item version">Version {{Config.version}}</div>
@@ -29,7 +29,7 @@
 		methods: {
 			// 拷贝git仓库地址
 			copyGitUrl(){
-				console.log(this.Config.gitUrl)
+				// console.log(this.Config.gitUrl)
 				copy(this.Config.gitUrl)
 			}
 		},

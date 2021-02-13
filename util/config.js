@@ -3,6 +3,7 @@ module.exports = {
 	baseUrl: 'http://192.168.43.203:885/web/index.php', // api 接口地址
 	// baseUrl: 'https://yifangread.fologde.com', // api 接口地址
 	adminQQ: '2424004764', // 管理员QQ
+	adminEmail: 'yifangread@163.com', // 管理员邮箱
 	appName: '一方阅读', // app 名字
 	version: '1.0.0', // app 版本
 	gitUrl: 'https://github.com/2424004764/yifang-read-frond-end', // git 仓库地址

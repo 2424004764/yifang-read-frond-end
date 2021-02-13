@@ -25,7 +25,7 @@ export function copy(value) {
 			})
 		},
 		complete(res){
-			console.log(res)
+			// console.log(res)
 		}
 	})
 	return

@@ -2,7 +2,7 @@
 	<view class="bg">
 		<div class="login">
 			<div class="logo">
-				<img src="http://cdn.fologde.com/6.png" alt="">
+				<img src="/static/logo.png" alt="">
 			</div>
 			
 			<div class="form">

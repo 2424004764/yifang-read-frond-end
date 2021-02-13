@@ -29,7 +29,7 @@
 					<div class="more">更多成就</div>
 				</div> -->
 			</div>
-			
+
 			<!-- 常用操作 -->
 			<!-- <div class="block-area controller">
 				<div class="item" v-for="(item, index) in controllers"
@@ -38,106 +38,143 @@
 					<div class="title">{{item.title}}</div>
 				</div>
 			</div> -->
-			
+
 			<!-- 菜单 -->
 			<div class="block-area menu">
-				<!-- <div class="item">
-					<div class="title">帮助与反馈</div>
-				</div> -->
+				<div class="item" v-if="isLogin">
+					<div class="title" @click="feedback">意见反馈</div>
+				</div>
 				<div class="item" @click="toAboutPage">
 					<div class="title">关于</div>
 				</div>
 			</div>
-			
+
 			<!-- 设置 -->
 			<!-- <div class="block-area menu">
 				<div class="item">
 					<div class="title">设置</div>
 				</div>
 			</div> -->
-			
+
 			<!-- 退出 -->
 			<div class="block-area signout" v-if="isLogin" @click="outIn">
 				<div class="item">
 					<div class="title">退出</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</view>
 </template>
 
 <script>
-	import {isLogin, getLocalUserInfo} from '@/util/function/login.js'
-	
+	import {
+		isLogin,
+		getLocalUserInfo
+	} from '@/util/function/login.js'
+
 	export default {
 		name: "my",
 		data() {
 			return {
 				isLogin: false, // 是否登录
 				userinfo: [],
-				achievements: [
-					{title: '初入一方'}, {title: '小学者'}, {title: '初入一方'},
-					{title: '初入一方'}, {title: '初入一方'}, {title: '初入一方'},
+				achievements: [{
+						title: '初入一方'
+					}, {
+						title: '小学者'
+					}, {
+						title: '初入一方'
+					},
+					{
+						title: '初入一方'
+					}, {
+						title: '初入一方'
+					}, {
+						title: '初入一方'
+					},
 				], // 成就列表
-				controllers: [
-					{title: '浏览记录', icon: 'http://cdn.fologde.com/6.png'}, 
-					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
-					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
-					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
-					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
-					{title: '收藏', icon: 'http://cdn.fologde.com/6.png'},
+				controllers: [{
+						title: '浏览记录',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
+					{
+						title: '收藏',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
+					{
+						title: '收藏',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
+					{
+						title: '收藏',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
+					{
+						title: '收藏',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
+					{
+						title: '收藏',
+						icon: 'http://cdn.fologde.com/6.png'
+					},
 				], // 常用操作
 			};
 		},
-		onShow(){
+		onShow() {
 			this.init()
 		},
 		methods: {
+			// 反馈
+			feedback() {
+				uni.navigateTo({
+					url: 'feedback'
+				})
+			},
 			// 点击头像昵称区域  进度我的个人中心
-			clickMyInfo(){
+			clickMyInfo() {
 				uni.navigateTo({
 					url: '/pages/my/my-info'
 				})
 			},
 			// 初始化
-			init(){
+			init() {
 				this.isLogin = isLogin() ? true : false
-				if(this.isLogin){
+				if (this.isLogin) {
 					// 加载用户信息
 					this.userinfo = getLocalUserInfo()
 					// 加载成就
-					if(this.userinfo.hasOwnProperty('achievements')){
+					if (this.userinfo.hasOwnProperty('achievements')) {
 						this.achievements = this.userinfo.achievements
-					}else{
+					} else {
 						this.achievements = []
 					}
 				}
 			},
 			// 退出
-			outIn(){
+			outIn() {
 				let that = this
 				uni.showModal({
-				    title: '提示',
-				    content: '是否退出？',
-				    success: function (res) {
-				        if (res.confirm) {
-				            uni.clearStorageSync()
+					title: '提示',
+					content: '是否退出？',
+					success: function(res) {
+						if (res.confirm) {
+							uni.clearStorageSync()
 							that.init()
-				        }
-				    }
+						}
+					}
 				});
 			},
 			// 去关于页
-			toAboutPage(){
+			toAboutPage() {
 				uni.navigateTo({
-				    url: '/pages/about/about'
+					url: '/pages/about/about'
 				})
 			},
 			// 去登录页
-			toLoginPage(){
+			toLoginPage() {
 				uni.navigateTo({
-				    url: '/pages/login/login'
+					url: '/pages/login/login'
 				})
 			}
 		},
@@ -146,142 +183,163 @@
 
 <style lang="scss" scoped>
 	@import '@/util/util.scss';
-	
-.my{
-	@extend .uni-bg-cr;
-	height: 100vh;
-	padding-top: 1%;
-	.block-area{
-		padding: 30rpx;
+
+	.my {
+		@extend .uni-bg-cr;
+		height: 100vh;
+		padding-top: 1%;
 		box-sizing: border-box;
-		// border: 1px solid red;
-		background-color: white;
-		width: 94%;
-		margin-left: 3%;
-		margin-top: 2%;
-		border-radius: 26rpx;
-		// 个人中心
-		.userinfo{
-			display: flex;
-			justify-content: flex-start;
-			// border: 1px solid red;
+
+		.block-area {
+			padding: 30rpx;
+			box-sizing: border-box;
 			background-color: white;
-			.headimg{
-				height: 140rpx;
-				width: 140rpx;
-				border-radius: 50%;
-				overflow: hidden;
-			}
-			.nikename-area{
-				margin-left: 5%;
-				max-width: 75%;
-				.nickname{
-					min-height: 84rpx;
-					font-weight: 700;
+			width: 94%;
+			margin-left: 3%;
+			margin-top: 2%;
+			border-radius: 26rpx;
+
+			// 个人中心
+			.userinfo {
+				display: flex;
+				justify-content: flex-start;
+				// border: 1px solid red;
+				background-color: white;
+
+				.headimg {
+					height: 140rpx;
+					width: 140rpx;
+					border-radius: 50%;
+					overflow: hidden;
 				}
-				.uid-area{
-					position: relative;
-					width: 472rpx;
-					&::after{
-						position: absolute;
-						right: 0px;
-						top: 14rpx;
+
+				.nikename-area {
+					margin-left: 5%;
+					max-width: 75%;
+
+					.nickname {
+						min-height: 84rpx;
+						font-weight: 700;
+					}
+
+					.uid-area {
+						position: relative;
+						width: 472rpx;
+
+						&::after {
+							position: absolute;
+							right: 0px;
+							top: 14rpx;
+							width: 14rpx;
+							height: 14rpx;
+							@extend .after-arrow-icon;
+						}
+					}
+				}
+
+				.noLogin {
+					.no-login-tip {
+						font-size: 24rpx;
+						margin-top: 15rpx;
+					}
+				}
+			}
+
+			// 成就
+			.achievement {
+				margin-top: 20rpx;
+				box-sizing: border-box;
+				padding: 10rpx;
+				padding-bottom: 0rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				display: flex;
+				justify-content: flex-start;
+				height: 60rpx;
+				overflow: hidden;
+
+				.box {
+					overflow-x: scroll;
+					height: 66rpx;
+
+					.item {
+						display: inline-block;
+						padding: 6rpx 15rpx;
+						background-color: $my-bg-cl;
+						font-size: 24rpx;
+						border-radius: 20rpx;
+					}
+				}
+
+				.more {
+					padding: 6rpx 15rpx;
+					margin-left: 20rpx;
+					font-size: 24rpx;
+					border-left: 1px solid black;
+					padding-top: 8rpx;
+
+					&::after {
 						width: 14rpx;
 						height: 14rpx;
 						@extend .after-arrow-icon;
 					}
 				}
 			}
-			.noLogin{
-				.no-login-tip{
-					font-size: 24rpx;
-					margin-top: 15rpx;
+		}
+
+		// 常用操作
+		.controller {
+			display: flex;
+			flex-flow: row wrap;
+			padding-top: 0px;
+
+			.item {
+				width: 161rpx;
+				// border: 1px solid red;
+				font-size: 26rpx;
+				margin-top: 40rpx;
+				box-sizing: border-box;
+
+				.icon {
+					width: 76rpx;
+					height: 76rpx;
+					margin: 0 auto;
+					border-radius: 50%;
+					overflow: hidden;
+				}
+
+				.title {
+					padding-top: 20rpx;
+					text-align: center;
 				}
 			}
 		}
-		// 成就
-		.achievement{
-			margin-top: 20rpx;
-			box-sizing: border-box;
-			padding: 10rpx;
-			padding-bottom: 0rpx;
-			white-space: nowrap;
-			overflow: hidden;
-			display: flex;
-			justify-content: flex-start;
-			height: 60rpx;
-			overflow: hidden;
-			.box{
-				overflow-x: scroll;
-				height: 66rpx;
-				.item{
-					display: inline-block;
-					padding: 6rpx 15rpx;
-					background-color: $my-bg-cl;
-					font-size: 24rpx;
-					border-radius: 20rpx;
-				}
-			}
-			.more{
-				padding: 6rpx 15rpx;
-				margin-left: 20rpx;
-				font-size: 24rpx;
-				border-left: 1px solid black;
-				padding-top: 8rpx;
-				&::after{
-					width: 14rpx;
-					height: 14rpx;
+
+		// 菜单
+		.menu {
+			.item {
+				font-size: 28rpx;
+				position: relative;
+
+				&::after {
+					position: absolute;
+					right: 0rpx;
+					top: 10rpx;
+					width: 16rpx;
+					height: 16rpx;
 					@extend .after-arrow-icon;
 				}
+
+				&:not(:first-child) {
+					margin-top: 30rpx;
+				}
 			}
 		}
-	}
-	// 常用操作
-	.controller{
-		display: flex;
-		flex-flow: row wrap;
-		padding-top: 0px;
-		.item{
-			width: 161rpx;
-			// border: 1px solid red;
-			font-size: 26rpx;
-			margin-top: 40rpx;
-			box-sizing: border-box;
-			.icon{
-				width: 76rpx;
-				height: 76rpx;
-				margin: 0 auto;
-				border-radius: 50%;
-				overflow: hidden;
-			}
-			.title{
-				padding-top: 20rpx;
-				text-align: center;
-			}
+
+		// 退出
+		.signout {
+			font-size: 24rpx;
+			text-align: center;
 		}
 	}
-	// 菜单
-	.menu{
-		.item{
-			font-size: 28rpx;
-			position: relative;
-			&::after{
-				position: absolute;
-				right: 0rpx;
-				top: 10rpx;
-				width: 16rpx;
-				height: 16rpx;
-				@extend .after-arrow-icon;
-			}
-			&:not(:first-child) {
-				margin-top: 30rpx;
-			}
-		}
-	}
-	// 退出
-	.signout{
-		font-size: 24rpx;
-		text-align: center;
-	}
-}
 </style>

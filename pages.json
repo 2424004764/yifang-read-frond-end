@@ -18,13 +18,16 @@
 				"navigationBarTitleText": "一方阅读",
 				"enablePullDownRefresh": true
 			}
-		},{
-			"path": "pages/square/square",
-			"style": {
-				"navigationBarTitleText": "广场",
-				"enablePullDownRefresh": true
-			}
-		},{
+		}
+		// ,{
+		// 	"path": "pages/square/square",
+		// 	"style": {
+		// 		"navigationBarTitleText": "广场",
+		// 		"enablePullDownRefresh": true
+		// 	}
+		// }
+		,
+		{
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "个人中心"
@@ -116,6 +119,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/my/feedback",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "意见反馈",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -138,12 +150,14 @@
 	        "iconPath": "static/logo.png",
 	        "selectedIconPath": "static/logo.png",
 	        "text": "藏书"
-	    }, {
-	        "pagePath": "pages/square/square",
-	        "iconPath": "static/logo.png",
-	        "selectedIconPath": "static/logo.png",
-	        "text": "广场"
-	    }, {
+	    }, 
+		// {
+	 //        "pagePath": "pages/square/square",
+	 //        "iconPath": "static/logo.png",
+	 //        "selectedIconPath": "static/logo.png",
+	 //        "text": "广场"
+	 //    },
+		{
 	        "pagePath": "pages/my/my",
 	        "iconPath": "static/logo.png",
 	        "selectedIconPath": "static/logo.png",
