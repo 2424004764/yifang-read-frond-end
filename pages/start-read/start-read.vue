@@ -201,11 +201,9 @@
 			getChapterContentBefore() {
 				this.save_schedule = false
 				this.chapter_content = ''
-				// console.log('getChapterContentBefore')
 			},
 			// 切换下一章之后
 			getChapterContentAfter() {
-				// console.log('getChapterContentAfter', this.save_schedule)
 				// 手动保存一下当前章节的进度
 				this.$nextTick(function() {
 					this.now_save_schedule && this._saveSchedule(this.book_id, this.chapter_id)
@@ -221,7 +219,6 @@
 					onReceive: function(context, intent) {
 						var action = intent.getAction();
 						if (action == Intent.ACTION_BATTERY_CHANGED) {
-							// console.log(intent.getIntExtras())
 							let plugged = intent.getIntExtra("plugged", -1) // 是否在充电 2是 0否
 							that.is_plugged = plugged
 
@@ -229,7 +226,6 @@
 							var voltage = intent.getIntExtra("voltage", 0); //电池电压
 							var temperature = intent.getIntExtra("temperature", 0); //电池温度
 							//如需获取别的，在这里继续写，此代码只提供获取电量
-							// console.log(level)
 							that.app_level = level
 						}
 					}
@@ -253,7 +249,6 @@
 			},
 			// 监听字体颜色改变
 			onFontColorChange(color) {
-				// console.log(color)
 				this.font_color = color
 				// 更改状态栏字体颜色
 				uni.setNavigationBarColor({
@@ -267,22 +262,16 @@
 			},
 			// 每次新章节  处理阅读进度（根据进度跳转scrolltop）
 			async calcReadSchedule(chapter) {
-				// console.log('calcReadSchedule chapter', chapter)
 				let _scrollTop = 0
 				try {
 					let schedule = JSON.parse(chapter.schedule).value
 					_scrollTop = parseInt(schedule)
 				} catch (e) {}
 
-				// console.log('_scrollTop before', this.scroll_top)
-				setTimeout(() => {
-					this.scroll_top = _scrollTop
-					this.scroll_controller_structure.value = this.scroll_top = (this.scroll_top + 0.01)
-				}, 100)
+				this.scroll_controller_structure.value = this.scroll_top = _scrollTop
 			},
 			// 阅读区域滚动
 			readScroll(e) {
-				// console.log('_readScroll', e)
 
 				this.$u.debounce(() => {
 					// 保存某一章节滚动的高度
@@ -293,15 +282,13 @@
 						return
 					}
 					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
-					// console.log('_saveSchedule', _scrollTop)
 					this._saveSchedule(this.book_id, this.chapter_id)
-				}, 1500)
+				}, 500)
 				
 			},
 			// 点击上一章
 			prevChapter() {
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'prev')
-				// console.log('prevChaptera', currentChapterIndex, chapterLegth, nextChapter)
 				if (0 == currentChapterIndex) {
 					uni.showToast({
 						title: '已经是第一章',
@@ -314,9 +301,7 @@
 			},
 			// 点击下一章
 			nextChapter() {
-				// console.log('nextChapter before')
 				let [currentChapterIndex, chapterLegth, nextChapter] = this.getCurrentChapterIndex(this.chapter_id, 'next')
-				// console.log('nextChaptera', currentChapterIndex, chapterLegth, nextChapter)
 				if (currentChapterIndex > chapterLegth) {
 					uni.showToast({
 						title: '已经是最后一章',
@@ -337,7 +322,6 @@
 				uni.setNavigationBarTitle({
 					title: chapter.chapter_name
 				}) // 设置页面标题为章节标题
-				// console.log('clickChapterAfter', chapter)
 				let newChapter = {
 					item: chapter
 				}
@@ -351,7 +335,6 @@
 			calcPercent(currentChapterIndex, chapterLegth) {
 				this.currentChapterIndex = currentChapterIndex
 				this.chapterLegth = chapterLegth
-				// console.log('calcPercenta', currentChapterIndex, chapterLegth)
 				this.percent = parseInt((currentChapterIndex / chapterLegth) * 100)
 			},
 			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
@@ -381,8 +364,6 @@
 			},
 			// 监听章节组件返回的章节id
 			async onChapterId(chapter) {
-				// return
-				// console.log('_onChapterId', chapter)
 				// 保存章节首次阅读信息
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
@@ -416,12 +397,10 @@
 			},
 			// 弹出控制层 也就是第三层
 			propControllerLayer3() {
-				// console.log('开始弹出控制层')
 				this.layer_3 = true
 			},
 			// 关闭第三层
 			closeLayer3() {
-				// console.log('关闭第三层')
 				this.layer_3 = false
 				this.layer_4_setting = false
 				this.openGlobalClickEvent()
@@ -433,28 +412,22 @@
 			openGlobalClickEvent() {
 				this.globalClickUse = false
 				setTimeout((function() {
-					// console.log('开启全局点击事件')
 					this.globalClickUse = true
 				}).bind(this), 200)
 			},
 			// 关闭第四层
 			closeLayer4(e) {
-				// console.log(e)
 				this.layer_4 = false
 				this.closeLayer3()
 			},
 			// 显示第四层章节列表
 			showChapterList() {
-				// console.log('显示第四层的章节')
 				this.closeLayer3()
 				this.layer_4 = true
 				this.layer_4_chapter_list = true
-				// 滚动到当前章节
-				// return this.$refs.chapterList.scrollToChapterId(this.chapter_id)
 			},
 			// 显示第四层设置
 			showSetting() {
-				// console.log('显示第四层的设置')
 				this.closeLayer3()
 				this.layer_4 = true
 				this.layer_4_chapter_list = false
@@ -466,8 +439,6 @@
 			nextPage() {},
 			// 获取章节详细内容
 			async getChapterContent(chapter) {
-				// console.log('getChapterContent chapter', chapter.item.chapter_name)
-				// console.log('_getChapterContent', chapter)
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
 				this.getChapterContentBefore()
@@ -478,7 +449,6 @@
 						loading: false
 					}
 				}).then(res => {
-					// console.log('getChapterContent', res)
 					if (!res.data) {
 						res.data[0].chapter_content = this.default_content
 					}
@@ -486,7 +456,6 @@
 					this.$nextTick(() => {
 						this.chapter_content = res.data[0].chapter_content
 						this.calcReadSchedule(chapter) // 处理阅读进度
-						// this.save_schedule = true
 						this.getChapterContentAfter()
 					})
 				}).then(() => {
@@ -512,7 +481,6 @@
 				this.propArea.y1 = parseFloat((c_h / 1.5).toFixed(2))
 				this.propArea.propMenuTop = this.propArea.y1
 				this.propArea.y2 = parseFloat((this.propArea.y1 + c_h).toFixed(2))
-				// console.log('x1', this.propArea.x1, 'x2', this.propArea.x2, 'y1', this.propArea.y1, 'y2', this.propArea.y2)
 			},
 			// 计算是否点击了弹出控制区域
 			calcIsClickControllerArea(event, that) {
@@ -533,7 +501,6 @@
 			// 全局点击事件
 			globalClick(event) {
 				if (!this.globalClickUse) return
-				// console.log('全局事件', event)
 				// 覆盖属性
 				event.offsetX = event.detail.x
 				event.offsetY = event.detail.y
@@ -550,7 +517,6 @@
 				uni.getSystemInfo({
 					success: function(res) {
 						that.systemInfo = res
-						// console.log(res)
 						that.initControllerArea()
 						// #ifdef APP-PLUS
 						that.padding_top = res.statusBarHeight
@@ -595,7 +561,8 @@
 			}
 			// #endif
 		},
-		watch: {}
+		watch: {
+		}
 	}
 </script>
 
@@ -681,11 +648,6 @@
 			}
 
 			.prop-menu {
-				// border: 1px solid red;
-				// width: 400rpx;
-				// height: 400rpx;
-				// margin-top: 50%;
-				// margin-left: 24%;
 				z-index: 203;
 			}
 		}
