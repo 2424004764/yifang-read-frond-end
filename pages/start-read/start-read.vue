@@ -212,7 +212,6 @@
 			// APP 环境加载电量信息
 			app_load_level() {
 				let that = this
-				//注意，安卓需要配置下manifest.json文件，打开后，进入模块权限配置，在右侧的Android权限设置里勾选上android.permission.BATTERY_STATS  
 				var main = plus.android.runtimeMainActivity();
 				var Intent = plus.android.importClass('android.content.Intent');
 				var recevier = plus.android.implements('io.dcloud.feature.internal.reflect.BroadcastReceiver', {
@@ -284,7 +283,7 @@
 					this.scroll_controller_structure.value = this.scroll_top = _scrollTop
 					this._saveSchedule(this.book_id, this.chapter_id)
 				}, 500)
-				
+
 			},
 			// 点击上一章
 			prevChapter() {
@@ -379,16 +378,8 @@
 			},
 			// 获取书籍详情
 			getBookDetail() {
-				// uni.showLoading({
-				// 	mask: true,
-				// 	title: "加载详情中..."
-				// })
 				getBookDetailUtil(this.book_id).then(res => {
 					this.bookDetail = res
-					// 设置页面标题
-					// uni.setNavigationBarTitle({
-					//     title: res.book_name
-					// })
 					this.app_chapter_title = res.book_name
 					uni.hideLoading()
 				}).catch(() => {
@@ -561,8 +552,7 @@
 			}
 			// #endif
 		},
-		watch: {
-		}
+		watch: {}
 	}
 </script>
 
