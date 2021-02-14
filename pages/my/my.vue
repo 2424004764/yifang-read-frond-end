@@ -10,7 +10,10 @@
 					</div>
 					<div class="nikename-area" v-if="isLogin" @click="clickMyInfo">
 						<p class="nickname">{{userinfo.user_nickname}}</p>
-						<p class="uid-area">一方书号：{{userinfo.user_id}}</p>
+						<p class="uid-area">
+							<text>个人信息</text>
+							<!-- 一方书号：{{userinfo.user_id}} -->
+						</p>
 					</div>
 					<!-- 未登录 -->
 					<div class="noLogin" v-if="!isLogin">
@@ -34,7 +37,9 @@
 			<div class="block-area controller">
 				<div class="item" v-for="(item, index) in controllers"
 				:key="index">
-					<div class="icon"><img :src="item.icon" alt=""></div>
+					<div class="icon">
+						<u-image width="75rpx" height="76rpx" :src="item.icon" alt=""></u-image>
+					</div>
 					<div class="title">{{item.title}}</div>
 				</div>
 			</div>
@@ -95,28 +100,8 @@
 					},
 				], // 成就列表
 				controllers: [{
-						title: '浏览记录',
-						icon: 'http://cdn.fologde.com/6.png'
-					},
-					{
-						title: '收藏',
-						icon: 'http://cdn.fologde.com/6.png'
-					},
-					{
-						title: '收藏',
-						icon: 'http://cdn.fologde.com/6.png'
-					},
-					{
-						title: '收藏',
-						icon: 'http://cdn.fologde.com/6.png'
-					},
-					{
-						title: '收藏',
-						icon: 'http://cdn.fologde.com/6.png'
-					},
-					{
-						title: '收藏',
-						icon: 'http://cdn.fologde.com/6.png'
+						title: '阅读记录',
+						icon: 'http://cdn.fologde.com/yifang-read/read-record.png'
 					},
 				], // 常用操作
 			};
@@ -225,6 +210,10 @@
 					.uid-area {
 						position: relative;
 						width: 472rpx;
+						text-align: right;
+						text{
+							margin-right: 30rpx;
+						}
 
 						&::after {
 							position: absolute;

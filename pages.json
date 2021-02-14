@@ -169,7 +169,7 @@
 	    "current": 0, //当前激活的模式（list 的索引项）
 	    "list": [
 			{
-			    "name": "个人中心", 
+			    "name": "个人信息", 
 			    "path": "pages/my/my-info"
 			},
 			{
