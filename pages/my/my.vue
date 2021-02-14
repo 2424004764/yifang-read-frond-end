@@ -34,13 +34,14 @@
 			</div>
 
 			<!-- 常用操作 -->
-			<div class="block-area controller">
-				<div class="item" v-for="(item, index) in controllers"
-				:key="index">
-					<div class="icon">
-						<u-image width="75rpx" height="76rpx" :src="item.icon" alt=""></u-image>
+			<div class="block-area controller" v-if="controllers">
+				<div class="item" v-for="(item, index) in controllers" :key="index">
+					<div v-if="isLogin">
+						<div class="icon">
+							<u-image width="76rpx" height="76rpx" :src="item.icon" alt=""></u-image>
+						</div>
+						<div class="title">{{item.title}}</div>
 					</div>
-					<div class="title">{{item.title}}</div>
 				</div>
 			</div>
 
@@ -99,17 +100,34 @@
 						title: '初入一方'
 					},
 				], // 成就列表
-				controllers: [{
-						title: '阅读记录',
-						icon: 'http://cdn.fologde.com/yifang-read/read-record.png'
-					},
-				], // 常用操作
-			};
+				controllers: [], // 常用操作
+			}
+		},
+		onLoad() {
+			this.init()
+			// 加载常用操作
+			this.loadControllers()
 		},
 		onShow() {
 			this.init()
 		},
 		methods: {
+			// 加载常用操作
+			loadControllers() {
+				// 需要的菜单在这里加
+				let _item = [{
+					title: '阅读记录',
+					icon: 'http://cdn.fologde.com/yifang-read/read-record.png', // 图标
+					need_login: true, // 是否需要登录才能使用
+				}]
+				for (let index in _item) {
+					// 需要菜单项需要登录  但是没有登录  则跳过
+					if (_item[index].need_login && !this.isLogin) {
+						continue
+					}
+					this.controllers.push(_item[index])
+				}
+			},
 			// 反馈
 			feedback() {
 				uni.navigateTo({
@@ -211,7 +229,8 @@
 						position: relative;
 						width: 472rpx;
 						text-align: right;
-						text{
+
+						text {
 							margin-right: 30rpx;
 						}
 

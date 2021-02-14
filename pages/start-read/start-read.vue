@@ -120,6 +120,9 @@
 		isLogin,
 		getLocalUserInfo
 	} from '@/util/function/login.js'
+	import {
+		getReadHistory
+	} from '@/util/user_http/book_history.js'
 
 	export default {
 		name: "startRead",
@@ -235,7 +238,7 @@
 			},
 			// 阅读区域滚动到底部
 			onScrolltolower(e) {
-				console.log('到底了')
+				// console.log('到底了')
 				this.$u.throttle(this.nextChapter, 1000)
 			},
 			// 监听到可以加载章节列表时（加载配置完成） 采取加载章节列表，才去加载章节内容
@@ -428,8 +431,22 @@
 			prevPage() {},
 			// 下一页
 			nextPage() {},
+			// 保存阅读历史
+			saveReadHistory(){
+				if(!isLogin)return; // 没登录不保存阅读历史
+				
+				// console.log('保存阅读进度')
+				getReadHistory({}, {
+					data: {
+						user_id: getLocalUserInfo()['user_id'],
+						book_id: this.book_id,
+						chapter_id: this.chapter_id,
+					}
+				})
+			},
 			// 获取章节详细内容
 			async getChapterContent(chapter) {
+				this.saveReadHistory() // 保存阅读进度
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
 				this.getChapterContentBefore()
