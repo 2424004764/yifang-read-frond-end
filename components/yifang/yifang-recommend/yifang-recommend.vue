@@ -59,7 +59,7 @@
 					for (let itemIndex in res.data) {
 						try{
 							res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
-						}catch{
+						}catch (err){
 							
 						}
 					}

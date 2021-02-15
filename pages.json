@@ -128,6 +128,16 @@
             }
             
         }
+        ,{
+            "path" : "pages/my/menu/read-history",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": true,
+				"onReachBottomDistance": 100
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -169,6 +179,14 @@
 	    "current": 0, //当前激活的模式（list 的索引项）
 	    "list": [
 			{
+			    "name": "个人中心", 
+			    "path": "pages/my/my"
+			},
+			{
+			    "name": "阅读历史", 
+			    "path": "pages/my/menu/read-history"
+			},
+			{
 			    "name": "个人信息", 
 			    "path": "pages/my/my-info"
 			},
@@ -184,10 +202,6 @@
 	            "name": "开始阅读", //模式名称
 	            "path": "pages/start-read/start-read", //启动页面，必选
 	            "query": "book_id=1001" //启动参数，在页面的onLoad函数里面得到。
-	        }, 
-			{
-	            "name": "个人中心", 
-	            "path": "pages/my/my"
 	        }, 
 			{
 	            "name": "登录", 

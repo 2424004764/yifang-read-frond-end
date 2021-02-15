@@ -34,9 +34,9 @@
 			</div>
 
 			<!-- 常用操作 -->
-			<div class="block-area controller" v-if="controllers">
+			<div class="block-area controller" v-if="controllers.length">
 				<div class="item" v-for="(item, index) in controllers" :key="index">
-					<div v-if="isLogin">
+					<div @click="menuJump(item)">
 						<div class="icon">
 							<u-image width="76rpx" height="76rpx" :src="item.icon" alt=""></u-image>
 						</div>
@@ -78,7 +78,11 @@
 		isLogin,
 		getLocalUserInfo
 	} from '@/util/function/login.js'
-
+	
+	import {
+		_menuJump
+	} from '@/util/function/menuJump.js'
+	
 	export default {
 		name: "my",
 		data() {
@@ -101,6 +105,13 @@
 					},
 				], // 成就列表
 				controllers: [], // 常用操作
+				menu_items: [{
+					title: '阅读记录',
+					icon: 'http://cdn.fologde.com/yifang-read/read-record.png', // 图标
+					need_login: true, // 是否需要登录才能使用
+					jumpType: 'navigateTo', // 跳转类型 如：navigateTo
+					jumpPage: '/pages/my/menu/read-history', // 跳转的页面 绝对路径
+				}], // 所有的菜单项
 			}
 		},
 		onLoad() {
@@ -110,22 +121,24 @@
 		},
 		onShow() {
 			this.init()
+			// 加载常用操作
+			this.loadControllers()
 		},
 		methods: {
+			// 点击了菜单
+			menuJump(menuItem) {
+				_menuJump(menuItem)
+			},
 			// 加载常用操作
 			loadControllers() {
+				this.controllers = [] // 重新计算需要显示的菜单项
 				// 需要的菜单在这里加
-				let _item = [{
-					title: '阅读记录',
-					icon: 'http://cdn.fologde.com/yifang-read/read-record.png', // 图标
-					need_login: true, // 是否需要登录才能使用
-				}]
-				for (let index in _item) {
+				for (let index in this.menu_items) {
 					// 需要菜单项需要登录  但是没有登录  则跳过
-					if (_item[index].need_login && !this.isLogin) {
+					if (this.menu_items[index].need_login && !this.isLogin) {
 						continue
 					}
-					this.controllers.push(_item[index])
+					this.controllers.push(this.menu_items[index])
 				}
 			},
 			// 反馈

@@ -25,3 +25,16 @@ export function getBookDetailUtil(book_id){
 		return Promise.reject(err)
 	})
 }
+
+/**
+ * 获取第一章封面图
+ * @param {string} CoverImgs 书籍封面图 可能多张
+ */
+export function calcBookCoverImgsGetFirst(CoverImgs){
+	try{
+		return JSON.parse(CoverImgs)[0]
+	}catch(err){
+		// 图片为空
+		return ''
+	}
+}

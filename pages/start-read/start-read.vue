@@ -121,7 +121,7 @@
 		getLocalUserInfo
 	} from '@/util/function/login.js'
 	import {
-		getReadHistory
+		addReadHistory
 	} from '@/util/user_http/book_history.js'
 
 	export default {
@@ -438,12 +438,15 @@
 			saveReadHistory(){
 				if(!isLogin)return; // 没登录不保存阅读历史
 				
-				getReadHistory({}, {
+				addReadHistory({}, {
 					data: {
 						user_id: getLocalUserInfo()['user_id'],
 						book_id: this.book_id,
 						chapter_id: this.chapter_id,
 						schedule: this.percent,
+					},
+					custom: {
+						loading: false
 					}
 				})
 			},
