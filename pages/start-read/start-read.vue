@@ -338,6 +338,9 @@
 				this.currentChapterIndex = currentChapterIndex
 				this.chapterLegth = chapterLegth
 				this.percent = parseInt((currentChapterIndex / chapterLegth) * 100)
+				this.$nextTick(() => {
+					this.saveReadHistory() // 保存阅读进度
+				})
 			},
 			// 点击上一章或下一章时  返回当前章节在章节列表中的索引以及总的章节数 和下一章的章节id
 			// 返回的数据说明：分别是当前章节在章节列表中的索引、总章节数、下一章节的id
@@ -435,18 +438,17 @@
 			saveReadHistory(){
 				if(!isLogin)return; // 没登录不保存阅读历史
 				
-				// console.log('保存阅读进度')
 				getReadHistory({}, {
 					data: {
 						user_id: getLocalUserInfo()['user_id'],
 						book_id: this.book_id,
 						chapter_id: this.chapter_id,
+						schedule: this.percent,
 					}
 				})
 			},
 			// 获取章节详细内容
 			async getChapterContent(chapter) {
-				this.saveReadHistory() // 保存阅读进度
 				// 设置APP端的章节标题
 				this.app_chapter_title = chapter.item.chapter_name
 				this.getChapterContentBefore()
