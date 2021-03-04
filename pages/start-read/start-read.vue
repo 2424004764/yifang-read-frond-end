@@ -34,9 +34,12 @@
 			</div>
 
 			<!-- 阅读区域底部信息区 显示电量和时间 -->
-			<div class="read_bottom_area app_style">
+			<div class="read_bottom_area app_style" 
+				:style="{color: font_color}"
+			>
 				<!-- #ifdef APP-PLUS -->
-				<div v-if="app_level">
+				<div v-if="app_level"
+				>
 					<text v-if="is_plugged">充电中</text>
 					<text v-else>电量</text>
 					：{{app_level}}%
