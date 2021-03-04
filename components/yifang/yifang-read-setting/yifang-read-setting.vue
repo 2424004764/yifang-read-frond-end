@@ -3,30 +3,55 @@
 		<!-- 设置项 -->
 		<div class="s-item">
 			<!-- 控制字体、大小 -->
-			<div class="font-reduce font" @click="font_reduce">A-</div>
+			<div class="btn">
+				<u-button throttle-time="50" shape="circle" class="font-reduce font" @click="font_reduce"  :ripple="true">A-</u-button>
+			</div>
 			<div class="font-size">{{user_font_size}}</div>
-			<div class="font-enlarge font" @click="font_enlarge">A+</div>
+			<div class="btn">
+				<u-button throttle-time="50" shape="circle" class="font-enlarge font" @click="font_enlarge" :ripple="true">A+</u-button>
+			</div>
 		</div>
 		
 		<!-- 字体颜色 -->
+		<!-- doto 各个增加、减少的按钮的事件还没写 -->
 		<div class="setting-item">
 			<div class="title">字体颜色</div>
 			<div class="bg-color">
 				<div class="color-scolle">
 					<div class="item" v-for="(item, index) in font_bg_list" :key="index"
-					:style="{'background-color': item.color}"
-					@click="font_color_change(item.color)"></div>
+					@click="font_color_change(item.color)">
+						<div class="btn">
+							<u-button :style="{backgroundColor: item.color}" throttle-time="50" shape="circle" class="bg" :ripple="true"></u-button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		
 		<!-- 字间距 -->
 		<div class="setting-item">
-			<div class="title">字间距</div>
+			<div class="title" v-longpress="letterSpacingLongPress">字间距</div>
 			<view class="wrap">
-				 <slider :value="letter_spacing" @changing="letterSpacingChanging"
-					@change="letterSpacingChange"
-				   show-value="true" step="2" max="50" />
+				<div class="reduce-btn" :style="{visibility: letter_spacing > 0 ? 'inherit' : 'collapse'}" 	@v-longpress="letterSpacingLongPress">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						@click="letterSpacingStep(false)"
+						@v-longpress="letterSpacingLongPress"
+					>
+						<u-icon name="minus" size="35"></u-icon>
+					</u-button>
+				</div>
+				<div class="slider">
+					<slider :value="letter_spacing" @changing="letterSpacingChanging"
+						@change="letterSpacingChange"
+					  show-value="true" :step="letter_spacing_step" :max="letter_spacing_max" />
+				</div>
+				<div class="add-btn" :style="{visibility: letter_spacing < letter_spacing_max ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						@click="letterSpacingStep(true)"
+					>
+						<u-icon name="plus" size="35"></u-icon>
+					</u-button>
+				</div>
 			</view>
 		</div>
 		
@@ -34,9 +59,21 @@
 		<div class="setting-item">
 			<div class="title">行间距</div>
 			<view class="wrap">
-				 <slider :value="line_height" @changing="lineHeightChanging"
-				 @change="lineHeightChange"
-				  show-value="true" step="2" min="50" />
+				<div class="reduce-btn">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true">
+						<u-icon name="minus" size="35"></u-icon>
+					</u-button>
+				</div>
+				<div class="slider">
+					 <slider :value="line_height" @changing="lineHeightChanging"
+					 @change="lineHeightChange"
+					  show-value="true" step="2" min="50" />
+				  </div>
+				  <div class="add-btn">
+				  	<u-button throttle-time="50" shape="circle" class="btn" :ripple="true">
+				  		<u-icon name="plus" size="35"></u-icon>
+				  	</u-button>
+				  </div>
 			</view>
 		</div>
 		
@@ -44,9 +81,21 @@
 		<div class="setting-item">
 			<div class="title">左右空白间距</div>
 			<view class="wrap">
-				 <slider :value="padding_left_right" @changing="paddingLeftRightChanging"
-				 @change="paddingLeftRightChange"
-				  show-value="true" step="2" max="40" />
+				<div class="reduce-btn">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true">
+						<u-icon name="minus" size="35"></u-icon>
+					</u-button>
+				</div>
+				<div class="slider">
+					 <slider :value="padding_left_right" @changing="paddingLeftRightChanging"
+					 @change="paddingLeftRightChange"
+					  show-value="true" step="2" max="40" />
+				  </div>
+				  <div class="add-btn">
+				  	<u-button throttle-time="50" shape="circle" class="btn" :ripple="true">
+				  		<u-icon name="plus" size="35"></u-icon>
+				  	</u-button>
+				  </div>
 			</view>
 		</div>
 		
@@ -82,6 +131,9 @@
 				t7: null, // 定时器
 				
 				letter_spacing: 2, // 文字间距 单位rpx
+				letter_spacing_step: 2, // 文字step 步进值
+				letter_spacing_max: 100, // 文字最大值
+				
 				line_height: 50, // 行间距 单位rpx
 				padding_left_right: 40, // 阅读区域左右空白区域间距 单位rpx
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
@@ -139,11 +191,31 @@
 					that.saveSetting(5, that.line_height)
 				}, 1000)
 			},
+			// 行间距改变按钮长按
+			letterSpacingLongPress(){
+				console.log(313)
+			},
 			// 行间距改变 拖动过程中触发的事件
 			lineHeightChanging(e){
 				// console.log(e.detail)
 				this.line_height = e.detail.value
 				this.uniReturnSettings()
+			},
+			// 点击减少或增加的按钮
+			letterSpacingStep(is_add, letterSpacing = 0){
+				if(is_add){
+					letterSpacing = this.letter_spacing + this.letter_spacing_step
+				}else{
+					letterSpacing = this.letter_spacing - this.letter_spacing_step
+				}
+				if(letterSpacing < 0 || (this.letter_spacing > this.letter_spacing_max && is_add))return;
+				let e = {
+					detail: {
+						value: letterSpacing
+					}
+				}
+				this.letterSpacingChange(e)
+				this.letterSpacingChanging(e)
 			},
 			// 文字间距改变 拖动完成触发的事件
 			letterSpacingChange(e){
@@ -272,6 +344,8 @@
 </script>
 
 <style lang="scss" scoped>
+	$background-color: #FEFAC4;
+	$btn-height: 60rpx;
 .read-body{
 	// border: 1px solid red;
 	box-sizing: border-box;
@@ -283,27 +357,51 @@
 	left: 0rpx;
 	width: 100%;
 	padding: 40rpx;
-	background-color: #FEFAC4;
+	background-color: $background-color;
 	.setting-item{
+		padding-bottom: 20rpx;
 		.title{
 			margin-top: 20rpx;
+		}
+		.wrap{
+			display: flex;
+			flex-flow: row nowarp;
+			.reduce-btn, .add-btn{
+				// border: 1px solid red;
+				margin-top: 8rpx;
+				flex: 1;
+				.btn{
+					height: $btn-height;
+					background-color: $background-color;
+					line-height: $btn-height;
+				}
+			}
+			.slider{
+				// border: 1px solid red;
+				margin-left: 16rpx;
+				flex: 8;
+			}
 		}
 	}
 	.s-item{
 		// border: 1px solid red;
-		overflow: auto;
+		// overflow: auto;
 		margin-top: 20rpx;
-		div{
-			float: left;
-			height: 60rpx;
-			line-height: 60rpx;
-		}
+		padding-bottom: 20rpx;
+		display: flex;
 		.font{
-			border: 1px solid #A3855F;
+			height: $btn-height;
 			border-radius: 37rpx;
-			padding: 0rpx 60rpx;
+			padding: 0rpx 50rpx;
+			background-color: $background-color;
+			// border: 1px solid red;
 		}
 		.font-size{
+			height: $btn-height;
+			line-height: $btn-height;
+			text-align: center;
+			width: 70rpx;
+			// border: 1px solid red;
 			margin: 0rpx 20rpx 0rpx 20rpx;
 		}
 		&::before{
@@ -337,6 +435,13 @@
 		}
 		.item:not(:first-child){
 			margin-left: 3%;
+		}
+		.btn{
+			.bg{
+				height: 64rpx;
+				background-color: $background-color;
+				border: none;
+			}
 		}
 	}
 	.wrap{

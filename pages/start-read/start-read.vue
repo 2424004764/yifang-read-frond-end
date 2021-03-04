@@ -10,7 +10,9 @@
 
 			<!-- 为APP时再显示标题 -->
 			<!-- #ifdef APP-PLUS -->
-			<div class="chapter_title app_style">{{app_chapter_title}}</div>
+			<div class="chapter_title app_style"
+			:style="{color: font_color}"
+			>{{app_chapter_title}}</div>
 			<!-- #endif -->
 
 			<scroll-view scroll-y="true" @scroll="readScroll" class="scroll-Y" show-scrollbar="false" :scroll-top="scroll_top"
@@ -473,6 +475,8 @@
 					})
 				}).then(() => {
 					uni.hideLoading()
+					// 测试开启设置层
+					this.showSetting()
 				}).catch(err => {
 					uni.hideLoading()
 					this.chapter_content = this.default_content
@@ -596,7 +600,7 @@
 			.chapter-content {
 				height: 100%;
 				line-height: 70rpx;
-				text-align: center;
+				text-align: justify;
 			}
 
 			.scroll-Y {

@@ -5,6 +5,7 @@
 		</div>
 		<div class="item appName"><b>{{Config.appName}}</b></div>
 		<div class="item version">Version {{Config.version}}</div>
+		<div class="item version">开发此软件的目的：让天下没有收费的书，承若书籍永久免费，如果没有你搜索的书籍，请提交反馈！</div>
 		
 		<div class="footer">
 			<p>Github 开源地址：<text class="copy" @click="copyGitUrl">点击复制</text></p>
