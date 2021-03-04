@@ -38,7 +38,7 @@
 		<div class="setting-item">
 			<div class="title">字间距</div>
 			<view class="wrap">
-				<div class="reduce-btn" :style="{visibility: letter_spacing > 0 ? 'inherit' : 'collapse'}">
+				<div class="reduce-btn" :style="{visibility: letter_spacing > letter_spacing_min ? 'inherit' : 'collapse'}">
 					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" @click="letterSpacingStep(false)"
 					 :customStyle="uButtonCustomStyle">
 						<u-icon name="minus" size="35"></u-icon>
@@ -61,17 +61,17 @@
 		<div class="setting-item">
 			<div class="title">行间距</div>
 			<view class="wrap">
-				<div class="reduce-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle">
+				<div class="reduce-btn" :style="{visibility: line_height > line_height_min ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="lineHeighStep(false)">
 						<u-icon name="minus" size="35"></u-icon>
 					</u-button>
 				</div>
 				<div class="slider">
-					<slider :value="line_height" @changing="lineHeightChanging" @change="lineHeightChange" show-value="true" step="2"
-					 min="50" />
+					<slider :value="line_height" @changing="lineHeightChanging" @change="lineHeightChange" show-value="true" :step="line_height_step"
+					 min="50" :max="line_height_max" />
 				</div>
 				<div class="add-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="lineHeighStep(true)" :style="{visibility: line_height < line_height_max ? 'inherit' : 'collapse'}">
 						<u-icon name="plus" size="35"></u-icon>
 					</u-button>
 				</div>
@@ -82,17 +82,17 @@
 		<div class="setting-item">
 			<div class="title">左右空白间距</div>
 			<view class="wrap">
-				<div class="reduce-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle">
+				<div class="reduce-btn" :style="{visibility: padding_left_right > padding_left_min ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="paddingLeftRightStep(false)">
 						<u-icon name="minus" size="35"></u-icon>
 					</u-button>
 				</div>
 				<div class="slider">
 					<slider :value="padding_left_right" @changing="paddingLeftRightChanging" @change="paddingLeftRightChange"
-					 show-value="true" step="2" max="40" />
+					 show-value="true" :step="padding_left_step" :max="padding_left_max" />
 				</div>
 				<div class="add-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" :style="{visibility: padding_left_right < padding_left_max ? 'inherit' : 'collapse'}" @click="paddingLeftRightStep(true)">
 						<u-icon name="plus" size="35"></u-icon>
 					</u-button>
 				</div>
@@ -135,11 +135,20 @@
 				t7: null, // 定时器
 
 				letter_spacing: 2, // 文字间距 单位rpx
-				letter_spacing_step: 2, // 文字step 步进值
-				letter_spacing_max: 100, // 文字最大值
-
+				letter_spacing_step: 2, // 文字间距step 步进值
+				letter_spacing_max: 100, // 文字间距最大值
+				letter_spacing_min: 0, // 文字间距最小值
+				
 				line_height: 50, // 行间距 单位rpx
+				line_height_step: 2,
+				line_height_max: 100,
+				line_height_min: 50,
+				
 				padding_left_right: 40, // 阅读区域左右空白区域间距 单位rpx
+				padding_left_step: 4,
+				padding_left_max: 100,
+				padding_left_min: 0,
+				
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
 				background_color: '#F6F2EF', // 默认背景颜色
 				user_font_color: '#000000', // 默认字体颜色
@@ -197,6 +206,22 @@
 			
 		},
 		methods: {
+			// 左右间距点击事件
+			paddingLeftRightStep(is_add, paddingLeftRight = 0){
+				if (is_add) {
+					paddingLeftRight = this.padding_left_right + this.padding_left_step
+				} else {
+					paddingLeftRight = this.padding_left_right - this.padding_left_step
+				}
+				if (paddingLeftRight < 0 || (this.line_height > this.padding_left_max && is_add)) return;
+				let e = {
+					detail: {
+						value: paddingLeftRight
+					}
+				}
+				this.paddingLeftRightChange(e)
+				this.paddingLeftRightChanging(e)
+			},
 			// 左右空白间距改变 完成一次拖动后触发的事件
 			paddingLeftRightChange(e) {
 				let that = this
@@ -214,6 +239,21 @@
 				this.padding_left_right = e.detail.value
 				this.uniReturnSettings()
 			},
+			lineHeighStep(is_add, lineHeigh = 0){
+				if (is_add) {
+					lineHeigh = this.line_height + this.line_height_step
+				} else {
+					lineHeigh = this.line_height - this.line_height_step
+				}
+				if (lineHeigh < this.line_height_min || (this.line_height > this.line_height_max && is_add)) return;
+				let e = {
+					detail: {
+						value: lineHeigh
+					}
+				}
+				this.lineHeightChange(e)
+				this.lineHeightChanging(e)
+			},
 			// 行间距改变 完成一次拖动后触发的事件
 			lineHeightChange(e) {
 				let that = this
@@ -223,7 +263,7 @@
 
 				// 保存左右空白间距改变
 				that.t2 = setTimeout(() => {
-					that.saveSetting(5, that.line_height)
+					that.saveSetting(5, parseInt(that.line_height))
 				}, 1000)
 			},
 			// 行间距改变 拖动过程中触发的事件
@@ -232,14 +272,14 @@
 				this.line_height = e.detail.value
 				this.uniReturnSettings()
 			},
-			// 点击减少或增加的按钮
+			// 字间距 点击减少或增加的按钮
 			letterSpacingStep(is_add, letterSpacing = 0) {
 				if (is_add) {
 					letterSpacing = this.letter_spacing + this.letter_spacing_step
 				} else {
 					letterSpacing = this.letter_spacing - this.letter_spacing_step
 				}
-				if (letterSpacing < 0 || (this.letter_spacing > this.letter_spacing_max && is_add)) return;
+				if (letterSpacing < this.letter_spacing_min || (this.letter_spacing > this.letter_spacing_max && is_add)) return;
 				let e = {
 					detail: {
 						value: letterSpacing
@@ -259,7 +299,7 @@
 				// 保存用户字体颜色
 
 				that.t3 = setTimeout((() => {
-					that.saveSetting(4, that.letter_spacing)
+					that.saveSetting(4, parseInt(that.letter_spacing))
 				}).bind(this), 1000)
 			},
 			// 文字间距改变 拖动过程中触发的事件
@@ -337,7 +377,7 @@
 			},
 			// 保存用户的配置
 			saveSetting(name, value) {
-
+				
 				_addSetting(name, value)
 			},
 			// 背景颜色改变
@@ -357,8 +397,7 @@
 
 				let that = this
 				this.$u.debounce(function() {
-					console.log(that.user_font_size)
-					that.saveSetting(1, that.user_font_size)
+					that.saveSetting(1, parseInt(that.user_font_size))
 				}, 1000)
 			},
 			// 点击字体变大
@@ -368,8 +407,7 @@
 
 				let that = this
 				this.$u.debounce(function() {
-					console.log(that.user_font_size)
-					that.saveSetting(1, that.user_font_size)
+					that.saveSetting(1, parseInt(that.user_font_size))
 				}, 1000)
 			}
 		}
