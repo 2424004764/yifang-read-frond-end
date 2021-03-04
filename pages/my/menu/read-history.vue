@@ -12,10 +12,10 @@
 		<u-swipe-action :show="item.show" :index="index" v-for="(item, index) in list" :key="item.book_id" @click="click"
 		 @content-click="toBookDetail" :options="options">
 			<view class="item u-border-bottom">
-				<image class="u-skeleton-circle image" mode="aspectFill" :src="item.images" />
-				<view class="title-wrap u-skeleton-rect">
-					<text class="title u-line-2 u-skeleton-rect">{{item.title}}</text>
-					<text class="schedule u-line-2 u-skeleton-rect">阅读进度：{{item.schedule}}</text>
+				<image class="image" mode="aspectFill" :src="item.images" />
+				<view class="title-wrap">
+					<text class="title u-line-2">{{item.title}}</text>
+					<text class="schedule u-line-2">阅读进度：{{item.schedule}}</text>
 				</view>
 			</view>
 		</u-swipe-action>
@@ -211,6 +211,10 @@
 	.item {
 		display: flex;
 		padding: 20rpx;
+		text{
+			width: 74vw;
+			// border: 1px solid red;
+		}
 	}
 
 	.image {

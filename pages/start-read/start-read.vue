@@ -479,7 +479,7 @@
 				}).then(() => {
 					uni.hideLoading()
 					// 测试开启设置层
-					this.showSetting()
+					// this.showSetting()
 				}).catch(err => {
 					uni.hideLoading()
 					this.chapter_content = this.default_content
@@ -608,8 +608,13 @@
 
 			.scroll-Y {
 				overflow-anchor: auto;
-				// height: 90%;
+				/* #ifdef MP-WEIXIN */
+				height: calc(100vh - 70rpx - env(safe-area-inset-bottom));
+				/* #endif */
+				
+				/* #ifndef MP-WEIXIN */
 				height: calc(100vh - 150rpx - env(safe-area-inset-bottom));
+				/* #endif */
 				position: fiexd;
 				z-index: 10;
 			}

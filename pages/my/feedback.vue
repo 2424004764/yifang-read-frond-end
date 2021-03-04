@@ -50,6 +50,7 @@
 						uni.showToast({
 							title: "谢谢你的反馈！"
 						})
+						this.feedBackvalue = ''
 						setTimeout(() => {
 							uni.navigateBack()
 						}, 1000)
@@ -84,13 +85,17 @@
 .page{
 	padding: 20rpx;
 	.feedback-area{
+		margin-top: 20rpx;
 		padding: 20rpx;
 		// border: 1px solid red;
 		background-color: #F2F5FA;
 	}
 }
-.btn{
-	background-color: $main-color;
-	margin-top: 20rpx;
+.submit{
+	margin-top: 60rpx;
+	.btn{
+		background-color: $main-color;
+		margin-top: 20rpx;
+	}
 }
 </style>
