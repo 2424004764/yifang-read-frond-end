@@ -5,23 +5,17 @@
 		:circular="true" :previous-margin="previous_margin" :next-margin="previous_margin"
 		:indicator-color="indicator_color" :indicator-active-color="indicator_active_color"
 		>
-			<swiper-item>
+			<swiper-item v-for="(item, key) in swiperData" :key="key">
 				<image mode="scaleToFill" class="swiper-images"
-					src="http://cdn.fologde.com/6.png"></image>
-			</swiper-item>
-			<swiper-item>
-				<image mode="scaleToFill" class="swiper-images"
-				src="http://cdn.fologde.com/7.png"></image>
-			</swiper-item>
-			<swiper-item>
-				<image mode="scaleToFill" class="swiper-images"
-				src="http://cdn.fologde.com/4.png"></image>
+					:src="item.url" @click="toBookDetail(item.book_id)"></image>
 			</swiper-item>
 		</swiper>
 	</view>
 </template>
 
 <script>
+	import {getSwiperImages} from '@/util/user_http/system-setting.js'
+	
 	export default {
 		name: 'yifangSwiper',
 		data() {
@@ -33,7 +27,33 @@
 				previous_margin: "50rpx", // 前边距，可用于露出前一项的一小部分
 				indicator_color: 'RGB(255,255,255)', // 指示点颜色
 				indicator_active_color: '#FF5501', // 当前选中的指示点颜色
-			};
+				
+				swiperData: [], // 轮播图
+			}
+		},
+		created(){
+			this._getSwiperImages()
+		},
+		methods:{
+			// 跳转书籍详情
+			toBookDetail(book_id){
+				// console.log(book_id)
+				uni.navigateTo({url: '/pages/book/book-detail/book-detail?book_id=' + book_id})
+			},
+			// 获取首页轮播图
+			_getSwiperImages(){
+				getSwiperImages({}, {
+					custom: {
+						loading: false
+					},
+				}).then(res => {
+					try{
+						this.swiperData = JSON.parse(res.data.config_value)
+					}catch(err){
+						
+					}
+				})
+			}
 		}
 	}
 </script>

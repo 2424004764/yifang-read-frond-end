@@ -179,6 +179,11 @@
 	    "current": 0, //当前激活的模式（list 的索引项）
 	    "list": [
 			{
+			    "name": "西游记书籍详情", 
+			    "path": "pages/book/book-detail/book-detail",
+				"query": "book_id=1370" //启动参数，在页面的onLoad函数里面得到。
+			},
+			{
 			    "name": "反馈页面", 
 			    "path": "pages/my/feedback"
 			},
@@ -204,7 +209,7 @@
 			    "path": "pages/my/update/avatar"
 			},
 			{
-			    "name": "藏书", 
+			    "name": "藏书-首页", 
 			    "path": "pages/index/index"
 			},
 			{
@@ -222,11 +227,6 @@
 			{
 	            "name": "书架", 
 	            "path": "pages/book-shelf/book-shelf"
-	        }, 
-			{
-	            "name": "西游记书籍详情", 
-	            "path": "pages/book/book-detail/book-detail",
-				"query": "book_id=1370" //启动参数，在页面的onLoad函数里面得到。
 	        }
 	    ]
 	}
