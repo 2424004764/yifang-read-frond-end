@@ -4,33 +4,35 @@
 			<!-- 只能有一个根元素 -->
 			<view class="sticky-box">
 				<u-dropdown ref="uDropdown" @open="open" @close="close" :border-bottom="true">
-					<u-dropdown-item v-model="option0.value" :title="option0.title" 
-						:options="option0.options" @change="rankChange"
-						
-					></u-dropdown-item>
-					
+					<u-dropdown-item v-model="option0.value" :title="option0.title" :options="option0.options"
+						@change="rankChange"></u-dropdown-item>
+
 				</u-dropdown>
 			</view>
 		</u-sticky>
-		
+
 		<!-- 书籍列表 -->
 		<div class="book-list">
 			<bookShelf v-if="hackReset" :isNeedReLoadData="isNeedReLoadData"></bookShelf>
 		</div>
-		
+
 	</view>
 </template>
 
 <script>
 	import bookShelf from '@/components/yifang/book-shelf/book-shelf.vue'
-	
-	import {isLogin} from '@/util/function/login.js'
-	
+
+	import {
+		isLogin
+	} from '@/util/function/login.js'
+
 	export default {
-		components: {bookShelf},
+		components: {
+			bookShelf
+		},
 		data() {
 			return {
-				currentClickItem: null,  // 当前点击的下拉菜单item index  由open事件修改
+				currentClickItem: null, // 当前点击的下拉菜单item index  由open事件修改
 				hackReset: true,
 				// 可能用户登录之后进入首页  判断是否需要重新加载数据 
 				// 传递给书架组件 
@@ -66,25 +68,25 @@
 		},
 		methods: {
 			// 书架组件刷新
-			bookShelfRef(){
+			bookShelfRef() {
 				this.hackReset = false;
 				this.$nextTick(() => {
 					this.hackReset = true;
 				})
 			},
 			// 点击某个下拉菜单 被打开事件
-			open(index){
+			open(index) {
 				// console.log(index + ' open')
 				this.currentClickItem = index
 				this.$refs.uDropdown.highlight()
 			},
 			// 点击某个下拉菜单 被关闭事件
-			close(index){
+			close(index) {
 				// console.log(index + ' close')
 				this.$refs.uDropdown.highlight(index)
 			},
 			// 点击某个下拉菜单的item
-			rankChange(index){
+			rankChange(index) {
 				// console.log(index)
 				let clickItem = 'option' + this.currentClickItem
 				// console.log(clickItem)
@@ -99,7 +101,7 @@
 		// 下拉刷新
 		onPullDownRefresh(option) {
 			// 未登录 没有啥可加载的
-			if(!isLogin()){
+			if (!isLogin()) {
 				uni.stopPullDownRefresh()
 				return
 			}
@@ -107,8 +109,8 @@
 			this.bookShelfRef()
 		},
 		// 上拉到底
-		onReachBottom(){
-			console.log(123)
+		onReachBottom() {
+			uni.$emit('ReachBottom')
 		}
 	}
 </script>
@@ -122,10 +124,10 @@
 		justify-content: space-between;
 		background-color: beige;
 	}
-	.other{
+
+	.other {
 		height: 200vh;
 	}
-	.book-list{
-		
-	}
+
+	.book-list {}
 </style>
