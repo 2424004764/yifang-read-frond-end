@@ -33,6 +33,11 @@
 		methods: {
 
 		},
+		// 首页上拉到底事件
+		onReachBottom(){
+			// 那个页面或者组件想监听这个事件的 监听该事件即可
+			uni.$emit('indexOnReachBottom')
+		},
 		onPullDownRefresh(option) {
 			this.hackReset = false
 			this.$nextTick(() => {

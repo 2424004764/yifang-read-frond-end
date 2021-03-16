@@ -1,20 +1,26 @@
 <template>
 	<view>
 		<div class="style1">
-			<u-grid :col="4">
+			<!-- loading -->
+			<div class="loading" v-if="!data_frist_load_done">
+				<div class="item">
+					<u-loading mode="circle" size="50" color="#257FFF"></u-loading>
+				</div>
+			</div>
+			
+			<u-grid :col="4" v-else>
 				<u-grid-item v-for="(item, index) in book_list" :key="index"
 					 @click="bookDesc(item.book_id)"
 					 >
 					<u-image class="book_img" width="150rpx" height="200rpx" 
-					:src="item.book_cover_imgs[0] ? item.book_cover_imgs[0] : 'http://cdn.fologde.com/6.png'" 
-					mode="scaleToFill">
+						:src="item.book_cover_imgs[0] ? item.book_cover_imgs[0] : 'http://cdn.fologde.com/6.png'" 
+						mode="scaleToFill">
 						<u-loading slot="loading"></u-loading>
 					</u-image>
 					<view class="book_title">{{item.book_name}}</view>
 				</u-grid-item>
 			</u-grid>
 		</div>
-		
 	</view>
 </template>
 
@@ -32,8 +38,10 @@
 		data() {
 			return {
 				page: 1,
-				size: 20,
+				size: 12,
 				book_list: [], // 请求的书籍列表
+				
+				data_frist_load_done: false, // 数据第一次加载完成
 			}
 		},
 		methods:{
@@ -47,6 +55,7 @@
 						loading: false
 					}
 				}).then(res => {
+					if(res.data.length && !this.data_frist_load_done)this.data_frist_load_done = true
 					for (let itemIndex in res.data) {
 						try{
 							res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
@@ -70,6 +79,15 @@
 
 <style lang="scss" scoped>
 	@import '@/util/util.scss';
+	.loading{
+		min-height: 200rpx;
+		.item{
+			width: 50rpx;
+			height: 50rpx;
+			margin: 0 auto;
+			margin-top: 80rpx;
+		}
+	}
 	
 .style1{
 	.book_img{

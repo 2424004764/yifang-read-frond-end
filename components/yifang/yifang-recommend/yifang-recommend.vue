@@ -4,9 +4,10 @@
 			 
 			<uni-list-item title="热门阅读" :showArrow="false"></uni-list-item>
 			
+			<!-- 加载热门阅读组件 -->
 			<hotRead></hotRead>
 			 
-			<uni-list-item title="更多阅读" :showArrow="false"></uni-list-item>
+			<uni-list-item title="更多阅读" :showArrow="false"></uni-list-item>#257FFF
 			 
 			<div v-for="(item, index) in more_read_list" :key="index">
 				<uni-list-chat :show-extra-icon="true"
@@ -19,6 +20,8 @@
 			</div>
 			 
 		</uni-list>
+		
+		<u-loadmore icon-color="#257FFF" style="margin-top: 50rpx;" :status="load_done ? 'nomore' : 'loading'" />
 	</view>
 </template>
 
@@ -41,31 +44,45 @@
 				size: 50,
 				recommend: [], // 热门阅读
 				more_read_list: [], // 更多阅读列表
+				loadingStatus: 'loading', // 更多阅读列表加载状态 nomore 为无更多
+				frist_load_done: false, // 首页请求是否完成
+				load_done: false, // 数据是否已经全部加载完成
 			}
 		},
 		created() {
-			this.getBookList()
+			this.getBookList() // 获取书籍列表
+			
+			// 监听首页上拉到底事件
+			uni.$on('indexOnReachBottom', () => {
+				this.frist_load_done && this.getBookList()
+			})
 		},
 		methods: {
+			// 获取书籍列表
 			getBookList(){
+				if(this.load_done)return
 				getBookList({
-					page: this.page,
+					page: this.page++,
 					size: this.size
 				}, {
 					custom: {
 						loading: false
 					}
 				}).then(res => {
+					if(res.data.length && !this.frist_load_done)this.frist_load_done = true
+					
+					if(res.data.length < this.size)this.load_done = true
 					for (let itemIndex in res.data) {
 						try{
 							res.data[itemIndex]['book_cover_imgs'] = JSON.parse(res.data[itemIndex]['book_cover_imgs'])
 						}catch (err){
 							
 						}
+						this.more_read_list.push(res.data[itemIndex])
 					}
-					this.more_read_list = res.data
 				}).catch()
 			},
+			// 点击书籍详情
 			bookDesc(book_id){
 				// console.log(book_id)
 				uni.navigateTo({url: '/pages/book/book-detail/book-detail?book_id=' + book_id})
