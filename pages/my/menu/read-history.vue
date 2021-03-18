@@ -143,9 +143,9 @@
 			},
 			// 加载列表
 			loadList(list) {
-				if (!list.length) {
+				if (!list.length || list.length < this.size) {
 					this.status = 'nomore'
-					return
+					// return
 				}
 				for (let index in list) {
 					let images = calcBookCoverImgsGetFirst(list[index].book_cover_imgs)
