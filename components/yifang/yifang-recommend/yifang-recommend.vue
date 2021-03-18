@@ -7,7 +7,7 @@
 			<!-- 加载热门阅读组件 -->
 			<hotRead></hotRead>
 			 
-			<uni-list-item title="更多阅读" :showArrow="false"></uni-list-item>#257FFF
+			<uni-list-item title="更多阅读" :showArrow="false"></uni-list-item>
 			 
 			<div v-for="(item, index) in more_read_list" :key="index">
 				<uni-list-chat :show-extra-icon="true"

@@ -13,7 +13,8 @@
 
 		<!-- 书籍列表 -->
 		<div class="book-list">
-			<bookShelf v-if="hackReset" :isNeedReLoadData="isNeedReLoadData"></bookShelf>
+			<bookShelf v-if="hackReset && isLogin" :isNeedReLoadData="isNeedReLoadData"></bookShelf>
+			<u-empty text="未登录" mode="favor" v-if="!isLogin" margin-top="400"></u-empty>
 		</div>
 
 	</view>
@@ -32,6 +33,7 @@
 		},
 		data() {
 			return {
+				isLogin: false, // 是否登录
 				currentClickItem: null, // 当前点击的下拉菜单item index  由open事件修改
 				hackReset: true,
 				// 可能用户登录之后进入首页  判断是否需要重新加载数据 
@@ -67,6 +69,10 @@
 			}
 		},
 		methods: {
+			// 初始化用户信息
+			initUser(){
+				this.isLogin = isLogin() ? true : false
+			},
 			// 书架组件刷新
 			bookShelfRef() {
 				this.hackReset = false;
@@ -96,6 +102,7 @@
 			}
 		},
 		onShow() {
+			this.initUser()
 			this.isNeedReLoadData = !this.isNeedReLoadData
 		},
 		// 下拉刷新
