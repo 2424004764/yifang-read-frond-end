@@ -5,12 +5,12 @@
 			<!-- 控制字体、大小 -->
 			<div class="btn">
 				<u-button throttle-time="50" shape="circle" class="font-reduce font" @click="font_reduce" :ripple="true"
-				 :customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">A-</u-button>
+					:customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">A-</u-button>
 			</div>
 			<div class="font-size">{{user_font_size}}</div>
 			<div class="btn">
-				<u-button throttle-time="50" shape="circle" class="font-enlarge font" @click="font_enlarge" :ripple="true"
-				  :customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">A+</u-button>
+				<u-button throttle-time="50" shape="circle" class="font-enlarge font" @click="font_enlarge"
+					:ripple="true" :customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">A+</u-button>
 			</div>
 		</div>
 
@@ -22,12 +22,13 @@
 				<div class="color-scolle">
 					<div class="item" v-for="(item, index) in font_bg_list" :key="index">
 						<div class="btn">
-							<u-button :style="{backgroundColor: item.color}" throttle-time="50" shape="circle" class="bg" :ripple="true"
-							 @click="font_color_change(item.color)" :customStyle="uButtonCustomStyle">
-							 <!-- #ifdef MP-WEIXIN -->
-							 <div :style="{backgroundColor: item.color, padding: '80rpx'}"></div>
-							 <!-- #endif -->
-							 </u-button>
+							<u-button :style="{backgroundColor: item.color}" throttle-time="50" shape="circle"
+								class="bg" :ripple="true" @click="font_color_change(item.color)"
+								:customStyle="uButtonCustomStyle">
+								<!-- #ifdef MP-WEIXIN -->
+								<div :style="{backgroundColor: item.color, padding: '80rpx'}"></div>
+								<!-- #endif -->
+							</u-button>
 						</div>
 					</div>
 				</div>
@@ -38,19 +39,21 @@
 		<div class="setting-item">
 			<div class="title">字间距</div>
 			<view class="wrap">
-				<div class="reduce-btn" :style="{visibility: letter_spacing > letter_spacing_min ? 'inherit' : 'collapse'}">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" @click="letterSpacingStep(false)"
-					 :customStyle="uButtonCustomStyle">
+				<div class="reduce-btn"
+					:style="{visibility: letter_spacing > letter_spacing_min ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						@click="letterSpacingStep(false)" :customStyle="uButtonCustomStyle">
 						<u-icon name="minus" size="35"></u-icon>
 					</u-button>
 				</div>
 				<div class="slider">
-					<slider :value="letter_spacing" @changing="letterSpacingChanging" @change="letterSpacingChange" show-value="true"
-					 :step="letter_spacing_step" :max="letter_spacing_max" />
+					<slider :value="letter_spacing" @changing="letterSpacingChanging" @change="letterSpacingChange"
+						show-value="true" :step="letter_spacing_step" :max="letter_spacing_max" />
 				</div>
-				<div class="add-btn" :style="{visibility: letter_spacing < letter_spacing_max ? 'inherit' : 'collapse'}">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" @click="letterSpacingStep(true)"
-					 :customStyle="uButtonCustomStyle">
+				<div class="add-btn"
+					:style="{visibility: letter_spacing < letter_spacing_max ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						@click="letterSpacingStep(true)" :customStyle="uButtonCustomStyle">
 						<u-icon name="plus" size="35"></u-icon>
 					</u-button>
 				</div>
@@ -62,16 +65,19 @@
 			<div class="title">行间距</div>
 			<view class="wrap">
 				<div class="reduce-btn" :style="{visibility: line_height > line_height_min ? 'inherit' : 'collapse'}">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="lineHeighStep(false)">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						:customStyle="uButtonCustomStyle" @click="lineHeighStep(false)">
 						<u-icon name="minus" size="35"></u-icon>
 					</u-button>
 				</div>
 				<div class="slider">
-					<slider :value="line_height" @changing="lineHeightChanging" @change="lineHeightChange" show-value="true" :step="line_height_step"
-					 min="50" :max="line_height_max" />
+					<slider :value="line_height" @changing="lineHeightChanging" @change="lineHeightChange"
+						show-value="true" :step="line_height_step" min="50" :max="line_height_max" />
 				</div>
 				<div class="add-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="lineHeighStep(true)" :style="{visibility: line_height < line_height_max ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						:customStyle="uButtonCustomStyle" @click="lineHeighStep(true)"
+						:style="{visibility: line_height < line_height_max ? 'inherit' : 'collapse'}">
 						<u-icon name="plus" size="35"></u-icon>
 					</u-button>
 				</div>
@@ -82,17 +88,23 @@
 		<div class="setting-item">
 			<div class="title">左右空白间距</div>
 			<view class="wrap">
-				<div class="reduce-btn" :style="{visibility: padding_left_right > padding_left_min ? 'inherit' : 'collapse'}">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" @click="paddingLeftRightStep(false)">
+				<div class="reduce-btn"
+					:style="{visibility: padding_left_right > padding_left_min ? 'inherit' : 'collapse'}">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						:customStyle="uButtonCustomStyle" @click="paddingLeftRightStep(false)">
 						<u-icon name="minus" size="35"></u-icon>
 					</u-button>
 				</div>
 				<div class="slider">
-					<slider :value="padding_left_right" @changing="paddingLeftRightChanging" @change="paddingLeftRightChange"
-					 show-value="true" :step="padding_left_step" :max="padding_left_max" />
+					<slider :value="padding_left_right" @changing="paddingLeftRightChanging"
+						@change="paddingLeftRightChange" show-value="true" :step="padding_left_step"
+						:max="padding_left_max" />
 				</div>
 				<div class="add-btn">
-					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true" :customStyle="uButtonCustomStyle" :style="{visibility: padding_left_right < padding_left_max ? 'inherit' : 'collapse'}" @click="paddingLeftRightStep(true)">
+					<u-button throttle-time="50" shape="circle" class="btn" :ripple="true"
+						:customStyle="uButtonCustomStyle"
+						:style="{visibility: padding_left_right < padding_left_max ? 'inherit' : 'collapse'}"
+						@click="paddingLeftRightStep(true)">
 						<u-icon name="plus" size="35"></u-icon>
 					</u-button>
 				</div>
@@ -104,7 +116,8 @@
 			<div class="title">背景颜色</div>
 			<div class="bg-color">
 				<div class="color-scolle">
-					<div class="item" v-for="(item, index) in bg_list" :key="index" :style="{'background-color': item.color}" @click="bg_color_change(item.color)"></div>
+					<div class="item" v-for="(item, index) in bg_list" :key="index"
+						:style="{'background-color': item.color}" @click="bg_color_change(item.color)"></div>
 				</div>
 			</div>
 		</div>
@@ -138,17 +151,17 @@
 				letter_spacing_step: 2, // 文字间距step 步进值
 				letter_spacing_max: 100, // 文字间距最大值
 				letter_spacing_min: 0, // 文字间距最小值
-				
+
 				line_height: 50, // 行间距 单位rpx
 				line_height_step: 2,
 				line_height_max: 100,
 				line_height_min: 50,
-				
+
 				padding_left_right: 40, // 阅读区域左右空白区域间距 单位rpx
 				padding_left_step: 4,
 				padding_left_max: 100,
 				padding_left_min: 0,
-				
+
 				user_font_size: 18, // 默认用户设置的字体大小  单位px
 				background_color: '#F6F2EF', // 默认背景颜色
 				user_font_color: '#000000', // 默认字体颜色
@@ -183,7 +196,7 @@
 					backgroundColor: "#FEFAC4",
 					// #endif
 				}, // u-btn 自定义样式
-				
+
 				uButtonFontSizeCustomStyle: {
 					// #ifdef MP-WEIXIN
 					padding: "0",
@@ -203,15 +216,15 @@
 			this.getSetting()
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			// 左右间距点击事件
-			paddingLeftRightStep(is_add, paddingLeftRight = 0){
+			paddingLeftRightStep(is_add, paddingLeftRight = 0) {
 				if (is_add) {
-					paddingLeftRight = this.padding_left_right + this.padding_left_step
+					paddingLeftRight = parseInt(this.padding_left_right) + parseInt(this.padding_left_step)
 				} else {
-					paddingLeftRight = this.padding_left_right - this.padding_left_step
+					paddingLeftRight = parseInt(this.padding_left_right) - parseInt(this.padding_left_step)
 				}
 				if (paddingLeftRight < 0 || (this.line_height > this.padding_left_max && is_add)) return;
 				let e = {
@@ -239,11 +252,11 @@
 				this.padding_left_right = e.detail.value
 				this.uniReturnSettings()
 			},
-			lineHeighStep(is_add, lineHeigh = 0){
+			lineHeighStep(is_add, lineHeigh = 0) {
 				if (is_add) {
-					lineHeigh = this.line_height + this.line_height_step
+					lineHeigh = parseInt(this.line_height) + parseInt(this.line_height_step)
 				} else {
-					lineHeigh = this.line_height - this.line_height_step
+					lineHeigh = parseInt(this.line_height) - parseInt(this.line_height_step)
 				}
 				if (lineHeigh < this.line_height_min || (this.line_height > this.line_height_max && is_add)) return;
 				let e = {
@@ -275,11 +288,12 @@
 			// 字间距 点击减少或增加的按钮
 			letterSpacingStep(is_add, letterSpacing = 0) {
 				if (is_add) {
-					letterSpacing = this.letter_spacing + this.letter_spacing_step
+					letterSpacing = parseInt(this.letter_spacing) + parseInt(this.letter_spacing_step)
 				} else {
-					letterSpacing = this.letter_spacing - this.letter_spacing_step
+					letterSpacing = parseInt(this.letter_spacing) - parseInt(this.letter_spacing_step)
 				}
-				if (letterSpacing < this.letter_spacing_min || (this.letter_spacing > this.letter_spacing_max && is_add)) return;
+				if (letterSpacing < this.letter_spacing_min || (this.letter_spacing > this.letter_spacing_max && is_add))
+					return;
 				let e = {
 					detail: {
 						value: letterSpacing
@@ -377,7 +391,7 @@
 			},
 			// 保存用户的配置
 			saveSetting(name, value) {
-				
+
 				_addSetting(name, value)
 			},
 			// 背景颜色改变
