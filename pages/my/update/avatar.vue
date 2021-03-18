@@ -6,12 +6,16 @@
 			<u-grid :col="3" :border="false">
 				<u-grid-item>
 					<text>当前的头像</text> <br>
-					<u-image width="120rpx" height="120rpx" :src="userinfo.user_headimg" @click="showImg(userinfo.user_headimg)"></u-image>
+					<u-image width="120rpx" height="120rpx" :src="userinfo.user_headimg" @click="showImg(userinfo.user_headimg)">
+						<u-loading slot="loading"></u-loading>
+					</u-image>
 				</u-grid-item>
 				
 				<u-grid-item v-if="man_icon_select_index || man_icon_select_index == 0 || woman_icon_select_index || woman_icon_select_index == 0">
 					<text>选择的头像</text> <br>
-					<u-image width="120rpx" height="120rpx" :src="current_select_avatar_url" @click="showImg(current_select_avatar_url)"></u-image>
+					<u-image width="120rpx" height="120rpx" :src="current_select_avatar_url" @click="showImg(current_select_avatar_url)">
+						<u-loading slot="loading"></u-loading>
+					</u-image>
 				</u-grid-item>
 				
 				<u-grid-item v-if="save_button_is_show">
@@ -24,7 +28,9 @@
 		<div class="avatar-select-area">
 			<u-grid :col="5">
 				<u-grid-item v-for="(item, index) in man_img" :key="index" class="select-area">
-					<u-image @click="showImg(item.icon)" width="120rpx" height="120rpx" :src="item.icon"></u-image>
+					<u-image @click="showImg(item.icon)" width="120rpx" height="120rpx" :src="item.icon">
+						<u-loading slot="loading"></u-loading>
+					</u-image>
 					<div class="select-item" @click="man_avatar_cilck(index)" :style="{opacity: item.is_select ? 1 : 0.2}"></div>
 				</u-grid-item>
 			</u-grid>
@@ -33,7 +39,9 @@
 			
 			<u-grid :col="5">
 				<u-grid-item v-for="(item2, index2) in woman_img" :key="index2" class="select-area">
-					<u-image @click="showImg(item2.icon)" width="120rpx" height="120rpx" :src="item2.icon"></u-image>
+					<u-image @click="showImg(item2.icon)" width="120rpx" height="120rpx" :src="item2.icon">
+						<u-loading slot="loading"></u-loading>
+					</u-image>
 					<div class="select-item" @click="woman_avatar_cilck(index2)" :style="{opacity: item2.is_select ? 1 : 0.2}"></div>
 				</u-grid-item>
 			</u-grid>
