@@ -2,7 +2,7 @@
 	<view class="bg">
 		<div class="login">
 			<div class="logo">
-				<img src="/static/logo.png" alt="">
+				<image src="/static/logo.png" alt="" mode="aspectFit">
 			</div>
 			
 			<div class="form">
@@ -144,6 +144,10 @@
 			position: absolute;
 			top: -70rpx;
 			left: 40%;
+			image{
+				width: 100%;
+				height: 100%;
+			}
 		}
 		.form{
 			margin-top: 100rpx;

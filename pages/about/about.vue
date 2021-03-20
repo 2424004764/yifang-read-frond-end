@@ -1,7 +1,7 @@
 <template>
 	<view class="about">
 		<div class="item icon">
-			<img src="/static/logo.png" alt="">
+			<image src="/static/logo.png" alt="" mode="aspectFit">
 		</div>
 		<div class="item appName"><b>{{Config.appName}}</b></div>
 		<div class="item version">Version {{Config.version}}</div>
@@ -54,6 +54,10 @@
 		margin-top: 100rpx;
 		border-radius: 10px;
 		overflow: hidden;
+		image{
+			width: 100%;
+			height: 100%;
+		}
 	}
 	.appName{
 		margin-top: 80rpx;

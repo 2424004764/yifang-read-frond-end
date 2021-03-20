@@ -4,13 +4,12 @@
 			<div class="title">目录</div>
 			<scroll-view class="items scroll-Y" scroll-y="true" :scroll-top="scroll_Top"
 			@scroll="_scroll">
-				<div v-for="(item, index) in chapter_list" :key="index">
+				<block v-for="(item, index) in chapter_list" :key="index">
 					<div class="item" :class="{chapter_item_active: item.chapter_id == chapter_id, first_item: 0 == index}"
-					:style="{height: chapter_height + 'px'}"
 					@click="clickChapterItem(item, index)">
 						{{item.chapter_name}}
 					</div>
-				</div>
+				</block>
 			</scroll-view>
 		</div>
 	</view>
@@ -43,7 +42,6 @@
 				is_scroll: false, // 是否已经滚动过  如果已经感动定位过了，则下次无需在滚动
 				systemInfo: {}, // 系统信息
 				benchmark_height: 750, // 基准高度，动态计算每个机型章节列表item应该的高度
-				chapter_height: 20, // 章节列表item 最大高度，可能章节又超两行，超则忽略
 			}
 		},
 		methods: {
@@ -119,23 +117,6 @@
 			scrollToChapterId(chapter_id){
 				// todo 滚动到章节难实现  以后有时间再搞
 				return;
-				if(this.is_scroll)return;
-				
-				let chapter_real_height = 0
-				for (let index in this.chapter_list) {
-					if(this.chapter_id == this.chapter_list[index]['chapter_id']){
-						chapter_real_height = (parseInt(index) + 1) * this.chapter_height
-						break
-					}
-				}
-				
-				// console.log(chapter_real_height)
-				this.$nextTick(() => {
-					setTimeout(() => {
-						this.scroll_Top = chapter_real_height
-					}, 200)
-				})
-				this.is_scroll = true
 			},
 			// 点击章节列表时 返回
 			clickChapterItem(item, index){

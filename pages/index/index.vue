@@ -38,6 +38,13 @@
 		onShow() {
 			this.initUser()
 		},
+		onShareAppMessage(res) {
+			
+			return {
+				title: '自定义分享标题',
+				path: '/pages/index/index'
+			}
+		},
 		methods: {
 			// 初始化用户信息
 			initUser(){
