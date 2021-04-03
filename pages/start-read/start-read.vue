@@ -119,7 +119,7 @@
 	import yifangReadSetting from '@/components/yifang/yifang-read-setting/yifang-read-setting.vue'
 
 	import {
-		saveSchedule
+		saveSchedule, saveToLocal
 	} from '@/util/function/book-schedule.js'
 	import {
 		isLogin,
@@ -289,7 +289,7 @@
 				let _scrollTop = 0
 				try {
 					let schedule = JSON.parse(chapter.schedule).value
-					_scrollTop = parseInt(schedule)
+					_scrollTop = schedule ? parseInt(schedule) : _scrollTop
 				} catch (e) {}
 
 				this.scroll_controller_structure.value = this.scroll_top = _scrollTop
@@ -391,6 +391,7 @@
 			},
 			// 监听章节组件返回的章节id
 			async onChapterId(chapter) {
+				console.log(chapter)
 				// 保存章节首次阅读信息
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({
@@ -403,6 +404,9 @@
 				this.openGlobalClickEvent()
 				await this.getChapterContent(chapter) // 获取章节详情
 				this.calcPercent(chapter.index, chapter.chapterLegth) // 计算进度
+				// 需要保存进度至本地
+				let schedule_value = '{"value": '+ this.scroll_top +'}'
+				saveToLocal(getLocalUserInfo()['user_id'], this.book_id, this.chapter_id, schedule_value)
 			},
 			// 获取书籍详情
 			getBookDetail() {

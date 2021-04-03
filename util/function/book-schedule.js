@@ -24,7 +24,8 @@ let save_structure ={
  * @param {Object} chapter_id
  * @param {Object} schedule_value
  */
-function saveToLocal(user_id, book_id, chapter_id, schedule_value){
+export function saveToLocal(user_id, book_id, chapter_id, schedule_value){
+	console.log(schedule_value)
 	save_structure.u = user_id
 	save_structure.b = book_id
 	save_structure.c = chapter_id
@@ -41,6 +42,7 @@ function saveToLocal(user_id, book_id, chapter_id, schedule_value){
  * 保存阅读进度 先判断有无进度，如果有则不保存
  * 因为是首次保存，所有需要进行判断，因为如果在阅读当前章节时，就会进行保存
  * 当再次进入该章节时，又会将阅读进度覆盖
+ * 会同步保存至本地和云端
  * @param {Object} user_id 用户id
  * @param {Object} book_id 书籍id
  * @param {Object} chapter_id 章节id
@@ -61,7 +63,6 @@ export function saveSchedule(user_id, book_id, chapter_id, schedule) {
 	}catch(e){
 		//TODO handle the exception
 	}
-	
 	saveToLocal(user_id ? user_id : '', book_id, chapter_id, schedule)
 	
 	if(!isLogin())return;

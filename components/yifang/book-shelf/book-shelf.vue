@@ -4,14 +4,14 @@
 		<!-- 样式1 -->
 		<div class="style1" v-if="use_style_num == 1">
 			<u-grid :col="3">
-				<u-grid-item v-for="(item, index) in book_list" :key="index" @click="book_click(item.book_id)"
+				<u-grid-item v-for="(item, index) in book_list" :key="index" @click="book_click(item.book_id, index)"
 					@longpress="logoTime">
 					<u-image class="book_img" width="188rpx" height="252rpx"
-						:src="item.detail.book_cover_imgs[0] ? item.detail.book_cover_imgs[0] : 'http://cdn.fologde.com/6.png'"
+						:src="item.book_cover_imgs[0] ? item.book_cover_imgs[0] : 'http://cdn.fologde.com/6.png'"
 						mode="scaleToFill">
 						<u-loading slot="loading"></u-loading>
 					</u-image>
-					<view class="book_title">{{item.detail.book_name}}</view>
+					<view class="book_title">{{item.book_name}}</view>
 					<view class="read_schedule">{{item.read_schedule}}</view>
 				</u-grid-item>
 			</u-grid>
@@ -27,7 +27,7 @@
 
 <script>
 	import {
-		getBookshelfList
+		getBookshelfListV2
 	} from '@/util/user_http/book-shelf.js'
 
 	import {
@@ -80,8 +80,17 @@
 				});
 			},
 			// 点击书架中的书籍 去阅读书籍
-			book_click(book_id) {
+			book_click(book_id, index) {
+				// 点击的书籍位置变换到第一位
+				if(index > 0){
+					let _temp = this.book_list[index]
+					this.book_list.splice(index, 1) // 删除当前元素
+					this.book_list.unshift(_temp) // 插入到第一位
+				}
+				
 				uni.navigateTo({
+					// animationType: 'slide-in-bottom',
+					// animationDuration: 2000,
 					url: '/pages/start-read/start-read?book_id=' + book_id
 				})
 			},
@@ -91,21 +100,21 @@
 				
 				let that = this
 				that.current_request_done = false
-				getBookshelfList({
+				getBookshelfListV2({
 					user_id: getLocalUserInfo()['user_id'],
 					page: this.page++,
 					size: this.size,
 				}, {
 					custom: {loading: false}
 				}).then(res => {
-					// console.log('getBookshelfList', res)
+					// console.log('getBookshelfListV2', res)
 					if (res.code == 0) {
 						this.book_list
 						let data = res.data.list
 						if(!this.total)this.total = parseInt(res.data.total)
 						for (let item in data) {
 							try {
-								data[item]['detail']['book_cover_imgs'] = JSON.parse(data[item]['detail'][
+								data[item]['book_cover_imgs'] = JSON.parse(data[item][
 									'book_cover_imgs'
 								])
 							} catch (e) {

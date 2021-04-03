@@ -47,7 +47,7 @@
 		methods: {
 			// 统一反馈章节信息
 			uniGetClickChapterId(item, index, schedule){
-				// console.log('uniGetClickChapterId', schedule)
+				// console.log('_uniGetClickChapterId', schedule)
 				this.$emit('getClickChapterId', {
 					item: item,
 					index: index,
