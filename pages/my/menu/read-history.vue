@@ -9,7 +9,7 @@
 			</view>
 		</view>
 
-		<u-swipe-action :show="item.show" :index="index" v-for="(item, index) in list" :key="item.book_id" @click="click"
+		<u-swipe-action :show="item.show" :index="index" v-for="(item, index) in list" :key="item.book_id" @click="click" :disabled="is_share"
 		 @content-click="toBookDetail" :options="options">
 			<view class="item u-border-bottom">
 				<image class="image" mode="aspectFill" :src="item.images" />
@@ -63,13 +63,40 @@
 				status: 'loading', // 加载更多的组件状态
 				loading_is_done: false, // 请求是否加载完成
 				skeleton_loading: true, // 是否显示骨架屏
+				Config: {}, // 全局配置
+				user_id: null,
+				is_share: false, // 是否通过分享进来的  如果是 则不能删除
 			}
 		},
 		onShow() {
 			this.init()
 		},
-		onLoad() {
+		
+		onLoad(option) {
+			this.isLogin = isLogin() ? true : false
+			// console.log(this.isLogin)
+			
+			// 如果是自己分享的 则可以删除
+			if(this.isLogin){
+				this.is_share = (option.user_id && option.user_id != getLocalUserInfo()['user_id'])
+				console.log(this.is_share)
+			}else{
+				// 未登录
+				this.is_share = option.is_share
+				this.user_id = option.user_id
+			}
+			
 			this._onLoad()
+			this.Config = this.$yifangConfig
+		},
+		
+		onShareAppMessage(res) {
+			let title = "我读过的" + this.list_count +"本书"
+			
+			return {
+				title: title,
+				path: '/pages/my/menu/read-history?is_share=1&user_id=' + this.user_id
+			}
 		},
 		// 监听下拉刷新
 		onPullDownRefresh() {
@@ -143,9 +170,9 @@
 			},
 			// 加载列表
 			loadList(list) {
-				if (!list.length || list.length < this.size) {
+				if (!list.length) {
 					this.status = 'nomore'
-					// return
+					return
 				}
 				for (let index in list) {
 					let images = calcBookCoverImgsGetFirst(list[index].book_cover_imgs)
@@ -177,10 +204,12 @@
 			getList() {
 				this.init()
 				if (this.status == 'nomore') { // 没数据了 不加载了
+					this.listFirstLoadDone()
 					return
 				}
+				
 				getHistoryList({
-					user_id: getLocalUserInfo()['user_id'],
+					user_id: this.user_id,
 					page: this.page,
 					size: this.size,
 				}, {
@@ -195,13 +224,14 @@
 			},
 			init() {
 				this.isLogin = isLogin() ? true : false
-				if (!this.isLogin) {
+				if (!this.isLogin && !this.is_share) {
 					uni.reLaunch({
 						url: '../my'
 					})
 
 					return
 				}
+				this.user_id = this.user_id ? this.user_id : getLocalUserInfo()['user_id']
 			}
 		},
 	}

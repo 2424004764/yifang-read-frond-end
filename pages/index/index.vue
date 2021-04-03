@@ -33,15 +33,21 @@
 			return {
 				hackReset: true,
 				isLogin: false, // 是否登录
+				Config: {}, // 全局配置
 			}
 		},
 		onShow() {
 			this.initUser()
 		},
+		onLoad() {
+			this.Config = this.$yifangConfig
+		},
+		
 		onShareAppMessage(res) {
+			let title = this.Config.appName
 			
 			return {
-				title: '自定义分享标题',
+				title: title+' 邀你一起知书',
 				path: '/pages/index/index'
 			}
 		},

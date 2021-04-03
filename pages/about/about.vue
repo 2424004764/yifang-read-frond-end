@@ -27,6 +27,14 @@
 		created() {
 			this.Config = this.$yifangConfig
 		},
+		onShareAppMessage(res) {
+			let title = "关于 " + this.Config.appName
+			
+			return {
+				title: title,
+				path: '/pages/about/about'
+			}
+		},
 		methods: {
 			// 拷贝git仓库地址
 			copyGitUrl(){

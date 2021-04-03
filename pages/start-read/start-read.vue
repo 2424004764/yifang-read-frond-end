@@ -187,6 +187,14 @@
 				default_content: '该章节没有内容', // 如果章节没有内容时显示的文字
 			}
 		},
+		onShareAppMessage(res) {
+			let title = "《" + this.bookDetail.book_name + "》"
+			
+			return {
+				title: title,
+				path: '/pages/start-read/start-read?book_id=' + this.bookDetail.book_id
+			}
+		},
 		onLoad(options) {
 			this.book_id = options.book_id
 			this.getBookDetail()
@@ -203,6 +211,15 @@
 			}, 2000)
 			this.app_load_level()
 			// #endif
+			
+			uni.loadFontFace({
+			  family: 'Bitstream Vera Serif Bold',
+			  source: 'url("https://yifang-read-api.fologde.com/font/ch/DottedSongtiSquareRegular.otf")',
+			  // source: 'url("https://sungd.github.io/Pacifico.ttf")',
+			  complete(res) {
+			      console.log('loadFontFace', res)
+			  }
+			})
 		},
 		methods: {
 			// 切换下一章之前
@@ -607,6 +624,8 @@
 			}
 
 			.scroll-Y {
+				font-family:"Bitstream Vera Serif Bold";
+				
 				overflow-anchor: auto;
 				/* #ifdef MP-WEIXIN */
 				height: calc(100vh - 70rpx - env(safe-area-inset-bottom));

@@ -66,6 +66,18 @@
 				// 		}
 				// 	],
 				// },
+				Config: {}, // 全局配置
+			}
+		},
+		onLoad() {
+			this.Config = this.$yifangConfig
+		},
+		onShareAppMessage(res) {
+			let title = this.Config.appName
+			
+			return {
+				title: title+' 邀你一起知书',
+				path: '/pages/index/index'
 			}
 		},
 		methods: {

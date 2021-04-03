@@ -202,6 +202,8 @@
 					// uni.setNavigationBarTitle({
 					//     title: res.book_name
 					// })
+					// 向父组件返回书籍详情
+					this.$emit('bookDetail', res)
 					this.isLoadingSuccess = true
 					uni.hideLoading()
 				}).then(() => {

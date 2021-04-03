@@ -27,12 +27,23 @@
 				userinfo: [],
 				feedBackvalue: '', // 反馈内容
 				btn_disable: true, // 提交按钮是否禁用
+				Config: {}, // 全局配置
 			}
 		},
 		onShow() {
 			this.init()
 		},
 		mounted() {
+			this.Config = this.$yifangConfig
+		},
+		
+		onShareAppMessage(res) {
+			let title = "意见反馈 - " + this.Config.appName
+			
+			return {
+				title: title,
+				path: '/pages/my/feedback'
+			}
 		},
 		methods: {
 			// 提交

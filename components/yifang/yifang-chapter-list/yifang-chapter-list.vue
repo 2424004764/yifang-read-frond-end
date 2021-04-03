@@ -207,16 +207,16 @@
 				border-bottom: 1px solid #f5f5f5;
 				padding: 20rpx 10rpx;
 				text-indent: 1em;
+				// white-space:normal;
 				
 				// 最多两行
 				text-overflow: -o-ellipsis-lastline;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				display: -webkit-box;
-				-webkit-line-clamp: 1;
-				line-clamp: 1;
+				-webkit-line-clamp: 5;
+				line-clamp: 5;
 				-webkit-box-orient: vertical;
-				white-space: nowrap
 			}
 			.chapter_item_active{
 				background-color: antiquewhite

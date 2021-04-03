@@ -34,7 +34,7 @@
 			</div>
 
 			<!-- 常用操作 -->
-			<div class="block-area controller" v-if="controllers.length">
+			<div class="block-area controller" v-if="controllers.length && isLogin">
 				<div class="item" v-for="(item, index) in controllers" :key="index">
 					<div @click="menuJump(item)">
 						<div class="icon">
@@ -112,17 +112,27 @@
 					jumpType: 'navigateTo', // 跳转类型 如：navigateTo
 					jumpPage: '/pages/my/menu/read-history', // 跳转的页面 绝对路径
 				}], // 所有的菜单项
+				Config: {}, // 全局配置
 			}
 		},
 		onLoad() {
 			this.init()
 			// 加载常用操作
 			this.loadControllers()
+			this.Config = this.$yifangConfig
 		},
 		onShow() {
 			this.init()
 			// 加载常用操作
 			this.loadControllers()
+		},
+		onShareAppMessage(res) {
+			let title = this.Config.appName
+			
+			return {
+				title: title+' 邀你一起知书',
+				path: '/pages/index/index'
+			}
 		},
 		methods: {
 			// 点击了菜单
