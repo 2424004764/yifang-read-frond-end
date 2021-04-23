@@ -138,6 +138,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/start-read/font-setting",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "字体",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -178,6 +187,10 @@
 	"condition": { //模式配置，仅开发期间生效
 	    "current": 0, //当前激活的模式（list 的索引项）
 	    "list": [
+			{
+			    "name": "字体", 
+			    "path": "pages/start-read/font-setting"
+			},
 			{
 			    "name": "书架", 
 			    "path": "pages/book-shelf/book-shelf"

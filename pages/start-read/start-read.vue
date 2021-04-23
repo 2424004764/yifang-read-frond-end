@@ -391,7 +391,7 @@
 			},
 			// 监听章节组件返回的章节id
 			async onChapterId(chapter) {
-				console.log(chapter)
+				// console.log(chapter)
 				// 保存章节首次阅读信息
 				this.chapter_id = chapter.item.chapter_id
 				uni.setNavigationBarTitle({

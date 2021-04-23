@@ -12,6 +12,10 @@
 				<u-button throttle-time="50" shape="circle" class="font-enlarge font" @click="font_enlarge"
 					:ripple="true" :customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">A+</u-button>
 			</div>
+			<div class="btn font-s">
+				<u-button throttle-time="50" shape="circle" class="font-enlarge font" @click="font_setting"
+					:ripple="true" :customStyle="uButtonCustomStyle" :style="[uButtonFontSizeCustomStyle]">字体</u-button>
+			</div>
 		</div>
 
 		<!-- 字体颜色 -->
@@ -219,6 +223,12 @@
 
 		},
 		methods: {
+			// 去字体设置页面
+			font_setting(){
+				uni.navigateTo({
+					url: '/pages/start-read/font-setting',
+				})
+			},
 			// 左右间距点击事件
 			paddingLeftRightStep(is_add, paddingLeftRight = 0) {
 				if (is_add) {
@@ -505,6 +515,10 @@
 				content: '';
 				display: inline-block;
 				clear: both;
+			}
+			
+			.font-s{
+				margin-left: 20rpx;
 			}
 		}
 

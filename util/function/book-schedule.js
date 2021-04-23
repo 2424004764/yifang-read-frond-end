@@ -25,7 +25,7 @@ let save_structure ={
  * @param {Object} schedule_value
  */
 export function saveToLocal(user_id, book_id, chapter_id, schedule_value){
-	console.log(schedule_value)
+	// console.log(schedule_value)
 	save_structure.u = user_id
 	save_structure.b = book_id
 	save_structure.c = chapter_id
